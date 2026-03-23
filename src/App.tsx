@@ -21,6 +21,7 @@ import BlogPage from "./pages/BlogPage.tsx";
 import ShopsPage from "./pages/ShopsPage.tsx";
 import CreateShopPage from "./pages/CreateShopPage.tsx";
 import ShopViewPage from "./pages/ShopViewPage.tsx";
+import ServiceDetailPage from "./pages/ServiceDetailPage.tsx";
 import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
 import DashboardHome from "./components/dashboard/DashboardHome.tsx";
 import MyAds from "./components/dashboard/MyAds.tsx";
