@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, Wand2, RefreshCw, TrendingUp, Lightbulb, ChevronDown, Check } from "lucide-react";
 import { carBrands, brandList, motoBrands, motoBrandList } from "@/data/carData";
 
 interface Props {
