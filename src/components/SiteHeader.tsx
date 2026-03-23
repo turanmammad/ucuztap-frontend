@@ -87,13 +87,13 @@ const SiteHeader = () => {
 
       {/* Mobile search */}
       <div className="md:hidden px-4 pb-3">
-        <div className="flex items-center rounded-md overflow-hidden bg-white shadow-sm">
+        <div className="flex items-center border border-border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
           <input
             type="text"
             placeholder="Elan axtar..."
             className="flex-1 px-3 py-2 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
           />
-          <button className="px-4 py-2 bg-foreground text-background">
+          <button className="px-4 py-2 bg-primary text-primary-foreground">
             <Search size={16} />
           </button>
         </div>
