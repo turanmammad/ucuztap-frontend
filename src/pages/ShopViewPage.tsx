@@ -579,6 +579,40 @@ const ShopViewPage = () => {
                 }`}>
                   <MessageCircle size={15} /> Mesaj yaz
                 </button>
+
+                {/* Share button */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShareOpen(!shareOpen)}
+                    className="w-full py-2.5 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
+                  >
+                    <Share2 size={15} /> Paylaş
+                  </button>
+                  {shareOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setShareOpen(false)} />
+                      <div className="absolute left-0 right-0 top-full mt-1.5 bg-popover border border-border rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                        <button onClick={handleShareWhatsApp} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                          💬 WhatsApp
+                        </button>
+                        <button onClick={handleShareTelegram} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                          ✈️ Telegram
+                        </button>
+                        {typeof navigator.share === "function" && (
+                          <button onClick={handleNativeShare} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                            <Share2 size={14} /> Digər...
+                          </button>
+                        )}
+                        <div className="border-t border-border mt-1 pt-1">
+                          <button onClick={() => { handleCopyLink(); setShareOpen(false); }} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                            {linkCopied ? <CheckIcon size={14} className="text-accent" /> : <Link2 size={14} />}
+                            {linkCopied ? "Kopyalandı!" : "Linki kopyala"}
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Quick hours */}
