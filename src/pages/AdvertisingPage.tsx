@@ -24,7 +24,7 @@ const AdvertisingPage = () => {
   const [message, setMessage] = useState("");
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
       <SiteHeader />
       <main className="flex-1">
         <section className="bg-hero-bg py-14 md:py-18">

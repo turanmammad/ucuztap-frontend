@@ -12,7 +12,7 @@ const ContactPage = () => {
   const [message, setMessage] = useState("");
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
       <SiteHeader />
       <main className="flex-1 container py-10 md:py-14">
         <h1 className="text-2xl font-extrabold text-foreground mb-8">Əlaqə</h1>

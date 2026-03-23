@@ -92,7 +92,7 @@ const PromotionPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-muted/30">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-muted/30">
       <SiteHeader />
 
       <main className="flex-1 container py-8 md:py-10">

@@ -20,7 +20,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
       <SiteHeader />
       <main className="flex-1 flex items-center justify-center px-4 py-20">
         <div className="text-center max-w-md">
