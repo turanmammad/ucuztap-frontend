@@ -200,6 +200,7 @@ const AdDetailPage = () => {
       </div>
 
       <SiteFooter />
+      </PullToRefresh>
     </div>
   );
 };
