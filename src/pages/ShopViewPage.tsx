@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown } from "lucide-react";
+import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar } from "@/components/AdBanners";
