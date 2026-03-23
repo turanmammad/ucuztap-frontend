@@ -261,7 +261,7 @@ const ShopsPage = () => {
               {filtered.map(shop => (
                 <Link key={shop.id} to={`/magazalar/${shop.slug}`} className="group">
                   {viewMode === "large" && (
-                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift">
+                    <div className={`bg-card rounded-xl border overflow-hidden card-lift ${shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/20" : "border-border"}`}>
                       <div className="relative h-28 overflow-hidden">
                         <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
