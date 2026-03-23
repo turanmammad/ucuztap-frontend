@@ -24,21 +24,33 @@ const CategoryGrid = () => (
           {categories.length} kateqoriya
         </span>
       </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+      {/* Mobile: horizontal scroll */}
+      <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide sm:hidden">
+        {categories.map((cat) => (
+          <Link
+            key={cat.name}
+            to={`/kateqoriya/${cat.slug}`}
+            className="group relative flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/50 transition-all shrink-0 w-[90px] snap-start"
+          >
+            <span className="text-2xl">{cat.emoji}</span>
+            <span className="text-[11px] font-semibold text-center text-card-foreground leading-tight line-clamp-2">{cat.name}</span>
+            <span className="text-[10px] text-muted-foreground tabular-nums">{cat.count}</span>
+          </Link>
+        ))}
+      </div>
+
+      {/* Tablet+: grid */}
+      <div className="hidden sm:grid sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-3">
         {categories.map((cat) => (
           <Link
             key={cat.name}
             to={`/kateqoriya/${cat.slug}`}
             className="group relative flex flex-col items-center gap-2.5 p-4 pb-3 rounded-xl border border-border bg-card hover:border-primary/50 hover:shadow-lg transition-all duration-200 cursor-pointer overflow-hidden"
           >
-            {/* Subtle gradient on hover */}
             <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
             <span className="text-3xl group-hover:scale-110 transition-transform duration-200 relative z-10">{cat.emoji}</span>
             <span className="text-sm font-semibold text-center text-card-foreground relative z-10 leading-tight">{cat.name}</span>
             <span className="text-[11px] text-muted-foreground relative z-10 tabular-nums">{cat.count} elan</span>
-
-            {/* Sub-categories preview */}
             {cat.subs.length > 0 && (
               <div className="w-full pt-2 mt-1 border-t border-border/60 relative z-10">
                 <p className="text-[10px] text-muted-foreground/70 text-center leading-relaxed line-clamp-1">
