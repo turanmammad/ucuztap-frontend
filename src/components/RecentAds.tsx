@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { AdCardInFeed } from "@/components/AdBanners";
 
 const tabs = ["Hamısı", "Nəqliyyat", "Əmlak", "Elektronika"];
 
@@ -26,9 +27,20 @@ const allAds = [
   { id: 20, title: "Torpaq sahəsi, 10 sot", price: "45,000", location: "Şamaxı", date: "8 saat əvvəl", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=300&fit=crop", cat: "Əmlak" },
 ];
 
+const AD_POSITIONS = [4, 12]; // After 4th and 12th items
+
 const RecentAds = () => {
   const [activeTab, setActiveTab] = useState("Hamısı");
   const filtered = activeTab === "Hamısı" ? allAds : allAds.filter((ad) => ad.cat === activeTab);
+
+  // Insert ad cards at specific positions
+  const itemsWithAds: (typeof allAds[0] | "ad")[] = [];
+  filtered.forEach((ad, i) => {
+    if (AD_POSITIONS.includes(i)) {
+      itemsWithAds.push("ad");
+    }
+    itemsWithAds.push(ad);
+  });
 
   return (
     <section className="section-padding">
@@ -50,21 +62,25 @@ const RecentAds = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {filtered.map((ad) => (
-            <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-              </div>
-              <div className="p-3">
-                <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
-                <p className="text-base font-bold text-foreground mt-1">{ad.price} ₼</p>
-                <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
-                  <span>📍 {ad.location}</span>
-                  <span>{ad.date}</span>
+          {itemsWithAds.map((item, idx) =>
+            item === "ad" ? (
+              <AdCardInFeed key={`ad-${idx}`} />
+            ) : (
+              <Link key={item.id} to={`/elanlar/${item.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                 </div>
-              </div>
-            </Link>
-          ))}
+                <div className="p-3">
+                  <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{item.title}</p>
+                  <p className="text-base font-bold text-foreground mt-1">{item.price} ₼</p>
+                  <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
+                    <span>📍 {item.location}</span>
+                    <span>{item.date}</span>
+                  </div>
+                </div>
+              </Link>
+            )
+          )}
         </div>
         <div className="text-center mt-8">
           <Link to="/axtaris" className="px-6 py-2.5 border-2 border-border rounded-lg text-sm font-semibold text-foreground hover:border-primary hover:shadow-sm transition-all active:scale-[0.97] inline-block">

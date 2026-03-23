@@ -1,10 +1,11 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { ClipboardList, Heart, MessageCircle, Bell, CreditCard, BarChart3, Star, Settings, Plus, LogOut } from "lucide-react";
+import { ClipboardList, Heart, MessageCircle, Bell, CreditCard, BarChart3, Star, Settings, Plus, LogOut, Store } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 const navItems = [
   { icon: ClipboardList, label: "Elanlarım", path: "/panel/elanlarim" },
+  { icon: Store, label: "Mağazam", path: "/panel/magazam" },
   { icon: Heart, label: "Favoritlərim", path: "/panel/favoritler" },
   { icon: MessageCircle, label: "Mesajlar", path: "/panel/mesajlar", badge: 3 },
   { icon: Bell, label: "Bildirişlər", path: "/panel/bildirisler", badge: 5 },
