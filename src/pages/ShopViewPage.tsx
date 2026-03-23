@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown } from "lucide-react";
+import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar } from "@/components/AdBanners";
@@ -10,6 +10,7 @@ const shopData = {
   id: "autoplus",
   name: "AutoPlus MMC",
   category: "Nəqliyyat",
+  premium: true,
   description: "Bakının ən etibarlı avtomobil satış mərkəzi. 2015-ci ildən fəaliyyət göstəririk. Yeni və ikinci əl avtomobillər, lizinq imkanları, texniki xidmət.",
   location: "Bakı, Nəsimi r.",
   address: "Təbriz küç. 42, Nəsimi rayonu, Bakı, AZ1007",
@@ -82,13 +83,18 @@ const ShopViewPage = () => {
   const [reviewSortOpen, setReviewSortOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
+     <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
       <SiteHeader />
       <main className="flex-1">
         {/* Cover + Hero Header */}
-        <div className="relative h-52 md:h-72 overflow-hidden bg-muted">
+        <div className={`relative h-52 md:h-72 overflow-hidden bg-muted ${shopData.premium ? 'ring-b-4 ring-[hsl(var(--vip-gold))]' : ''}`}>
           <img src={shopData.cover} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
+          <div className={`absolute inset-0 ${shopData.premium ? 'bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10' : 'bg-gradient-to-t from-black/80 via-black/40 to-black/10'}`} />
+
+          {/* Premium shimmer overlay */}
+          {shopData.premium && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--vip-gold))]/[0.06] to-transparent pointer-events-none" />
+          )}
 
           {/* Shop info overlay on cover */}
           <div className="absolute inset-x-0 bottom-0 z-10">
@@ -98,18 +104,34 @@ const ShopViewPage = () => {
                   <img
                     src={shopData.logo}
                     alt={shopData.name}
-                    className="w-20 h-20 md:w-28 md:h-28 rounded-2xl border-[3px] border-white/20 object-cover shadow-2xl ring-2 ring-white/10"
+                    className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl object-cover shadow-2xl ${
+                      shopData.premium
+                        ? 'border-[3px] border-[hsl(var(--vip-gold))]/60 ring-2 ring-[hsl(var(--vip-gold))]/30'
+                        : 'border-[3px] border-white/20 ring-2 ring-white/10'
+                    }`}
                   />
                   {shopData.verified && (
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-7 md:h-7 rounded-full bg-accent flex items-center justify-center shadow-lg ring-2 ring-black/20">
                       <ShieldCheck size={14} className="text-accent-foreground" />
                     </div>
                   )}
+                  {shopData.premium && (
+                    <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(var(--vip-gold))] to-[hsl(35,80%,45%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
+                      <Crown size={14} className="text-white" />
+                    </div>
+                  )}
                 </div>
                 <div className="pb-0.5 min-w-0 flex-1">
-                  <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
-                    {shopData.name}
-                  </h1>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
+                      {shopData.name}
+                    </h1>
+                    {shopData.premium && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[10px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
+                        <Crown size={10} /> Premium
+                      </span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
                     <span className="inline-flex items-center gap-1 text-sm text-white/90 bg-white/15 backdrop-blur-sm px-2.5 py-0.5 rounded-full font-medium">
                       <Store size={12} /> {shopData.category}
@@ -132,6 +154,11 @@ const ShopViewPage = () => {
           </div>
         </div>
 
+        {/* Premium accent bar */}
+        {shopData.premium && (
+          <div className="h-1 bg-gradient-to-r from-[hsl(var(--vip-gold))]/60 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/60" />
+        )}
+
         <div className="container mt-5 relative z-10">
 
           <div className="grid lg:grid-cols-[1fr_280px] gap-6 pb-10">
@@ -148,9 +175,18 @@ const ShopViewPage = () => {
                 <TabsContent value="ads">
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {shopData.ads.map((ad) => (
-                      <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
-                        <div className="aspect-[4/3] overflow-hidden">
+                      <Link key={ad.id} to={`/elanlar/${ad.id}`} className={`rounded-lg border overflow-hidden card-lift group ${
+                        shopData.premium
+                          ? 'border-[hsl(var(--vip-gold))]/30 bg-card shadow-sm hover:shadow-[0_4px_20px_hsl(var(--vip-gold)/0.1)]'
+                          : 'border-border bg-card'
+                      }`}>
+                        <div className="aspect-[4/3] overflow-hidden relative">
                           <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                          {shopData.premium && (
+                            <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[9px] font-bold text-white uppercase shadow">
+                              <Crown size={8} /> Premium
+                            </span>
+                          )}
                         </div>
                         <div className="p-3">
                           <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
@@ -484,7 +520,17 @@ const ShopViewPage = () => {
             {/* Sidebar */}
             <div className="space-y-4">
               {/* Contact card */}
-              <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+              <div className={`rounded-xl border p-4 space-y-3 ${
+                shopData.premium
+                  ? 'border-[hsl(var(--vip-gold))]/40 bg-gradient-to-b from-[hsl(var(--vip-gold))]/[0.04] to-card shadow-[0_2px_12px_hsl(var(--vip-gold)/0.08)]'
+                  : 'border-border bg-card'
+              }`}>
+                {shopData.premium && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))]/15 to-[hsl(var(--vip-gold))]/5 mb-1">
+                    <Crown size={13} className="text-[hsl(var(--vip-gold))]" />
+                    <span className="text-[10px] font-bold text-[hsl(var(--vip-gold))] uppercase tracking-wide">Premium Mağaza</span>
+                  </div>
+                )}
                 <h3 className="text-sm font-semibold text-foreground">Əlaqə</h3>
                 <a href={`tel:${shopData.phone}`} className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors">
                   <Phone size={14} className="text-muted-foreground" /> {shopData.phone}
@@ -497,7 +543,11 @@ const ShopViewPage = () => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin size={14} /> <span className="text-xs leading-tight">{shopData.address}</span>
                 </div>
-                <button className="w-full py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] flex items-center justify-center gap-2">
+                <button className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-colors active:scale-[0.98] flex items-center justify-center gap-2 ${
+                  shopData.premium
+                    ? 'bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-white hover:opacity-90 shadow-sm'
+                    : 'bg-accent text-accent-foreground hover:bg-accent-hover'
+                }`}>
                   <MessageCircle size={15} /> Mesaj yaz
                 </button>
               </div>
