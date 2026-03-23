@@ -33,6 +33,7 @@ import Payments from "./components/dashboard/Payments.tsx";
 import Statistics from "./components/dashboard/Statistics.tsx";
 import Reviews from "./components/dashboard/Reviews.tsx";
 import SettingsPage from "./components/dashboard/SettingsPage.tsx";
+import InstallPage from "./pages/InstallPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,7 @@ const App = () => (
           <Route path="/magazalar/yarat" element={<CreateShopPage />} />
           <Route path="/magazalar/:slug" element={<ShopViewPage />} />
           <Route path="/xidmetler/:id" element={<ServiceDetailPage />} />
+          <Route path="/install" element={<InstallPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
