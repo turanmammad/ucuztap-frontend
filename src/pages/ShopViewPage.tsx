@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation } from "lucide-react";
+import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar } from "@/components/AdBanners";
@@ -31,11 +32,13 @@ const shopData = {
     { day: "Bazar", hours: "Bağlı", open: false },
   ],
   reviews: [
-    { id: 1, name: "Leyla Əliyeva", rating: 5, comment: "Çox yaxşı satıcıdır. Maşın tam təsvir olunduğu kimi idi. Təşəkkür edirəm!", date: "12.01.2025", avatar: "LƏ" },
-    { id: 2, name: "Rəşad Hüseynov", rating: 5, comment: "Sürətli cavab verdi, əla kommunikasiya. Tövsiyə edirəm.", date: "08.01.2025", avatar: "RH" },
-    { id: 3, name: "Nigar Quliyeva", rating: 4, comment: "Yaxşı idi, amma görüşə bir az gec gəldi. Məhsul keyfiyyətli idi.", date: "03.01.2025", avatar: "NQ" },
-    { id: 4, name: "Kamran İsmayılov", rating: 5, comment: "Etibarlı satıcı. Təkrar alış-veriş edərdim.", date: "28.12.2024", avatar: "Kİ" },
-    { id: 5, name: "Aynur Həsənova", rating: 4, comment: "Qiymət razılaşması yaxşı keçdi. Məhsul gözlədiyim kimi idi.", date: "20.12.2024", avatar: "AH" },
+    { id: 1, name: "Leyla Əliyeva", rating: 5, comment: "Çox yaxşı satıcıdır. Maşın tam təsvir olunduğu kimi idi. Təşəkkür edirəm!", date: "12.01.2025", avatar: "LƏ", helpful: 12, notHelpful: 1 },
+    { id: 2, name: "Rəşad Hüseynov", rating: 5, comment: "Sürətli cavab verdi, əla kommunikasiya. Tövsiyə edirəm.", date: "08.01.2025", avatar: "RH", helpful: 8, notHelpful: 0 },
+    { id: 3, name: "Nigar Quliyeva", rating: 4, comment: "Yaxşı idi, amma görüşə bir az gec gəldi. Məhsul keyfiyyətli idi.", date: "03.01.2025", avatar: "NQ", helpful: 5, notHelpful: 2, reply: { text: "Hörmətli Nigar xanım, gecikməyə görə üzr istəyirik. Bundan sonra daha diqqətli olacağıq.", date: "04.01.2025" } },
+    { id: 4, name: "Kamran İsmayılov", rating: 5, comment: "Etibarlı satıcı. Təkrar alış-veriş edərdim.", date: "28.12.2024", avatar: "Kİ", helpful: 15, notHelpful: 0 },
+    { id: 5, name: "Aynur Həsənova", rating: 4, comment: "Qiymət razılaşması yaxşı keçdi. Məhsul gözlədiyim kimi idi.", date: "20.12.2024", avatar: "AH", helpful: 3, notHelpful: 1 },
+    { id: 6, name: "Tural Məmmədov", rating: 3, comment: "Orta səviyyədə xidmət. Məhsulun vəziyyəti elana tam uyğun deyildi.", date: "15.12.2024", avatar: "TM", helpful: 7, notHelpful: 3 },
+    { id: 7, name: "Günay Həsənli", rating: 5, comment: "Mükəmməl təcrübə! Hər şey çox peşəkar idi. Mütləq tövsiyə edirəm.", date: "10.12.2024", avatar: "GH", helpful: 20, notHelpful: 0 },
   ],
   ads: [
     { id: 1, title: "Mercedes-Benz C200, 2019", price: "25,000", img: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=300&fit=crop", date: "Bugün" },
@@ -60,8 +63,23 @@ const isOpenNow = () => {
   return shopData.workingHours[dayIndex]?.open ?? false;
 };
 
+const REVIEW_SORT_OPTIONS = [
+  { value: "newest", label: "Ən yeni" },
+  { value: "oldest", label: "Ən köhnə" },
+  { value: "highest", label: "Ən yüksək reytinq" },
+  { value: "lowest", label: "Ən aşağı reytinq" },
+  { value: "helpful", label: "Ən faydalı" },
+];
+
 const ShopViewPage = () => {
   const { slug } = useParams();
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewSort, setReviewSort] = useState("newest");
+  const [reviewFilterStar, setReviewFilterStar] = useState<number | null>(null);
+  const [newRating, setNewRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewSortOpen, setReviewSortOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
@@ -147,52 +165,256 @@ const ShopViewPage = () => {
                 {/* Reviews Tab */}
                 <TabsContent value="reviews">
                   <div className="mt-4 space-y-5">
-                    {/* Rating Summary */}
-                    <div className="rounded-xl border border-border bg-card p-5 flex flex-col sm:flex-row gap-6">
-                      <div className="flex flex-col items-center justify-center gap-1 min-w-[100px]">
-                        <span className="text-4xl font-extrabold text-foreground">{avgRating}</span>
-                        <div className="flex items-center gap-0.5">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <Star key={s} size={14} className={s <= Math.round(Number(avgRating)) ? "text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" : "text-border"} />
+                    {/* Rating Summary + Write Review */}
+                    <div className="rounded-xl border border-border bg-card p-5">
+                      <div className="flex flex-col sm:flex-row gap-6">
+                        <div className="flex flex-col items-center justify-center gap-1 min-w-[120px]">
+                          <span className="text-5xl font-extrabold text-foreground">{avgRating}</span>
+                          <div className="flex items-center gap-0.5">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star key={s} size={16} className={s <= Math.round(Number(avgRating)) ? "text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" : "text-border"} />
+                            ))}
+                          </div>
+                          <span className="text-xs text-muted-foreground mt-1">{shopData.reviews.length} rəy əsasında</span>
+                        </div>
+                        <div className="flex-1 space-y-1.5">
+                          {ratingDistribution.map((rd) => (
+                            <button
+                              key={rd.star}
+                              onClick={() => setReviewFilterStar(reviewFilterStar === rd.star ? null : rd.star)}
+                              className={`w-full flex items-center gap-2 text-xs px-2 py-1 rounded-md transition-colors ${
+                                reviewFilterStar === rd.star ? "bg-primary/10" : "hover:bg-muted"
+                              }`}
+                            >
+                              <span className="w-3 text-muted-foreground font-medium">{rd.star}</span>
+                              <Star size={10} className="text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" />
+                              <div className="flex-1 h-2.5 rounded-full bg-muted overflow-hidden">
+                                <div className="h-full rounded-full bg-[hsl(var(--vip-gold))] transition-all" style={{ width: `${rd.percent}%` }} />
+                              </div>
+                              <span className="w-8 text-right text-muted-foreground tabular-nums">{rd.count}</span>
+                            </button>
                           ))}
                         </div>
-                        <span className="text-xs text-muted-foreground mt-1">{shopData.reviews.length} rəy</span>
                       </div>
-                      <div className="flex-1 space-y-1.5">
-                        {ratingDistribution.map((rd) => (
-                          <div key={rd.star} className="flex items-center gap-2 text-xs">
-                            <span className="w-3 text-muted-foreground">{rd.star}</span>
-                            <Star size={10} className="text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" />
-                            <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
-                              <div className="h-full rounded-full bg-[hsl(var(--vip-gold))] transition-all" style={{ width: `${rd.percent}%` }} />
-                            </div>
-                            <span className="w-8 text-right text-muted-foreground">{rd.count}</span>
+
+                      {/* Write review button */}
+                      <div className="mt-5 pt-4 border-t border-border">
+                        <button
+                          onClick={() => setShowReviewForm(!showReviewForm)}
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-accent-foreground font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97]"
+                        >
+                          <Pencil size={15} /> Rəy yaz
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Write Review Form */}
+                    {showReviewForm && (
+                      <div className="rounded-xl border-2 border-primary/20 bg-card p-5 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-sm font-bold text-foreground">Rəyinizi yazın</h3>
+                          <button onClick={() => setShowReviewForm(false)} className="p-1 hover:bg-muted rounded-md transition-colors">
+                            <X size={16} className="text-muted-foreground" />
+                          </button>
+                        </div>
+
+                        {/* Star rating input */}
+                        <div className="mb-4">
+                          <label className="text-xs font-medium text-muted-foreground mb-2 block">Qiymətləndirmə</label>
+                          <div className="flex items-center gap-1">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <button
+                                key={s}
+                                type="button"
+                                onMouseEnter={() => setHoverRating(s)}
+                                onMouseLeave={() => setHoverRating(0)}
+                                onClick={() => setNewRating(s)}
+                                className="p-0.5 transition-transform hover:scale-110"
+                              >
+                                <Star
+                                  size={28}
+                                  className={`transition-colors ${
+                                    s <= (hoverRating || newRating)
+                                      ? "text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]"
+                                      : "text-border hover:text-[hsl(var(--vip-gold))]/40"
+                                  }`}
+                                />
+                              </button>
+                            ))}
+                            {newRating > 0 && (
+                              <span className="ml-2 text-sm font-medium text-foreground">
+                                {newRating === 1 ? "Pis" : newRating === 2 ? "Zəif" : newRating === 3 ? "Orta" : newRating === 4 ? "Yaxşı" : "Əla"}
+                              </span>
+                            )}
                           </div>
-                        ))}
+                        </div>
+
+                        {/* Review text */}
+                        <div className="mb-4">
+                          <label className="text-xs font-medium text-muted-foreground mb-2 block">Rəyiniz</label>
+                          <textarea
+                            value={reviewText}
+                            onChange={(e) => setReviewText(e.target.value)}
+                            placeholder="Təcrübənizi paylaşın... Məhsulun keyfiyyəti, xidmətin səviyyəsi, çatdırılma və s."
+                            rows={4}
+                            className="w-full px-4 py-3 text-sm border border-border rounded-xl bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all resize-none placeholder:text-muted-foreground/60"
+                          />
+                          <div className="flex items-center justify-between mt-1.5">
+                            <span className="text-[11px] text-muted-foreground">Minimum 10 simvol</span>
+                            <span className={`text-[11px] ${reviewText.length >= 10 ? "text-accent" : "text-muted-foreground"}`}>
+                              {reviewText.length}/500
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Submit */}
+                        <div className="flex items-center gap-3">
+                          <button
+                            disabled={newRating === 0 || reviewText.length < 10}
+                            className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover transition-colors active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            Göndər
+                          </button>
+                          <button
+                            onClick={() => { setShowReviewForm(false); setNewRating(0); setReviewText(""); }}
+                            className="px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            Ləğv et
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Sort & Filter bar */}
+                    <div className="flex items-center justify-between flex-wrap gap-3">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Star filter chips */}
+                        {reviewFilterStar && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-foreground text-xs font-medium">
+                            {reviewFilterStar} <Star size={10} className="fill-[hsl(var(--vip-gold))] text-[hsl(var(--vip-gold))]" />
+                            <button onClick={() => setReviewFilterStar(null)} className="ml-0.5 hover:text-destructive">
+                              <X size={12} />
+                            </button>
+                          </span>
+                        )}
+                        <span className="text-xs text-muted-foreground">
+                          {reviewFilterStar
+                            ? `${shopData.reviews.filter(r => r.rating === reviewFilterStar).length} rəy`
+                            : `${shopData.reviews.length} rəy`
+                          }
+                        </span>
+                      </div>
+
+                      {/* Sort dropdown */}
+                      <div className="relative">
+                        <button
+                          onClick={() => setReviewSortOpen(!reviewSortOpen)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
+                        >
+                          <ArrowUpDown size={12} />
+                          {REVIEW_SORT_OPTIONS.find(o => o.value === reviewSort)?.label}
+                          <ChevronDown size={12} />
+                        </button>
+                        {reviewSortOpen && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setReviewSortOpen(false)} />
+                            <div className="absolute right-0 top-full mt-1 w-44 bg-popover border border-border rounded-lg shadow-xl z-50 py-1 animate-fade-in">
+                              {REVIEW_SORT_OPTIONS.map((opt) => (
+                                <button
+                                  key={opt.value}
+                                  onClick={() => { setReviewSort(opt.value); setReviewSortOpen(false); }}
+                                  className={`w-full text-left px-3 py-2 text-xs transition-colors ${
+                                    reviewSort === opt.value ? "bg-primary/10 text-foreground font-medium" : "text-muted-foreground hover:bg-muted"
+                                  }`}
+                                >
+                                  {opt.label}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
 
                     {/* Review Cards */}
                     <div className="space-y-3">
-                      {shopData.reviews.map((r) => (
-                        <div key={r.id} className="rounded-xl border border-border bg-card p-4">
+                      {shopData.reviews
+                        .filter(r => reviewFilterStar ? r.rating === reviewFilterStar : true)
+                        .sort((a, b) => {
+                          if (reviewSort === "highest") return b.rating - a.rating;
+                          if (reviewSort === "lowest") return a.rating - b.rating;
+                          if (reviewSort === "helpful") return b.helpful - a.helpful;
+                          if (reviewSort === "oldest") return a.id - b.id;
+                          return b.id - a.id; // newest
+                        })
+                        .map((r) => (
+                        <div key={r.id} className="rounded-xl border border-border bg-card p-4 hover:border-border/80 transition-colors">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+                              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-[11px] font-bold text-primary">
                                 {r.avatar}
                               </div>
-                              <span className="text-sm font-semibold text-foreground">{r.name}</span>
+                              <div>
+                                <span className="text-sm font-semibold text-foreground block leading-tight">{r.name}</span>
+                                <div className="flex items-center gap-1.5 mt-0.5">
+                                  <div className="flex items-center gap-0.5">
+                                    {[1, 2, 3, 4, 5].map((s) => (
+                                      <Star key={s} size={11} className={s <= r.rating ? "text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" : "text-border"} />
+                                    ))}
+                                  </div>
+                                  <span className="text-[11px] text-muted-foreground">{r.date}</span>
+                                </div>
+                              </div>
                             </div>
-                            <span className="text-xs text-muted-foreground">{r.date}</span>
+                            <button className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground" title="Şikayət et">
+                              <Flag size={13} />
+                            </button>
                           </div>
-                          <div className="flex items-center gap-0.5 mb-2">
-                            {[1, 2, 3, 4, 5].map((s) => (
-                              <Star key={s} size={12} className={s <= r.rating ? "text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" : "text-border"} />
-                            ))}
+
+                          <p className="text-sm text-foreground/80 leading-relaxed mt-2">{r.comment}</p>
+
+                          {/* Shop reply */}
+                          {r.reply && (
+                            <div className="mt-3 ml-4 pl-4 border-l-2 border-primary/20 bg-muted/30 rounded-r-lg p-3">
+                              <div className="flex items-center gap-1.5 mb-1">
+                                <Store size={12} className="text-primary" />
+                                <span className="text-xs font-semibold text-primary">Mağaza cavabı</span>
+                                <span className="text-[10px] text-muted-foreground">· {r.reply.date}</span>
+                              </div>
+                              <p className="text-xs text-foreground/70 leading-relaxed">{r.reply.text}</p>
+                            </div>
+                          )}
+
+                          {/* Helpful buttons */}
+                          <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border/50">
+                            <span className="text-[11px] text-muted-foreground mr-1">Faydalıdır?</span>
+                            <button className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-accent transition-colors">
+                              <ThumbsUp size={12} /> {r.helpful}
+                            </button>
+                            <button className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-destructive transition-colors">
+                              <ThumbsDown size={12} /> {r.notHelpful}
+                            </button>
                           </div>
-                          <p className="text-sm text-foreground/80 leading-relaxed">{r.comment}</p>
                         </div>
                       ))}
+
+                      {/* Empty state for filtered */}
+                      {reviewFilterStar && shopData.reviews.filter(r => r.rating === reviewFilterStar).length === 0 && (
+                        <div className="text-center py-8">
+                          <Star size={32} className="mx-auto text-muted-foreground/20 mb-2" />
+                          <p className="text-sm text-muted-foreground">Bu reytinqdə rəy tapılmadı</p>
+                          <button onClick={() => setReviewFilterStar(null)} className="text-xs text-primary hover:underline mt-1">
+                            Bütün rəylərə bax
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Load more */}
+                    <div className="text-center">
+                      <button className="px-6 py-2.5 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all">
+                        Daha çox rəy göstər
+                      </button>
                     </div>
                   </div>
                 </TabsContent>
