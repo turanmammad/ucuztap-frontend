@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import AdImageGallery from "@/components/AdImageGallery";
 import AdSidebar from "@/components/AdSidebar";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Phone, MessageCircle } from "lucide-react";
 
 const breadcrumbs = [
   { label: "Ana Səhifə", to: "/" },
