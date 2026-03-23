@@ -60,9 +60,22 @@ const CITIES = [
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState("Bütün Azərbaycan");
   const [query, setQuery] = useState("");
   const isLoggedIn = true;
   const navigate = useNavigate();
+  const cityRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (cityRef.current && !cityRef.current.contains(e.target as Node)) {
+        setCityDropdownOpen(false);
+      }
+    };
+    if (cityDropdownOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [cityDropdownOpen]);
 
   const handleSearch = () => {
     if (query.trim()) {
