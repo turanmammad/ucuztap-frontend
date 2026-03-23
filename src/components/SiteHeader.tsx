@@ -1,8 +1,61 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Heart, PlusCircle, User } from "lucide-react";
+import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Heart, PlusCircle, User, Check } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import logoImg from "@/assets/logo.png";
+
+const CITIES = [
+  "Bütün Azərbaycan",
+  "Bakı",
+  "Sumqayıt",
+  "Gəncə",
+  "Mingəçevir",
+  "Lənkəran",
+  "Şirvan",
+  "Naxçıvan",
+  "Şəki",
+  "Yevlax",
+  "Xaçmaz",
+  "Quba",
+  "Qusar",
+  "İsmayıllı",
+  "Qəbələ",
+  "Balakən",
+  "Zaqatala",
+  "Şamaxı",
+  "Göyçay",
+  "Bərdə",
+  "Ağdam",
+  "Füzuli",
+  "Şuşa",
+  "Ağdaş",
+  "Biləsuvar",
+  "Salyan",
+  "Kürdəmir",
+  "Sabirabad",
+  "Hacıqabul",
+  "Masallı",
+  "Cəlilabad",
+  "Astara",
+  "Lerik",
+  "Yardımlı",
+  "Tovuz",
+  "Qazax",
+  "Ağstafa",
+  "Samux",
+  "Göygöl",
+  "Daşkəsən",
+  "Gədəbəy",
+  "Oğuz",
+  "İmişli",
+  "Beyləqan",
+  "Zəngilan",
+  "Cəbrayıl",
+  "Kəlbəcər",
+  "Laçın",
+  "Xocalı",
+  "Xankəndi",
+];
 
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
