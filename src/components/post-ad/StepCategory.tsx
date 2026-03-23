@@ -44,6 +44,7 @@ interface Props {
 const StepCategory = ({ selectedPath, onSelect }: Props) => {
   const mainCat = selectedPath[0];
   const subCat = selectedPath[1];
+  const isComplete = selectedPath.length >= 2 && (!deepCategories[subCat] || selectedPath.length >= 3);
 
   const handleMainSelect = (name: string) => {
     onSelect([name]);
