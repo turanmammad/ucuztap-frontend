@@ -55,6 +55,7 @@ const App = () => (
           <Route path="/reklam" element={<AdvertisingPage />} />
           <Route path="/elaqe" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/magazalar" element={<ShopsPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
