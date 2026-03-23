@@ -62,6 +62,7 @@ const App = () => (
           <Route path="/magazalar" element={<ShopsPage />} />
           <Route path="/magazalar/yarat" element={<CreateShopPage />} />
           <Route path="/magazalar/:slug" element={<ShopViewPage />} />
+          <Route path="/xidmetler/:id" element={<ServiceDetailPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
