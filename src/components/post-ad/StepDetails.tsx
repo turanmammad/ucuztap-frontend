@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Search } from "lucide-react";
+import { carBrands, brandList, motoBrands, motoBrandList } from "@/data/carData";
 
 interface Props {
   categoryPath: string[];
@@ -12,24 +13,23 @@ const currencies = ["₼", "$", "€"];
 // Category-specific field configs
 const categoryFields: Record<string, { label: string; key: string; type?: string; placeholder?: string; options?: string[] }[]> = {
   "Nəqliyyat/Avtomobil": [
-    { label: "Marka *", key: "brand", placeholder: "Mercedes-Benz" },
-    { label: "Model", key: "model", placeholder: "E-Class" },
     { label: "İl *", key: "year", placeholder: "2021", type: "number" },
     { label: "Yürüş (km)", key: "mileage", placeholder: "50000", type: "number" },
     { label: "Mühərrik həcmi (L)", key: "engine", placeholder: "2.0" },
     { label: "Yanacaq", key: "fuel", options: ["Benzin", "Dizel", "Qaz", "Hibrid", "Elektrik"] },
     { label: "Ötürmə qutusu", key: "gear", options: ["Avtomat", "Mexaniki", "Variator", "Robot"] },
-    { label: "Ban növü", key: "body", options: ["Sedan", "SUV", "Hetçbek", "Kupe", "Universal", "Minivan", "Pikap"] },
-    { label: "Rəng", key: "color", options: ["Qara", "Ağ", "Gümüşü", "Boz", "Göy", "Qırmızı", "Yaşıl", "Qəhvəyi", "Sarı"] },
+    { label: "Ban növü", key: "body", options: ["Sedan", "SUV", "Hetçbek", "Kupe", "Universal", "Minivan", "Pikap", "Kabriolet", "Liftbek", "Mikroavtobus"] },
+    { label: "Rəng", key: "color", options: ["Qara", "Ağ", "Gümüşü", "Boz", "Göy", "Qırmızı", "Yaşıl", "Qəhvəyi", "Sarı", "Narıncı", "Bej", "Mavi"] },
     { label: "Sürücülük", key: "drive", options: ["Ön", "Arxa", "Tam"] },
+    { label: "At gücü", key: "horsepower", placeholder: "150", type: "number" },
+    { label: "Vəziyyət", key: "condition", options: ["Yeni", "Sürülmüş", "Əla", "Yaxşı", "Orta", "Ehtiyata ehtiyacı var"] },
   ],
   "Nəqliyyat/Motosiklet": [
-    { label: "Marka *", key: "brand", placeholder: "Yamaha" },
-    { label: "Model", key: "model", placeholder: "MT-07" },
     { label: "İl *", key: "year", placeholder: "2022", type: "number" },
     { label: "Yürüş (km)", key: "mileage", placeholder: "10000", type: "number" },
     { label: "Mühərrik həcmi (cc)", key: "engine", placeholder: "700" },
-    { label: "Rəng", key: "color", options: ["Qara", "Ağ", "Qırmızı", "Göy", "Yaşıl", "Sarı"] },
+    { label: "Rəng", key: "color", options: ["Qara", "Ağ", "Qırmızı", "Göy", "Yaşıl", "Sarı", "Narıncı"] },
+    { label: "Vəziyyət", key: "condition", options: ["Yeni", "İşlənmiş - Əla", "İşlənmiş - Yaxşı", "İşlənmiş - Orta"] },
   ],
   "Nəqliyyat": [
     { label: "Marka", key: "brand", placeholder: "Marka" },
@@ -148,12 +148,10 @@ const categoryFields: Record<string, { label: string; key: string; type?: string
 };
 
 function getFieldsForCategory(path: string[]): typeof categoryFields[string] {
-  // Try most specific first: "Main/Sub"
   if (path.length >= 2) {
     const key = `${path[0]}/${path[1]}`;
     if (categoryFields[key]) return categoryFields[key];
   }
-  // Fallback to main category
   if (path[0] && categoryFields[path[0]]) return categoryFields[path[0]];
   return [];
 }
@@ -205,12 +203,76 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
   };
 
   const isJobCategory = categoryPath[0] === "İş Elanları";
+  const isCarCategory = categoryPath[0] === "Nəqliyyat" && categoryPath[1] === "Avtomobil";
+  const isMotoCategory = categoryPath[0] === "Nəqliyyat" && categoryPath[1] === "Motosiklet";
+
+  // Get models based on selected brand
+  const getModels = (): string[] => {
+    if (isCarCategory && formData.brand) {
+      return carBrands[formData.brand] || [];
+    }
+    if (isMotoCategory && formData.brand) {
+      return motoBrands[formData.brand] || [];
+    }
+    return [];
+  };
+
+  const currentBrands = isCarCategory ? brandList : isMotoCategory ? motoBrandList : [];
+  const currentModels = getModels();
 
   return (
     <div>
       <h2 className="text-xl font-bold text-foreground mb-6">Elan məlumatları</h2>
 
       <div className="space-y-5 max-w-xl">
+        {/* Brand & Model pickers for car/moto */}
+        {(isCarCategory || isMotoCategory) && (
+          <div className="border border-border rounded-xl p-5 bg-card space-y-4">
+            <h3 className="text-sm font-semibold text-foreground">
+              {isCarCategory ? "Avtomobil məlumatları" : "Motosiklet məlumatları"}
+            </h3>
+            
+            {/* Brand picker */}
+            <SearchableSelect
+              label="Marka *"
+              value={formData.brand}
+              options={currentBrands}
+              placeholder="Marka axtarın..."
+              onChange={(v) => {
+                update("brand", v);
+                // Reset model when brand changes
+                if (formData.model) {
+                  onUpdate({ ...formData, brand: v, model: "" });
+                }
+              }}
+            />
+
+            {/* Model picker - dependent on brand */}
+            {formData.brand && formData.brand !== "Digər" && currentModels.length > 0 && (
+              <SearchableSelect
+                label="Model *"
+                value={formData.model}
+                options={currentModels}
+                placeholder="Model axtarın..."
+                onChange={(v) => update("model", v)}
+              />
+            )}
+
+            {formData.brand && (formData.brand === "Digər" || currentModels.length === 0) && (
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Model</label>
+                <input
+                  type="text"
+                  value={formData.model || ""}
+                  onChange={(e) => update("model", e.target.value)}
+                  placeholder="Modeli daxil edin"
+                  className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                />
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Title */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">Başlıq *</label>
@@ -343,6 +405,91 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
           </div>
         )}
       </div>
+    </div>
+  );
+};
+
+// Searchable select for brands & models
+const SearchableSelect = ({
+  label, value, options, placeholder, onChange,
+}: {
+  label: string; value?: string; onChange: (v: string) => void; options: string[]; placeholder?: string;
+}) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = search
+    ? options.filter((o) => o.toLowerCase().includes(search.toLowerCase()))
+    : options;
+
+  const handleSelect = (v: string) => {
+    onChange(v);
+    setOpen(false);
+    setSearch("");
+  };
+
+  return (
+    <div className="relative">
+      <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
+      
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className={`w-full h-10 rounded-lg border bg-background px-3 text-sm text-left flex items-center justify-between transition-shadow ${
+          open ? "border-ring ring-2 ring-ring" : "border-input"
+        }`}
+      >
+        <span className={value ? "text-foreground" : "text-muted-foreground"}>
+          {value || "Seçin"}
+        </span>
+        <svg className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => { setOpen(false); setSearch(""); }} />
+          <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-popover border border-border rounded-lg shadow-lg overflow-hidden">
+            {/* Search input */}
+            <div className="p-2 border-b border-border">
+              <div className="relative">
+                <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={placeholder}
+                  autoFocus
+                  className="w-full h-9 rounded-md border border-input bg-background pl-8 pr-3 text-sm outline-none focus:ring-1 focus:ring-ring"
+                />
+              </div>
+            </div>
+            
+            {/* Options list */}
+            <div className="max-h-56 overflow-y-auto py-1">
+              {filtered.length === 0 ? (
+                <p className="text-sm text-muted-foreground px-3 py-4 text-center">Nəticə tapılmadı</p>
+              ) : (
+                filtered.map((opt) => (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => handleSelect(opt)}
+                    className={`w-full text-left px-3 py-2 text-sm transition-colors hover:bg-muted ${
+                      value === opt ? "bg-primary/10 text-primary font-medium" : "text-foreground"
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
