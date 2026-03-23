@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck, LayoutGrid, List, Grid3X3 } from "lucide-react";
+import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck, LayoutGrid, List, Grid3X3, Crown } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
