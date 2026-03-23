@@ -386,6 +386,7 @@ const CategoryListingPage = () => {
         <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} />
       </main>
       <SiteFooter />
+      </PullToRefresh>
     </div>
   );
 };
