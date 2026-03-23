@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
 import { AdBannerSidebar, AdCardInFeed, AdBannerHorizontal } from "@/components/AdBanners";
+import PullToRefresh from "@/components/PullToRefresh";
 
 const sortOptions = ["Tarixə görə", "Ucuzdan bahaya", "Bahalıdan ucuza", "Populyarlığa görə"];
 
@@ -180,6 +181,11 @@ const CategoryListingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
 
+  const handleRefresh = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 800));
+    window.location.reload();
+  }, []);
+
   const category = categoryMap[slug || "neqliyyat"] || categoryMap.neqliyyat;
   const { title, count, ads } = category;
   const activeFilterCount = 3;
@@ -203,6 +209,7 @@ const CategoryListingPage = () => {
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
       <SiteHeader />
+      <PullToRefresh onRefresh={handleRefresh}>
       <main className="flex-1">
         {/* Breadcrumb */}
         <div className="border-b border-border bg-muted/30">
@@ -380,6 +387,7 @@ const CategoryListingPage = () => {
         <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} />
       </main>
       <SiteFooter />
+      </PullToRefresh>
     </div>
   );
 };
