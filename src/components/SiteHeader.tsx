@@ -46,12 +46,12 @@ const SiteHeader = () => {
 
           {isLoggedIn ? (
             <>
-              <button className="relative p-2 rounded-md hover:bg-muted transition-colors">
-                <Bell size={20} className="text-muted-foreground" />
+              <button className="relative p-2 rounded-md hover:bg-white/20 transition-colors">
+                <Bell size={20} className="text-primary-foreground" />
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 text-[10px] font-bold bg-destructive text-destructive-foreground rounded-full flex items-center justify-center">3</span>
               </button>
-              <button className="p-2 rounded-md hover:bg-muted transition-colors">
-                <MessageCircle size={20} className="text-muted-foreground" />
+              <button className="p-2 rounded-md hover:bg-white/20 transition-colors">
+                <MessageCircle size={20} className="text-primary-foreground" />
               </button>
               <div className="relative">
                 <button
