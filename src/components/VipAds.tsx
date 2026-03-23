@@ -53,7 +53,7 @@ const VipAds = () => {
             <Link
               key={ad.id}
               to={`/elanlar/${ad.id}`}
-              className="shrink-0 w-[220px] rounded-xl bg-card overflow-hidden card-lift snap-start group ring-2 ring-[hsl(var(--vip-gold)/0.3)] hover:ring-[hsl(var(--vip-gold)/0.6)] transition-all"
+              className="rounded-xl bg-card overflow-hidden card-lift group ring-2 ring-[hsl(var(--vip-gold)/0.3)] hover:ring-[hsl(var(--vip-gold)/0.6)] transition-all"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
@@ -61,12 +61,12 @@ const VipAds = () => {
                   <Star size={10} fill="currentColor" /> VIP
                 </span>
               </div>
-              <div className="p-3">
-                <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
-                <p className="text-base font-bold text-foreground mt-1">{ad.price} ₼</p>
-                <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
-                  <span>📍 {ad.location}</span>
-                  <span>{ad.date}</span>
+              <div className="p-2.5">
+                <p className="text-xs font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
+                <p className="text-sm font-bold text-foreground mt-1">{ad.price} ₼</p>
+                <div className="flex items-center justify-between mt-1 text-[11px] text-muted-foreground">
+                  <span className="truncate">📍 {ad.location}</span>
+                  <span className="shrink-0">{ad.date}</span>
                 </div>
               </div>
             </Link>
