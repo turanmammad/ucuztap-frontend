@@ -48,7 +48,7 @@ const VipAds = () => {
             Hamısını gör <ChevronRight size={14} />
           </Link>
         </div>
-        <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory scrollbar-hide">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {vipAds.map((ad) => (
             <Link
               key={ad.id}
