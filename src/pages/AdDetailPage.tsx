@@ -188,4 +188,41 @@ const AdDetailPage = () => {
   );
 };
 
+const adDescriptionHtml = `
+<p>Mercedes-Benz C200, 2019-cu il buraxılış. Avtomobil <strong>əla vəziyyətdədir</strong>, heç bir qəzası olmayıb. Tam texniki baxışdan keçib, bütün dəyişikliklər vaxtında aparılıb. Salon tam dəri, oturacaqların isidilməsi və ventilyasiyası mövcuddur.</p>
+<p>Mühərrik <b>2.0 litr turbo benzin</b>, 184 at gücü. Avtomat ötürücü qutusu 9G-Tronic. Yanacaq sərfiyyatı şəhərdaxili 8.5L/100km, magistral yolda 5.5L/100km. Yürüş cəmi <u>45,000 km</u>-dir.</p>
+<h3>Təchizat:</h3>
+<ul>
+  <li>AMG paket</li>
+  <li>Panoramik lyuk</li>
+  <li>360 dərəcə kamera</li>
+  <li>Adaptiv tempomat</li>
+  <li>COMAND naviqasiya sistemi</li>
+  <li>Burmester audio sistemi</li>
+  <li>LED intellektual fənərlər</li>
+  <li>Açarsız giriş və mühərrik işə salma</li>
+</ul>
+<p><em>Qiymət razılaşma yolu ilə. Barter təklif etməyin.</em> Ciddi alıcıları gözləyirəm. Əlavə məlumat üçün zəng edə bilərsiniz.</p>
+`;
+
+const DescriptionSection = () => {
+  const sanitizedHtml = useMemo(
+    () => DOMPurify.sanitize(adDescriptionHtml, {
+      ALLOWED_TAGS: ["p", "br", "b", "strong", "i", "em", "u", "s", "ul", "ol", "li", "h2", "h3", "h4", "a", "span", "blockquote"],
+      ALLOWED_ATTR: ["href", "target", "rel"],
+    }),
+    []
+  );
+
+  return (
+    <section className="mt-8">
+      <h2 className="text-lg font-bold text-foreground mb-4">Ətraflı məlumat</h2>
+      <div
+        className="prose prose-sm max-w-none text-muted-foreground leading-relaxed"
+        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+      />
+    </section>
+  );
+};
+
 export default AdDetailPage;
