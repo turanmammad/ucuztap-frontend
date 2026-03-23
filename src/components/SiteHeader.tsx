@@ -7,29 +7,29 @@ const SiteHeader = () => {
   const isLoggedIn = true;
 
   return (
-    <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-primary border-b border-primary-hover shadow-sm">
       <div className="container flex items-center justify-between h-16 gap-4">
         {/* Logo */}
         <a href="/" className="flex items-center shrink-0">
-          <span className="text-xl font-extrabold text-foreground">ucuz</span>
-          <span className="text-xl font-extrabold text-primary">tap</span>
-          <span className="text-xl font-extrabold text-muted-foreground">.az</span>
+          <span className="text-xl font-extrabold text-primary-foreground">ucuz</span>
+          <span className="text-xl font-extrabold text-white">tap</span>
+          <span className="text-xl font-extrabold text-primary-foreground/60">.az</span>
         </a>
 
         {/* Desktop Search */}
         <div className="hidden md:flex items-center flex-1 max-w-xl gap-2">
-          <div className="flex items-center gap-1 px-3 py-2 text-sm border border-border rounded-md bg-background cursor-pointer hover:border-primary/50 transition-colors">
+          <div className="flex items-center gap-1 px-3 py-2 text-sm border border-primary-foreground/20 rounded-md bg-white/90 cursor-pointer hover:bg-white transition-colors">
             <MapPin size={14} className="text-muted-foreground" />
             <span className="text-muted-foreground whitespace-nowrap">Bütün Azərbaycan</span>
             <ChevronDown size={14} className="text-muted-foreground" />
           </div>
-          <div className="flex flex-1 items-center border border-border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
+          <div className="flex flex-1 items-center rounded-md overflow-hidden bg-white shadow-sm">
             <input
               type="text"
               placeholder="Elan axtar..."
               className="flex-1 px-3 py-2 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
             />
-            <button className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary-hover transition-colors">
+            <button className="px-4 py-2 bg-foreground text-background hover:bg-foreground/90 transition-colors">
               <Search size={16} />
             </button>
           </div>
@@ -46,17 +46,17 @@ const SiteHeader = () => {
 
           {isLoggedIn ? (
             <>
-              <button className="relative p-2 rounded-md hover:bg-muted transition-colors">
-                <Bell size={20} className="text-muted-foreground" />
+              <button className="relative p-2 rounded-md hover:bg-white/20 transition-colors">
+                <Bell size={20} className="text-primary-foreground" />
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 text-[10px] font-bold bg-destructive text-destructive-foreground rounded-full flex items-center justify-center">3</span>
               </button>
-              <button className="p-2 rounded-md hover:bg-muted transition-colors">
-                <MessageCircle size={20} className="text-muted-foreground" />
+              <button className="p-2 rounded-md hover:bg-white/20 transition-colors">
+                <MessageCircle size={20} className="text-primary-foreground" />
               </button>
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center hover:opacity-90 transition-opacity"
+                  className="w-8 h-8 rounded-full bg-foreground text-background font-semibold text-sm flex items-center justify-center hover:opacity-90 transition-opacity"
                 >
                   R
                 </button>
@@ -75,25 +75,25 @@ const SiteHeader = () => {
               </div>
             </>
           ) : (
-            <a href="/login" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Daxil ol</a>
+            <a href="/login" className="text-sm font-medium text-primary-foreground hover:text-white transition-colors">Daxil ol</a>
           )}
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <button className="md:hidden p-2 text-primary-foreground" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile search */}
       <div className="md:hidden px-4 pb-3">
-        <div className="flex items-center border border-border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-primary/30">
+        <div className="flex items-center rounded-md overflow-hidden bg-white shadow-sm">
           <input
             type="text"
             placeholder="Elan axtar..."
             className="flex-1 px-3 py-2 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
           />
-          <button className="px-4 py-2 bg-primary text-primary-foreground">
+          <button className="px-4 py-2 bg-foreground text-background">
             <Search size={16} />
           </button>
         </div>
