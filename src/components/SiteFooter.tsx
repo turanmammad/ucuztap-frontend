@@ -61,7 +61,7 @@ const seoTags = [
 ];
 
 const SiteFooter = () => (
-  <footer className="bg-footer-bg text-footer-foreground" role="contentinfo">
+  <footer className="hidden md:block bg-footer-bg text-footer-foreground" role="contentinfo">
     {/* Main grid */}
     <div className="container pt-12 pb-8">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-8">
