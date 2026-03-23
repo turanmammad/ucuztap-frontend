@@ -67,43 +67,54 @@ const ShopViewPage = () => {
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
       <SiteHeader />
       <main className="flex-1">
-        {/* Cover */}
-        <div className="relative h-40 md:h-56 overflow-hidden bg-muted">
+        {/* Cover + Hero Header */}
+        <div className="relative h-52 md:h-72 overflow-hidden bg-muted">
           <img src={shopData.cover} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
 
-        <div className="container -mt-12 md:-mt-16 relative z-10">
-          {/* Shop header */}
-          <div className="flex items-end gap-4 mb-6">
-            <img
-              src={shopData.logo}
-              alt={shopData.name}
-              className="w-20 h-20 md:w-24 md:h-24 rounded-xl border-4 border-background object-cover shadow-lg"
-            />
-            <div className="pb-1">
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl md:text-2xl font-extrabold text-foreground">{shopData.name}</h1>
-                {shopData.verified && (
-                  <ShieldCheck size={18} className="text-accent" />
-                )}
-              </div>
-              <div className="flex items-center gap-3 mt-1 flex-wrap">
-                <span className="text-sm text-muted-foreground">{shopData.category}</span>
-                <span className="inline-flex items-center gap-1 text-sm text-primary font-medium">
-                  <Star size={13} fill="currentColor" /> {shopData.rating}
-                  <span className="text-muted-foreground font-normal">({shopData.reviewCount})</span>
-                </span>
-                <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-                  <MapPin size={13} /> {shopData.location}
-                </span>
-                <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${isOpenNow() ? 'bg-green-500/10 text-green-600 dark:text-green-400' : 'bg-destructive/10 text-destructive'}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${isOpenNow() ? 'bg-green-500' : 'bg-destructive'}`} />
-                  {isOpenNow() ? "Açıqdır" : "Bağlıdır"}
-                </span>
+          {/* Shop info overlay on cover */}
+          <div className="absolute inset-x-0 bottom-0 z-10">
+            <div className="container pb-5 md:pb-7">
+              <div className="flex items-end gap-4">
+                <div className="relative shrink-0">
+                  <img
+                    src={shopData.logo}
+                    alt={shopData.name}
+                    className="w-20 h-20 md:w-28 md:h-28 rounded-2xl border-[3px] border-white/20 object-cover shadow-2xl ring-2 ring-white/10"
+                  />
+                  {shopData.verified && (
+                    <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-7 md:h-7 rounded-full bg-accent flex items-center justify-center shadow-lg ring-2 ring-black/20">
+                      <ShieldCheck size={14} className="text-accent-foreground" />
+                    </div>
+                  )}
+                </div>
+                <div className="pb-0.5 min-w-0 flex-1">
+                  <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
+                    {shopData.name}
+                  </h1>
+                  <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
+                    <span className="inline-flex items-center gap-1 text-sm text-white/90 bg-white/15 backdrop-blur-sm px-2.5 py-0.5 rounded-full font-medium">
+                      <Store size={12} /> {shopData.category}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-sm text-white/90 bg-white/15 backdrop-blur-sm px-2.5 py-0.5 rounded-full font-medium">
+                      <Star size={12} fill="currentColor" className="text-[hsl(var(--vip-gold))]" /> {shopData.rating}
+                      <span className="text-white/60">({shopData.reviewCount})</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-sm text-white/80">
+                      <MapPin size={12} /> {shopData.location}
+                    </span>
+                    <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full backdrop-blur-sm ${isOpenNow() ? 'bg-green-500/25 text-green-300' : 'bg-red-500/25 text-red-300'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isOpenNow() ? 'bg-green-400' : 'bg-red-400'}`} />
+                      {isOpenNow() ? "Açıqdır" : "Bağlıdır"}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="container mt-5 relative z-10">
 
           <div className="grid lg:grid-cols-[1fr_280px] gap-6 pb-10">
             {/* Main content */}
