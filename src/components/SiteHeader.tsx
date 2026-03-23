@@ -23,9 +23,7 @@ const SiteHeader = () => {
         {/* Desktop */}
         <div className="container hidden md:flex items-center justify-between h-16 gap-4">
           <Link to="/" className="flex items-center shrink-0">
-            <span className="text-xl font-extrabold text-foreground">ucuz</span>
-            <span className="text-xl font-extrabold text-primary">tap</span>
-            <span className="text-xl font-extrabold text-muted-foreground">.az</span>
+            <img src={logoImg} alt="ucuztap.az" className="h-8" />
           </Link>
 
           <div className="flex items-center flex-1 max-w-xl gap-2">
