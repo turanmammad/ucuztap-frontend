@@ -61,7 +61,7 @@ const HeroSearch = () => {
   const showDropdown = focused && filtered.length > 0;
 
   return (
-    <section className="relative bg-primary section-padding" style={{ overflow: "clip", overflowClipMargin: "0px" }}>
+    <section className={`relative bg-primary section-padding ${showDropdown ? "pb-[320px]" : ""}`} style={{ overflow: showDropdown ? undefined : "hidden" }}>
       {floatingIcons.map(({ Icon, size, style }, i) => (
         <div
           key={i}
