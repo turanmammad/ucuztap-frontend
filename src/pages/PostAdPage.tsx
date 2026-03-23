@@ -507,7 +507,9 @@ const PostAdPage = () => {
                   )}
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} className="hidden" />
-                <p className="text-[10px] text-muted-foreground mt-2">Minimum 1 şəkil. İlk şəkil elanın üz qabığıdır.</p>
+                <p className={`text-[10px] mt-2 ${tried && errors.images ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                  {tried && errors.images ? errors.images : "Minimum 1 şəkil. İlk şəkil elanın üz qabığıdır."}
+                </p>
               </FieldSection>
 
               {/* Contact */}
