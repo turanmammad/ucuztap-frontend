@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Store, Check, Package, Zap, Crown, BarChart3, Edit, ExternalLink, Eye, X, CreditCard, Shield, Rocket, Star, TrendingUp, ChevronRight, Sparkles } from "lucide-react";
+import { useState, useRef } from "react";
+import { Store, Check, Package, Zap, Crown, BarChart3, Edit, ExternalLink, Eye, X, CreditCard, Shield, Star, TrendingUp, ChevronRight, Sparkles, Camera, Image, Upload, Wand2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -60,13 +60,50 @@ const premiumBenefits = [
   { icon: Shield, title: "Prioritet dəstək", desc: "7/24 xüsusi dəstək xətti" },
 ];
 
+const bannerDesignPackages = [
+  {
+    id: "basic",
+    name: "Sadə dizayn",
+    price: "15",
+    delivery: "24 saat",
+    features: ["1 baner dizaynı", "2 reviziya", "JPG/PNG format"],
+  },
+  {
+    id: "pro",
+    name: "Professional",
+    price: "35",
+    delivery: "48 saat",
+    popular: true,
+    features: ["3 baner variantı", "5 reviziya", "JPG/PNG/WebP", "Sosial media uyğunlaşdırma"],
+  },
+  {
+    id: "premium",
+    name: "Premium paket",
+    price: "65",
+    delivery: "72 saat",
+    features: ["5 baner variantı", "Limitsiz reviziya", "Bütün formatlar", "Logo + baner + sosial", "Animasiyalı variant"],
+  },
+];
+
 const MyShop = () => {
-  const [hasShop, setHasShop] = useState(true);
+  const [hasShop] = useState(true);
   const [activeTab, setActiveTab] = useState<"overview" | "edit" | "stats" | "upgrade">("overview");
   const [currentPlan, setCurrentPlan] = useState("business");
   const [showPayment, setShowPayment] = useState(false);
   const [selectedUpgrade, setSelectedUpgrade] = useState("premium");
   const [paymentProcessing, setPaymentProcessing] = useState(false);
+
+  // Image uploads
+  const [logo, setLogo] = useState<string>("https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=200&h=200&fit=crop");
+  const [cover, setCover] = useState<string>("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=200&fit=crop");
+  const logoRef = useRef<HTMLInputElement>(null);
+  const coverRef = useRef<HTMLInputElement>(null);
+
+  // Banner design order
+  const [showBannerOrder, setShowBannerOrder] = useState(false);
+  const [selectedBannerPkg, setSelectedBannerPkg] = useState("pro");
+  const [bannerProcessing, setBannerProcessing] = useState(false);
+  const [bannerDescription, setBannerDescription] = useState("");
 
   const currentPkg = packages.find(p => p.id === currentPlan)!;
 
@@ -88,6 +125,33 @@ const MyShop = () => {
           : "Paket yeniləndi!"
       );
     }, 2000);
+  };
+
+  const handleFileUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: (v: string) => void
+  ) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      setter(URL.createObjectURL(file));
+      toast.success("Şəkil yükləndi");
+    }
+  };
+
+  const handleBannerOrder = () => {
+    if (!bannerDescription.trim()) {
+      toast.error("Baner haqqında təsvir yazın");
+      return;
+    }
+    setBannerProcessing(true);
+    setTimeout(() => {
+      setBannerProcessing(false);
+      setShowBannerOrder(false);
+      setBannerDescription("");
+      toast.success("Sifariş qəbul edildi! 🎨", {
+        description: "Dizayner tezliklə sizinlə əlaqə saxlayacaq.",
+      });
+    }, 1500);
   };
 
   if (!hasShop) {
@@ -129,43 +193,73 @@ const MyShop = () => {
         </Link>
       </div>
 
-      {/* Shop summary card */}
+      {/* Shop summary card — matching ShopViewPage hero style */}
       <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <div className="h-24 relative overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=200&fit=crop"
-            alt=""
-            className="w-full h-full object-cover"
-          />
+        <div className="h-32 md:h-40 relative overflow-hidden">
+          <img src={cover} alt="" className="w-full h-full object-cover" />
+          <div className={`absolute inset-0 ${
+            currentPlan === "premium"
+              ? "bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10"
+              : "bg-gradient-to-t from-black/80 via-black/40 to-black/10"
+          }`} />
+          {currentPlan === "premium" && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--vip-gold))]/[0.06] to-transparent pointer-events-none" />
+          )}
+          {/* Info overlay on cover */}
+          <div className="absolute inset-x-0 bottom-0 z-10">
+            <div className="px-5 pb-4">
+              <div className="flex items-end gap-3">
+                <div className="relative shrink-0">
+                  <img
+                    src={logo}
+                    alt="Logo"
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover shadow-2xl ${
+                      currentPlan === "premium"
+                        ? "border-[3px] border-[hsl(var(--vip-gold))]/60 ring-2 ring-[hsl(var(--vip-gold))]/30"
+                        : "border-[3px] border-white/20 ring-2 ring-white/10"
+                    }`}
+                  />
+                  {currentPlan === "premium" && (
+                    <div className="absolute -top-1.5 -left-1.5 w-6 h-6 rounded-full bg-gradient-to-br from-[hsl(var(--vip-gold))] to-[hsl(35,80%,45%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
+                      <Crown size={12} className="text-white" />
+                    </div>
+                  )}
+                </div>
+                <div className="pb-0.5 min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg md:text-xl font-extrabold text-white drop-shadow-lg truncate">
+                      AutoPlus MMC
+                    </h2>
+                    {currentPlan === "premium" && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[9px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
+                        <Crown size={9} /> Premium
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <span className="text-xs text-white/80 bg-white/15 backdrop-blur-sm px-2 py-0.5 rounded-full font-medium">
+                      Nəqliyyat
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-xs text-white/80">
+                      <Star size={10} fill="currentColor" className="text-[hsl(var(--vip-gold))]" /> 4.8
+                    </span>
+                    <span className="text-xs text-white/70">Bakı</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           {currentPlan === "premium" && (
             <div className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
               <Crown size={10} /> Premium
             </div>
           )}
         </div>
-        <div className="px-5 pb-5 -mt-8 relative">
-          <div className="flex items-end gap-3">
-            <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=200&h=200&fit=crop"
-                alt="Logo"
-                className={`w-16 h-16 rounded-xl border-4 border-card object-cover shadow ${currentPlan === "premium" ? "ring-2 ring-[hsl(var(--vip-gold))]" : ""}`}
-              />
-              {currentPlan === "premium" && (
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[hsl(var(--vip-gold))] flex items-center justify-center shadow">
-                  <Crown size={10} className="text-white" />
-                </div>
-              )}
-            </div>
-            <div className="pb-0.5">
-              <h2 className="text-base font-bold text-foreground flex items-center gap-1.5">
-                AutoPlus MMC
-                {currentPlan === "premium" && <Sparkles size={14} className="text-[hsl(var(--vip-gold))]" />}
-              </h2>
-              <p className="text-xs text-muted-foreground">Nəqliyyat · Bakı</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-3 mt-4">
+        {currentPlan === "premium" && (
+          <div className="h-0.5 bg-gradient-to-r from-[hsl(var(--vip-gold))]/60 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/60" />
+        )}
+        <div className="px-5 py-4">
+          <div className="grid grid-cols-3 gap-3">
             <div className="rounded-lg bg-muted/50 p-3 text-center">
               <p className="text-lg font-bold text-foreground">48</p>
               <p className="text-[10px] text-muted-foreground">Aktiv elan</p>
@@ -206,7 +300,6 @@ const MyShop = () => {
 
       {activeTab === "overview" && (
         <div className="space-y-4">
-          {/* Current package info */}
           <div className={`rounded-xl border bg-card p-4 flex items-center justify-between ${
             currentPlan === "premium" ? "border-[hsl(var(--vip-gold))]" : "border-primary"
           }`}>
@@ -232,7 +325,6 @@ const MyShop = () => {
             )}
           </div>
 
-          {/* Premium benefits highlight for non-premium users */}
           {currentPlan !== "premium" && (
             <div className="rounded-xl border border-[hsl(var(--vip-gold))]/30 bg-gradient-to-br from-[hsl(var(--vip-gold))]/5 to-transparent p-4">
               <div className="flex items-center gap-2 mb-3">
@@ -259,7 +351,6 @@ const MyShop = () => {
             </div>
           )}
 
-          {/* Quick actions */}
           <div className="grid sm:grid-cols-2 gap-3">
             <Link to="/elan-yerlesdir" className="rounded-xl border border-border bg-card p-4 flex items-center gap-3 hover:border-primary/30 transition-colors group">
               <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
@@ -285,7 +376,6 @@ const MyShop = () => {
 
       {activeTab === "upgrade" && (
         <div className="space-y-5">
-          {/* Package comparison */}
           <div className="grid md:grid-cols-3 gap-4">
             {packages.map((p) => {
               const isCurrent = p.id === currentPlan;
@@ -300,21 +390,14 @@ const MyShop = () => {
                   }`}
                 >
                   {p.id === "business" && !isCurrent && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold bg-primary text-primary-foreground">
-                      Populyar
-                    </span>
+                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold bg-primary text-primary-foreground">Populyar</span>
                   )}
                   {p.id === "premium" && !isCurrent && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold bg-[hsl(var(--vip-gold))] text-white">
-                      Tövsiyə
-                    </span>
+                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold bg-[hsl(var(--vip-gold))] text-white">Tövsiyə</span>
                   )}
                   {isCurrent && (
-                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold bg-accent/10 text-accent">
-                      Cari paket
-                    </span>
+                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold bg-accent/10 text-accent">Cari paket</span>
                   )}
-
                   <div className={`w-10 h-10 rounded-lg ${p.bg} flex items-center justify-center mb-3`}>
                     <p.icon size={20} className={p.color} />
                   </div>
@@ -335,15 +418,10 @@ const MyShop = () => {
                       </li>
                     ))}
                   </ul>
-
                   {isCurrent ? (
-                    <button disabled className="w-full py-2.5 rounded-lg bg-muted text-muted-foreground text-sm font-semibold cursor-default">
-                      Cari paket
-                    </button>
+                    <button disabled className="w-full py-2.5 rounded-lg bg-muted text-muted-foreground text-sm font-semibold cursor-default">Cari paket</button>
                   ) : isDowngrade ? (
-                    <button disabled className="w-full py-2.5 rounded-lg bg-muted text-muted-foreground text-sm font-medium cursor-default">
-                      Aşağı paket
-                    </button>
+                    <button disabled className="w-full py-2.5 rounded-lg bg-muted text-muted-foreground text-sm font-medium cursor-default">Aşağı paket</button>
                   ) : (
                     <button
                       onClick={() => handleUpgrade(p.id)}
@@ -361,7 +439,6 @@ const MyShop = () => {
             })}
           </div>
 
-          {/* Premium highlight */}
           <div className="rounded-xl border border-[hsl(var(--vip-gold))]/20 bg-gradient-to-br from-[hsl(var(--vip-gold))]/5 via-transparent to-[hsl(var(--vip-gold))]/5 p-5">
             <h3 className="text-sm font-bold text-foreground flex items-center gap-2 mb-3">
               <Crown size={16} className="text-[hsl(var(--vip-gold))]" />
@@ -390,7 +467,119 @@ const MyShop = () => {
       )}
 
       {activeTab === "edit" && (
-        <div className="space-y-4">
+        <div className="space-y-5">
+          {/* Logo & Cover upload */}
+          <div className="rounded-xl border border-border bg-card p-5">
+            <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Camera size={15} className="text-primary" /> Profil və baner şəkli
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-5">
+              {/* Logo */}
+              <div className="flex flex-col items-center gap-2">
+                <div
+                  onClick={() => logoRef.current?.click()}
+                  className="w-24 h-24 rounded-xl border-2 border-dashed border-border bg-muted/20 flex items-center justify-center cursor-pointer hover:border-primary/40 transition-colors overflow-hidden relative group"
+                >
+                  {logo ? (
+                    <>
+                      <img src={logo} alt="Logo" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Camera size={20} className="text-white" />
+                      </div>
+                    </>
+                  ) : (
+                    <Camera size={24} className="text-muted-foreground" />
+                  )}
+                </div>
+                <div className="text-center">
+                  <p className="text-xs font-medium text-foreground">Logo</p>
+                  <p className="text-[10px] text-muted-foreground">200×200 px, JPG/PNG</p>
+                  <p className="text-[10px] text-muted-foreground">Maks. 2 MB</p>
+                </div>
+                <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, setLogo)} />
+              </div>
+              {/* Cover */}
+              <div className="flex-1">
+                <div
+                  onClick={() => coverRef.current?.click()}
+                  className="h-32 rounded-xl border-2 border-dashed border-border bg-muted/20 flex items-center justify-center cursor-pointer hover:border-primary/40 transition-colors overflow-hidden relative group"
+                >
+                  {cover ? (
+                    <>
+                      <img src={cover} alt="Cover" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <Camera size={20} className="text-white" />
+                        <span className="text-white text-xs font-medium">Dəyişdir</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center">
+                      <Upload size={24} className="mx-auto text-muted-foreground mb-1" />
+                      <span className="text-xs text-muted-foreground">Baner şəkli yüklə</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <div>
+                    <p className="text-xs font-medium text-foreground">Baner / Üz qabığı</p>
+                    <p className="text-[10px] text-muted-foreground">1200×400 px (3:1 nisbət), JPG/PNG/WebP, maks. 5 MB</p>
+                  </div>
+                </div>
+                <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, setCover)} />
+              </div>
+            </div>
+          </div>
+
+          {/* AI Banner Design Service */}
+          <div className="rounded-xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-5">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Wand2 size={20} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  AI ilə Professional Baner Dizaynı
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold">YENİ</span>
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Peşəkar dizayner + AI texnologiyası ilə mağazanıza uyğun baner hazırlayaq
+                </p>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-3 mb-4">
+              {bannerDesignPackages.map((bp) => (
+                <button
+                  key={bp.id}
+                  onClick={() => { setSelectedBannerPkg(bp.id); setShowBannerOrder(true); }}
+                  className={`relative rounded-lg border p-4 text-left transition-all hover:shadow-md active:scale-[0.98] ${
+                    bp.popular ? "border-primary bg-primary/5" : "border-border bg-card"
+                  }`}
+                >
+                  {bp.popular && (
+                    <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full text-[9px] font-bold bg-primary text-primary-foreground">
+                      Populyar
+                    </span>
+                  )}
+                  <p className="text-sm font-bold text-foreground">{bp.name}</p>
+                  <div className="flex items-baseline gap-0.5 mt-1 mb-3">
+                    <span className="text-xl font-extrabold text-foreground">{bp.price}</span>
+                    <span className="text-xs text-muted-foreground"> ₼</span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mb-2">Təslim: {bp.delivery}</p>
+                  <ul className="space-y-1">
+                    {bp.features.map((f) => (
+                      <li key={f} className="flex items-center gap-1.5 text-[11px] text-foreground">
+                        <Check size={10} className="text-accent shrink-0" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Shop info form */}
           <div className="rounded-xl border border-border bg-card p-5 space-y-3">
             <h3 className="text-sm font-semibold text-foreground">Mağaza məlumatları</h3>
             <div className="grid sm:grid-cols-2 gap-3">
@@ -423,7 +612,10 @@ const MyShop = () => {
                 <input type="url" defaultValue="https://autoplus.az" className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow" />
               </div>
             </div>
-            <button className="mt-2 px-6 py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-accent-hover transition-colors active:scale-[0.98]">
+            <button
+              onClick={() => toast.success("Məlumatlar yeniləndi")}
+              className="mt-2 px-6 py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-accent-hover transition-colors active:scale-[0.98]"
+            >
               Yadda saxla
             </button>
           </div>
@@ -457,7 +649,6 @@ const MyShop = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-foreground/50 backdrop-blur-sm" onClick={() => !paymentProcessing && setShowPayment(false)} />
           <div className="relative bg-card rounded-2xl border border-border shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            {/* Header */}
             <div className="bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] p-5 text-white">
               <button
                 onClick={() => !paymentProcessing && setShowPayment(false)}
@@ -466,15 +657,9 @@ const MyShop = () => {
                 <X size={14} />
               </button>
               <Crown size={28} className="mb-2" />
-              <h3 className="text-lg font-bold">
-                {packages.find(p => p.id === selectedUpgrade)?.name} Paket
-              </h3>
-              <p className="text-white/80 text-sm">
-                {packages.find(p => p.id === selectedUpgrade)?.price} ₼ / ay
-              </p>
+              <h3 className="text-lg font-bold">{packages.find(p => p.id === selectedUpgrade)?.name} Paket</h3>
+              <p className="text-white/80 text-sm">{packages.find(p => p.id === selectedUpgrade)?.price} ₼ / ay</p>
             </div>
-
-            {/* Summary */}
             <div className="p-5 space-y-4">
               <div className="rounded-lg bg-muted/50 p-3 space-y-2">
                 <div className="flex items-center justify-between text-sm">
@@ -490,17 +675,11 @@ const MyShop = () => {
                   <span className="text-lg font-extrabold text-foreground">{packages.find(p => p.id === selectedUpgrade)?.price} ₼</span>
                 </div>
               </div>
-
-              {/* Card form */}
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-medium text-muted-foreground mb-1">Kart nömrəsi</label>
                   <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="0000 0000 0000 0000"
-                      className="w-full h-10 rounded-lg border border-input bg-background pl-10 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
-                    />
+                    <input type="text" placeholder="0000 0000 0000 0000" className="w-full h-10 rounded-lg border border-input bg-background pl-10 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow" />
                     <CreditCard size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   </div>
                 </div>
@@ -515,7 +694,6 @@ const MyShop = () => {
                   </div>
                 </div>
               </div>
-
               <button
                 onClick={processPayment}
                 disabled={paymentProcessing}
@@ -527,18 +705,131 @@ const MyShop = () => {
                     Ödəniş emal olunur...
                   </>
                 ) : (
-                  <>
-                    <Shield size={14} /> Ödəniş et — {packages.find(p => p.id === selectedUpgrade)?.price} ₼
-                  </>
+                  <><Shield size={14} /> Ödəniş et — {packages.find(p => p.id === selectedUpgrade)?.price} ₼</>
                 )}
               </button>
-
               <p className="text-[10px] text-muted-foreground text-center flex items-center justify-center gap-1">
                 <Shield size={9} /> Payriff ilə təhlükəsiz ödəniş
               </p>
             </div>
           </div>
         </div>
+      )}
+
+      {/* Banner Design Order Modal */}
+      {showBannerOrder && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => !bannerProcessing && setShowBannerOrder(false)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            <div className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                  <Wand2 size={18} className="text-primary" />
+                  Baner dizaynı sifarişi
+                </h3>
+                <button onClick={() => !bannerProcessing && setShowBannerOrder(false)} className="p-1 rounded-md hover:bg-muted transition-colors">
+                  <X size={18} className="text-muted-foreground" />
+                </button>
+              </div>
+              <div className="px-5 py-4 space-y-4 max-h-[60vh] overflow-y-auto">
+                {/* Selected package */}
+                <div className="rounded-lg bg-primary/5 border border-primary/20 p-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-foreground">
+                        {bannerDesignPackages.find(b => b.id === selectedBannerPkg)?.name}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        Təslim: {bannerDesignPackages.find(b => b.id === selectedBannerPkg)?.delivery}
+                      </p>
+                    </div>
+                    <span className="text-lg font-extrabold text-foreground">
+                      {bannerDesignPackages.find(b => b.id === selectedBannerPkg)?.price} ₼
+                    </span>
+                  </div>
+                </div>
+
+                {/* Select package */}
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Paket seçin</p>
+                  <div className="flex gap-2">
+                    {bannerDesignPackages.map((bp) => (
+                      <button
+                        key={bp.id}
+                        onClick={() => setSelectedBannerPkg(bp.id)}
+                        className={`flex-1 py-2 px-2 rounded-lg border text-xs font-medium transition-all ${
+                          selectedBannerPkg === bp.id
+                            ? "border-primary bg-primary/5 text-foreground"
+                            : "border-border text-muted-foreground hover:border-primary/30"
+                        }`}
+                      >
+                        {bp.name}
+                        <br />
+                        <span className="font-bold">{bp.price} ₼</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Dimensions info */}
+                <div className="rounded-lg bg-muted/50 p-3 space-y-1.5">
+                  <p className="text-xs font-semibold text-foreground">Baner ölçüləri:</p>
+                  <div className="grid grid-cols-2 gap-1.5 text-[11px] text-muted-foreground">
+                    <span>• Mağaza baneri: <strong className="text-foreground">1200×400 px</strong></span>
+                    <span>• Sosial media: <strong className="text-foreground">1200×630 px</strong></span>
+                    <span>• Mobil baner: <strong className="text-foreground">800×400 px</strong></span>
+                    <span>• Instagram: <strong className="text-foreground">1080×1080 px</strong></span>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-1.5">
+                    Baner haqqında təsvir *
+                  </label>
+                  <textarea
+                    value={bannerDescription}
+                    onChange={(e) => setBannerDescription(e.target.value)}
+                    rows={4}
+                    placeholder="Məs: Avtomobil satış mağazası üçün modern görünüşlü baner. Əsas rənglər: qara, qızılı. Logo-nu banerin sol tərəfinə yerləşdirin..."
+                    className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                  />
+                </div>
+
+                {/* Logo upload option */}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Sparkles size={12} className="text-primary" />
+                  <span>Mövcud logonuz avtomatik istifadə olunacaq</span>
+                </div>
+              </div>
+              <div className="px-5 py-4 border-t border-border flex gap-2">
+                <button
+                  onClick={() => setShowBannerOrder(false)}
+                  className="flex-1 py-2.5 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+                >
+                  Ləğv et
+                </button>
+                <button
+                  onClick={handleBannerOrder}
+                  disabled={!bannerDescription.trim() || bannerProcessing}
+                  className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+                >
+                  {bannerProcessing ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      Göndərilir...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 size={14} />
+                      Sifariş et — {bannerDesignPackages.find(b => b.id === selectedBannerPkg)?.price} ₼
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
