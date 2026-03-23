@@ -62,7 +62,7 @@ const SiteHeader = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState("Bütün Azərbaycan");
-  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
   const isLoggedIn = true;
   const navigate = useNavigate();
   const cityRef = useRef<HTMLDivElement>(null);
