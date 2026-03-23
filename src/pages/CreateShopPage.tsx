@@ -1,15 +1,16 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import { Store, MapPin, Star, ChevronRight, Upload, X, Camera, Check, Crown, Zap, Rocket, Clock, BarChart3, Package, ShieldCheck, Image } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Store, Star, ChevronRight, X, Camera, Check, Crown, Zap, Package, Image, CreditCard, Lock, CheckCircle, Eye } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import { toast } from "sonner";
 
 /* ═══ Packages ═══ */
 const packages = [
   {
     id: "start",
     name: "Start",
-    price: "0",
+    price: 0,
     period: "Pulsuz",
     icon: Package,
     color: "text-muted-foreground",
@@ -20,7 +21,7 @@ const packages = [
   {
     id: "business",
     name: "Biznes",
-    price: "29",
+    price: 29,
     period: "/ ay",
     icon: Zap,
     color: "text-primary",
@@ -32,7 +33,7 @@ const packages = [
   {
     id: "premium",
     name: "Premium",
-    price: "79",
+    price: 79,
     period: "/ ay",
     icon: Crown,
     color: "text-[hsl(var(--vip-gold))]",
@@ -48,6 +49,7 @@ const categories = [
 ];
 
 const CreateShopPage = () => {
+  const navigate = useNavigate();
   const [selectedPackage, setSelectedPackage] = useState("business");
   const [step, setStep] = useState<"package" | "form">("package");
   const [logo, setLogo] = useState<string | null>(null);
@@ -64,8 +66,15 @@ const CreateShopPage = () => {
     city: "Bakı",
     address: "",
     website: "",
-    whatsapp: true,
   });
+
+  // Payment modal state
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
 
   const update = (key: string, val: string | boolean) => setForm((f) => ({ ...f, [key]: val }));
 
@@ -80,6 +89,59 @@ const CreateShopPage = () => {
   };
 
   const pkg = packages.find((p) => p.id === selectedPackage)!;
+
+  const isFormValid = form.name.trim() && form.category && form.description.trim() && form.phone.trim();
+
+  const handleSubmit = () => {
+    if (!isFormValid) {
+      toast.error("Zəhmət olmasa bütün məcburi sahələri doldurun");
+      return;
+    }
+
+    if (pkg.price > 0) {
+      // Show payment modal for paid packages
+      setShowPayment(true);
+      setPaymentSuccess(false);
+      setPaymentProcessing(false);
+      setCardNumber("");
+      setExpiry("");
+      setCvv("");
+    } else {
+      // Free package — create directly
+      handleCreateSuccess();
+    }
+  };
+
+  const handleCreateSuccess = () => {
+    toast.success("Mağazanız uğurla yaradıldı!", {
+      description: `${pkg.name} paketi ilə mağazanız aktivdir.`,
+    });
+    setTimeout(() => navigate("/panel/magazam"), 1500);
+  };
+
+  const handlePay = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cardNumber.replace(/\s/g, "").length < 16 || expiry.length < 5 || cvv.length < 3) {
+      toast.error("Kart məlumatlarını düzgün daxil edin");
+      return;
+    }
+    setPaymentProcessing(true);
+    setTimeout(() => {
+      setPaymentProcessing(false);
+      setPaymentSuccess(true);
+    }, 2000);
+  };
+
+  const formatCardNumber = (val: string) => {
+    const digits = val.replace(/\D/g, "").slice(0, 16);
+    return digits.replace(/(.{4})/g, "$1 ").trim();
+  };
+
+  const formatExpiry = (val: string) => {
+    const digits = val.replace(/\D/g, "").slice(0, 4);
+    if (digits.length > 2) return digits.slice(0, 2) + "/" + digits.slice(2);
+    return digits;
+  };
 
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
@@ -97,7 +159,6 @@ const CreateShopPage = () => {
         <div className="container py-8 md:py-10 max-w-4xl">
           {step === "package" ? (
             <>
-              {/* Package selection */}
               <h2 className="text-lg font-bold text-foreground mb-6">Paket seçin</h2>
               <div className="grid md:grid-cols-3 gap-4 mb-8">
                 {packages.map((p) => (
@@ -150,7 +211,6 @@ const CreateShopPage = () => {
             </>
           ) : (
             <>
-              {/* Back to packages */}
               <button
                 onClick={() => setStep("package")}
                 className="text-sm text-primary hover:underline mb-6 inline-block"
@@ -163,7 +223,6 @@ const CreateShopPage = () => {
                 <div className="rounded-xl border border-border bg-card p-5">
                   <h3 className="text-sm font-semibold text-foreground mb-4">Logo və üz qabığı</h3>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Logo */}
                     <div className="flex flex-col items-center gap-2">
                       <div
                         onClick={() => logoRef.current?.click()}
@@ -178,7 +237,6 @@ const CreateShopPage = () => {
                       <span className="text-[10px] text-muted-foreground">Logo</span>
                       <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, setLogo)} />
                     </div>
-                    {/* Cover */}
                     <div className="flex-1">
                       <div
                         onClick={() => coverRef.current?.click()}
@@ -277,12 +335,39 @@ const CreateShopPage = () => {
                   </div>
                 </div>
 
+                {/* Order summary for paid packages */}
+                {pkg.price > 0 && (
+                  <div className="rounded-xl border border-border bg-card p-5">
+                    <h3 className="text-sm font-semibold text-foreground mb-3">Sifariş xülasəsi</h3>
+                    <div className="flex items-center justify-between py-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <pkg.icon size={16} className={pkg.color} />
+                        <span className="font-medium text-foreground">{pkg.name} paketi</span>
+                      </div>
+                      <span className="font-bold text-foreground">{pkg.price} ₼{pkg.period}</span>
+                    </div>
+                    <hr className="border-border my-2" />
+                    <div className="flex items-center justify-between py-1">
+                      <span className="text-sm font-semibold text-foreground">Cəmi</span>
+                      <span className="text-lg font-extrabold text-foreground">{pkg.price} ₼</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-2">
+                      Aylıq abunəlik. İstənilən vaxt ləğv edə bilərsiniz.
+                    </p>
+                  </div>
+                )}
+
                 {/* Submit */}
                 <button
+                  onClick={handleSubmit}
                   className="w-full py-3 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-accent-hover transition-colors active:scale-[0.98] shadow-sm"
                 >
                   <span className="inline-flex items-center gap-2">
-                    <Store size={16} /> Mağazanı yarat
+                    {pkg.price > 0 ? (
+                      <><CreditCard size={16} /> Ödəniş et və mağazanı yarat</>
+                    ) : (
+                      <><Store size={16} /> Mağazanı yarat</>
+                    )}
                   </span>
                 </button>
               </div>
@@ -290,6 +375,139 @@ const CreateShopPage = () => {
           )}
         </div>
       </main>
+
+      {/* Payment Modal */}
+      {showPayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" onClick={() => { if (!paymentProcessing && !paymentSuccess) setShowPayment(false); }} />
+
+          <div className="relative bg-card rounded-2xl shadow-2xl max-w-sm w-full p-7 animate-in fade-in zoom-in-95 duration-300">
+            {!paymentSuccess ? (
+              <>
+                <button
+                  onClick={() => !paymentProcessing && setShowPayment(false)}
+                  className="absolute top-4 right-4 w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X size={14} />
+                </button>
+
+                <h2 className="text-lg font-bold text-foreground mb-1">Mağaza ödənişi</h2>
+                <p className="text-sm text-muted-foreground mb-4">Payriff vasitəsilə təhlükəsiz ödəniş</p>
+
+                {/* Summary */}
+                <div className="bg-muted rounded-xl px-4 py-3.5 mb-5">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <pkg.icon size={16} className={pkg.color} />
+                      <span className="font-semibold text-foreground">{pkg.name} paketi</span>
+                    </div>
+                    <span className="font-bold text-foreground text-base">{pkg.price} ₼</span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1.5">Aylıq abunəlik · avtomatik yenilənir</p>
+                </div>
+
+                {/* Card form */}
+                <form onSubmit={handlePay} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-muted-foreground mb-1">Kart nömrəsi</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={cardNumber}
+                        onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                        placeholder="0000 0000 0000 0000"
+                        maxLength={19}
+                        className="w-full h-11 rounded-lg border border-input bg-background pl-10 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow tracking-wider"
+                      />
+                      <CreditCard size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-muted-foreground mb-1">Bitmə tarixi</label>
+                      <input
+                        type="text"
+                        value={expiry}
+                        onChange={(e) => setExpiry(formatExpiry(e.target.value))}
+                        placeholder="AA/İİ"
+                        maxLength={5}
+                        className="w-full h-11 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-muted-foreground mb-1">CVV</label>
+                      <input
+                        type="password"
+                        value={cvv}
+                        onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                        placeholder="•••"
+                        maxLength={3}
+                        className="w-full h-11 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={paymentProcessing}
+                    className="w-full h-11 rounded-lg bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97] shadow-sm disabled:opacity-60 flex items-center justify-center gap-2"
+                  >
+                    {paymentProcessing ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
+                        Ödəniş emal olunur...
+                      </>
+                    ) : (
+                      <>Ödə: {pkg.price} ₼</>
+                    )}
+                  </button>
+                </form>
+
+                <p className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground mt-4">
+                  <Lock size={10} /> Təhlükəsiz ödəniş — Payriff
+                </p>
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <div className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle size={28} className="text-accent" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Ödəniş uğurlu!</h3>
+                <p className="text-sm text-muted-foreground mb-1">
+                  <span className="font-semibold text-foreground">{pkg.name}</span> paketi ilə mağazanız yaradıldı.
+                </p>
+                <p className="text-xs text-muted-foreground mb-6">
+                  Ödəniş: {pkg.price} ₼{pkg.period}
+                </p>
+                <div className="bg-muted/50 rounded-lg p-3 mb-5 text-left space-y-1.5">
+                  {pkg.features.slice(0, 4).map((f) => (
+                    <p key={f} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <CheckCircle size={12} className="text-accent shrink-0" />
+                      {f}
+                    </p>
+                  ))}
+                </div>
+                <div className="space-y-2.5">
+                  <Link
+                    to="/panel/magazam"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-colors active:scale-[0.97]"
+                  >
+                    <Eye size={16} /> Mağazama keç
+                  </Link>
+                  <Link
+                    to="/panel"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-border text-foreground font-semibold text-sm hover:bg-muted transition-colors active:scale-[0.97]"
+                  >
+                    Panelə qayıt
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <SiteFooter />
     </div>
   );
