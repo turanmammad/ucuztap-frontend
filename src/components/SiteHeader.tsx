@@ -56,7 +56,7 @@ const SiteHeader = () => {
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="w-8 h-8 rounded-full bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center hover:opacity-90 transition-opacity"
+                  className="w-8 h-8 rounded-full bg-foreground text-background font-semibold text-sm flex items-center justify-center hover:opacity-90 transition-opacity"
                 >
                   R
                 </button>
