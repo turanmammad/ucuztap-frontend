@@ -127,6 +127,26 @@ const StepCategory = ({ selectedPath, onSelect }: Props) => {
           ))}
         </div>
       )}
+
+      {/* Selection complete confirmation */}
+      {isComplete && (
+        <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-6 text-center space-y-4">
+          <CheckCircle2 size={40} className="mx-auto text-primary" />
+          <div>
+            <p className="text-base font-bold text-foreground mb-1">Kateqoriya seçildi</p>
+            <p className="text-sm text-muted-foreground">
+              {selectedPath.join(" › ")}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onSelect([])}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors active:scale-[0.97]"
+          >
+            <RotateCcw size={13} /> Dəyişdir
+          </button>
+        </div>
+      )}
     </div>
   );
 };
