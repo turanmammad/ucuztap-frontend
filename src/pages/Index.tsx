@@ -21,7 +21,7 @@ const Index = () => (
       <RecentAds />
       <AiSearchBanner />
       <AdBannerHorizontal variant="large" className="py-4" />
-      <AppDownloadBanner />
+      
       <StatsBar />
     </main>
     <SiteFooter />
