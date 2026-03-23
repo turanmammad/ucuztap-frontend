@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Download, Smartphone, Monitor, ChevronRight, Share, MoreVertical, PlusSquare, Check, ArrowLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import logoIcon from "@/assets/logo-icon.png";
 
 const InstallPage = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
