@@ -224,8 +224,9 @@ const CategoryListingPage = () => {
 
           <div className="flex gap-8">
             {/* Sidebar */}
-            <div className="hidden lg:block w-[260px] shrink-0">
+            <div className="hidden lg:block w-[260px] shrink-0 space-y-4">
               <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} />
+              <AdBannerSidebar />
             </div>
 
             {/* Main content */}
