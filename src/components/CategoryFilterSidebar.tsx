@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { useState, useMemo } from "react";
+import { ChevronDown, ChevronUp, X, Search, RotateCcw, SlidersHorizontal } from "lucide-react";
 
 const dateOptions = ["Son 24 saat", "Son 3 gün", "Son həftə", "Son ay", "Hamısı"];
 
@@ -176,13 +176,48 @@ interface Props {
   slug?: string;
 }
 
-const FilterContent = ({ slug }: { slug?: string }) => {
+/* ── Collapsible Section ── */
+const FilterSection = ({
+  title,
+  defaultOpen = true,
+  children,
+  badge,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+  badge?: number;
+}) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-border last:border-b-0">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-3 text-sm font-semibold text-foreground hover:text-primary transition-colors"
+      >
+        <span className="flex items-center gap-2">
+          {title}
+          {badge && badge > 0 ? (
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
+              {badge}
+            </span>
+          ) : null}
+        </span>
+        {open ? <ChevronUp size={14} className="text-muted-foreground" /> : <ChevronDown size={14} className="text-muted-foreground" />}
+      </button>
+      {open && <div className="pb-4">{children}</div>}
+    </div>
+  );
+};
+
+const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?: (n: number) => void }) => {
   const fields = categoryFilters[slug || ""] || defaultFilters;
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [checked, setChecked] = useState<Record<string, string[]>>({});
   const [ranges, setRanges] = useState<Record<string, { min: string; max: string }>>({});
   const [selects, setSelects] = useState<Record<string, string>>({});
   const [dateFilter, setDateFilter] = useState("Hamısı");
+  const [filterSearch, setFilterSearch] = useState("");
 
   const toggleCheck = (key: string, val: string) => {
     const list = checked[key] || [];
@@ -193,77 +228,165 @@ const FilterContent = ({ slug }: { slug?: string }) => {
     setRanges({ ...ranges, [key]: { ...(ranges[key] || { min: "", max: "" }), [side]: val } });
   };
 
+  // Count active filters
+  const activeCount = useMemo(() => {
+    let count = 0;
+    if (activeSub) count++;
+    Object.values(checked).forEach(arr => { count += arr.length; });
+    Object.values(ranges).forEach(r => { if (r.min || r.max) count++; });
+    Object.values(selects).forEach(v => { if (v) count++; });
+    if (dateFilter !== "Hamısı") count++;
+    onActiveCount?.(count);
+    return count;
+  }, [activeSub, checked, ranges, selects, dateFilter, onActiveCount]);
+
   const handleReset = () => {
     setActiveSub(null);
     setChecked({});
     setRanges({});
     setSelects({});
     setDateFilter("Hamısı");
+    setFilterSearch("");
   };
 
+  // Collect active filter chips
+  const activeChips: { label: string; onRemove: () => void }[] = [];
+  if (activeSub) activeChips.push({ label: activeSub, onRemove: () => setActiveSub(null) });
+  Object.entries(checked).forEach(([key, vals]) => {
+    const field = fields.find(f => f.key === key);
+    vals.forEach(v => activeChips.push({
+      label: `${field?.label ? field.label + ': ' : ''}${v}`,
+      onRemove: () => toggleCheck(key, v),
+    }));
+  });
+  Object.entries(selects).forEach(([key, val]) => {
+    if (val) {
+      const field = fields.find(f => f.key === key);
+      activeChips.push({ label: `${field?.label}: ${val}`, onRemove: () => setSelects({ ...selects, [key]: "" }) });
+    }
+  });
+  Object.entries(ranges).forEach(([key, r]) => {
+    if (r.min || r.max) {
+      const field = fields.find(f => f.key === key);
+      activeChips.push({
+        label: `${field?.label}: ${r.min || '0'} — ${r.max || '∞'}`,
+        onRemove: () => setRanges({ ...ranges, [key]: { min: "", max: "" } }),
+      });
+    }
+  });
+  if (dateFilter !== "Hamısı") activeChips.push({ label: dateFilter, onRemove: () => setDateFilter("Hamısı") });
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-0">
+      {/* Search in filters */}
+      <div className="relative mb-4">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <input
+          type="text"
+          value={filterSearch}
+          onChange={(e) => setFilterSearch(e.target.value)}
+          placeholder="Filterlərdə axtar..."
+          className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 transition-shadow placeholder:text-muted-foreground/60"
+        />
+      </div>
+
+      {/* Active filter chips */}
+      {activeChips.length > 0 && (
+        <div className="mb-4 pb-4 border-b border-border">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Aktiv filterlər ({activeCount})
+            </span>
+            <button onClick={handleReset} className="text-xs text-destructive hover:underline flex items-center gap-1">
+              <RotateCcw size={10} /> Hamısını sil
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {activeChips.map((chip, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-foreground text-xs font-medium group"
+              >
+                {chip.label}
+                <button onClick={chip.onRemove} className="ml-0.5 hover:text-destructive transition-colors">
+                  <X size={12} />
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {fields.map((field) => {
+        // Filter search: hide sections that don't match
+        if (filterSearch.trim()) {
+          const q = filterSearch.toLowerCase();
+          const labelMatch = field.label.toLowerCase().includes(q);
+          const optionMatch = field.options?.some(o => o.name.toLowerCase().includes(q));
+          if (!labelMatch && !optionMatch) return null;
+        }
+
         if (field.type === "subcategory") {
           return (
-            <div key={field.key}>
-              <h3 className="text-sm font-semibold text-foreground mb-3">{field.label}</h3>
+            <FilterSection key={field.key} title={field.label} badge={activeSub ? 1 : 0}>
               <ul className="space-y-0.5">
                 {field.options?.map((s) => (
                   <li key={s.name}>
                     <button
                       onClick={() => setActiveSub(activeSub === s.name ? null : s.name)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all ${
                         activeSub === s.name
-                          ? "bg-primary/10 text-foreground font-medium border-l-[3px] border-primary"
+                          ? "bg-primary/10 text-foreground font-semibold border-l-[3px] border-primary pl-2.5"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground"
                       }`}
                     >
                       <span>{s.name}</span>
-                      {s.count && <span className="text-xs text-muted-foreground">({s.count})</span>}
+                      {s.count && (
+                        <span className="text-[11px] text-muted-foreground/70 tabular-nums">{s.count}</span>
+                      )}
                     </button>
                   </li>
                 ))}
               </ul>
-            </div>
+            </FilterSection>
           );
         }
 
         if (field.type === "range") {
           const range = ranges[field.key] || { min: "", max: "" };
+          const hasBadge = range.min || range.max;
           return (
-            <div key={field.key}>
-              <h3 className="text-sm font-semibold text-foreground mb-3">{field.label}</h3>
+            <FilterSection key={field.key} title={field.label} defaultOpen={false} badge={hasBadge ? 1 : 0}>
               <div className="flex gap-2 items-center">
                 <input
                   type="number"
                   placeholder="Min"
                   value={range.min}
                   onChange={(e) => updateRange(field.key, "min", e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                  className="w-full px-3 py-2.5 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
                 />
-                <span className="text-muted-foreground text-sm">—</span>
+                <span className="text-muted-foreground text-sm font-medium">—</span>
                 <input
                   type="number"
                   placeholder="Max"
                   value={range.max}
                   onChange={(e) => updateRange(field.key, "max", e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                  className="w-full px-3 py-2.5 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
                 />
               </div>
-            </div>
+            </FilterSection>
           );
         }
 
         if (field.type === "select") {
+          const hasVal = !!selects[field.key];
           return (
-            <div key={field.key}>
-              <h3 className="text-sm font-semibold text-foreground mb-3">{field.label}</h3>
+            <FilterSection key={field.key} title={field.label} defaultOpen={false} badge={hasVal ? 1 : 0}>
               <div className="relative">
                 <select
                   value={selects[field.key] || ""}
                   onChange={(e) => setSelects({ ...selects, [field.key]: e.target.value })}
-                  className="w-full appearance-none px-3 py-2 pr-8 text-sm border border-border rounded-md bg-background outline-none focus:ring-2 focus:ring-primary/30 transition-shadow"
+                  className="w-full appearance-none px-3 py-2.5 pr-8 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
                 >
                   <option value="">Hamısı</option>
                   {field.options?.map((o) => (
@@ -272,28 +395,41 @@ const FilterContent = ({ slug }: { slug?: string }) => {
                 </select>
                 <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
               </div>
-            </div>
+            </FilterSection>
           );
         }
 
         if (field.type === "checkbox") {
+          const checkedVals = checked[field.key] || [];
           return (
-            <div key={field.key}>
-              <h3 className="text-sm font-semibold text-foreground mb-3">{field.label}</h3>
-              <div className="space-y-2">
-                {field.options?.map((o) => (
-                  <label key={o.name} className="flex items-center gap-2.5 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      checked={(checked[field.key] || []).includes(o.name)}
-                      onChange={() => toggleCheck(field.key, o.name)}
-                      className="w-4 h-4 rounded border-border text-primary focus:ring-primary/30 accent-primary"
-                    />
-                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{o.name}</span>
-                  </label>
-                ))}
+            <FilterSection key={field.key} title={field.label} defaultOpen={field.options && field.options.length <= 4} badge={checkedVals.length || undefined}>
+              <div className="space-y-1">
+                {field.options?.map((o) => {
+                  const isChecked = checkedVals.includes(o.name);
+                  return (
+                    <label
+                      key={o.name}
+                      className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer transition-all ${
+                        isChecked ? "bg-primary/8 border border-primary/20" : "hover:bg-muted border border-transparent"
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all shrink-0 ${
+                        isChecked ? "bg-primary border-primary" : "border-border"
+                      }`}>
+                        {isChecked && (
+                          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                            <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-foreground" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className={`text-sm transition-colors ${isChecked ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                        {o.name}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
-            </div>
+            </FilterSection>
           );
         }
 
@@ -301,10 +437,9 @@ const FilterContent = ({ slug }: { slug?: string }) => {
       })}
 
       {/* City */}
-      <div>
-        <h3 className="text-sm font-semibold text-foreground mb-3">Şəhər</h3>
+      <FilterSection title="Şəhər" defaultOpen={false}>
         <div className="relative">
-          <select className="w-full appearance-none px-3 py-2 pr-8 text-sm border border-border rounded-md bg-background outline-none focus:ring-2 focus:ring-primary/30 transition-shadow">
+          <select className="w-full appearance-none px-3 py-2.5 pr-8 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all">
             <option>Bütün şəhərlər</option>
             <option>Bakı</option>
             <option>Gəncə</option>
@@ -315,34 +450,39 @@ const FilterContent = ({ slug }: { slug?: string }) => {
           </select>
           <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         </div>
-      </div>
+      </FilterSection>
 
       {/* Date */}
-      <div>
-        <h3 className="text-sm font-semibold text-foreground mb-3">Tarix</h3>
-        <div className="space-y-1">
+      <FilterSection title="Tarix" defaultOpen={false} badge={dateFilter !== "Hamısı" ? 1 : undefined}>
+        <div className="grid grid-cols-2 gap-1.5">
           {dateOptions.map((d) => (
             <button
               key={d}
               onClick={() => setDateFilter(d)}
-              className={`w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors ${
-                dateFilter === d ? "bg-primary/10 text-foreground font-medium" : "text-muted-foreground hover:bg-muted"
+              className={`px-3 py-2 rounded-lg text-xs font-medium text-center transition-all ${
+                dateFilter === d
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               {d}
             </button>
           ))}
         </div>
-      </div>
+      </FilterSection>
 
       {/* Actions */}
-      <div className="space-y-2 pt-2 border-t border-border">
-        <button className="w-full py-2.5 rounded-md bg-accent text-accent-foreground font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97]">
-          Axtar
+      <div className="space-y-2 pt-4">
+        <button className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97] shadow-sm">
+          <span className="flex items-center justify-center gap-2">
+            <Search size={15} /> Nəticələri göstər
+          </span>
         </button>
-        <button onClick={handleReset} className="w-full py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          Sıfırla
-        </button>
+        {activeCount > 0 && (
+          <button onClick={handleReset} className="w-full py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1.5">
+            <RotateCcw size={13} /> Filterləri sıfırla
+          </button>
+        )}
       </div>
     </div>
   );
@@ -351,21 +491,31 @@ const FilterContent = ({ slug }: { slug?: string }) => {
 const CategoryFilterSidebar = ({ open, onClose, slug }: Props) => {
   return (
     <>
-      <aside className="hidden lg:block w-full">
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:block w-full rounded-xl border border-border bg-card p-4 shadow-sm">
         <FilterContent slug={slug} />
       </aside>
 
+      {/* Mobile bottom sheet */}
       {open && (
         <div className="lg:hidden fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-foreground/50" onClick={onClose} />
-          <div className="absolute bottom-0 left-0 right-0 bg-background rounded-t-2xl max-h-[85vh] overflow-y-auto p-5 pb-8 animate-fade-up">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-foreground">Filterlər</h2>
-              <button onClick={onClose} className="p-1 hover:bg-muted rounded-md transition-colors">
-                <X size={20} />
-              </button>
+          <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute bottom-0 left-0 right-0 bg-background rounded-t-2xl max-h-[90vh] overflow-y-auto animate-fade-up">
+            {/* Handle */}
+            <div className="sticky top-0 z-10 bg-background pt-3 pb-2 px-5 border-b border-border rounded-t-2xl">
+              <div className="w-10 h-1 rounded-full bg-border mx-auto mb-3" />
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <SlidersHorizontal size={18} /> Filterlər
+                </h2>
+                <button onClick={onClose} className="p-2 hover:bg-muted rounded-lg transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
             </div>
-            <FilterContent slug={slug} />
+            <div className="p-5 pb-8">
+              <FilterContent slug={slug} />
+            </div>
           </div>
         </div>
       )}
