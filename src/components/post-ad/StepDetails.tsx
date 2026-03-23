@@ -323,7 +323,7 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
               type="text"
               value={formData.title || ""}
               onChange={(e) => { update("title", e.target.value); setShowTitleSuggestions(false); }}
-              placeholder={isJobCategory ? "Məsələn: Satış meneceri — Bakı" : "Məsələn: Toyota Camry 2.5 Hybrid, 2021"}
+              placeholder={getTitlePlaceholder(categoryPath)}
               className="flex-1 h-11 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
             />
             <button
