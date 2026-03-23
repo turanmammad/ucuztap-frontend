@@ -1,30 +1,13 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Search, Heart, PlusCircle, User, Check } from "lucide-react";
+import { Bell, MessageCircle, Menu, X, Store, Home, Search, Heart, PlusCircle, User } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import logoImg from "@/assets/logo.png";
-
-const CITIES = [
-  "Bütün Azərbaycan","Bakı","Sumqayıt","Gəncə","Mingəçevir","Lənkəran","Şirvan","Naxçıvan","Şəki","Yevlax","Xaçmaz","Quba","Qusar","İsmayıllı","Qəbələ","Balakən","Zaqatala","Şamaxı","Göyçay","Bərdə","Ağdam","Füzuli","Şuşa","Ağdaş","Biləsuvar","Salyan","Kürdəmir","Sabirabad","Hacıqabul","Masallı","Cəlilabad","Astara","Lerik","Yardımlı","Tovuz","Qazax","Ağstafa","Samux","Göygöl","Daşkəsən","Gədəbəy","Oğuz","İmişli","Beyləqan","Zəngilan","Cəbrayıl","Kəlbəcər","Laçın","Xocalı","Xankəndi",
-];
 
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState("Bütün Azərbaycan");
   const isLoggedIn = true;
-  const cityRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (cityRef.current && !cityRef.current.contains(e.target as Node)) {
-        setCityDropdownOpen(false);
-      }
-    };
-    if (cityDropdownOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [cityDropdownOpen]);
 
   return (
     <>
@@ -36,35 +19,6 @@ const SiteHeader = () => {
           </Link>
 
           <div className="flex items-center gap-2">
-            {/* City selector */}
-            <div className="relative" ref={cityRef}>
-              <button
-                onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
-                className="flex items-center gap-1.5 px-4 py-2 text-sm border-2 border-primary/40 rounded-full bg-background cursor-pointer hover:border-primary transition-colors"
-              >
-                <MapPin size={14} className="text-muted-foreground" />
-                <span className="text-muted-foreground whitespace-nowrap max-w-[120px] truncate">{selectedCity}</span>
-                <ChevronDown size={14} className={`text-muted-foreground transition-transform ${cityDropdownOpen ? "rotate-180" : ""}`} />
-              </button>
-              {cityDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1.5 w-56 max-h-72 overflow-y-auto bg-popover border border-border rounded-lg shadow-xl z-50 py-1 animate-fade-in">
-                  {CITIES.map((city) => (
-                    <button
-                      key={city}
-                      onClick={() => { setSelectedCity(city); setCityDropdownOpen(false); }}
-                      className={`flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-muted transition-colors ${selectedCity === city ? "text-primary font-medium" : "text-foreground"}`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <MapPin size={13} className="text-muted-foreground" />
-                        {city}
-                      </span>
-                      {selectedCity === city && <Check size={14} className="text-primary" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
             <Link to="/magazalar" className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors">
               <Store size={16} />
               <span className="hidden lg:inline">Mağazalar</span>
@@ -142,7 +96,7 @@ const SiteHeader = () => {
               <MessageCircle size={18} className="text-muted-foreground" /> Mesajlar
             </Link>
             <Link to="/panel/tenzimlemer" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-2.5 px-3 text-sm rounded-lg hover:bg-muted transition-colors">
-              <MapPin size={18} className="text-muted-foreground" /> Tənzimləmələr
+              <User size={18} className="text-muted-foreground" /> Tənzimləmələr
             </Link>
             <hr className="border-border my-2" />
             <button className="flex items-center gap-3 py-2.5 px-3 text-sm text-destructive rounded-lg w-full">
@@ -152,7 +106,6 @@ const SiteHeader = () => {
         )}
       </header>
 
-      {/* Mobile Bottom Tab Bar */}
       <MobileBottomBar />
     </>
   );
