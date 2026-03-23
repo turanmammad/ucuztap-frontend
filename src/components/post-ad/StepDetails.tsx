@@ -322,39 +322,117 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
             <input
               type="text"
               value={formData.title || ""}
-              onChange={(e) => update("title", e.target.value)}
+              onChange={(e) => { update("title", e.target.value); setShowTitleSuggestions(false); }}
               placeholder={isJobCategory ? "Məsələn: Satış meneceri — Bakı" : "Məsələn: Toyota Camry 2.5 Hybrid, 2021"}
               className="flex-1 h-11 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
             />
             <button
               type="button"
               onClick={handleAiTitle}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 h-11 rounded-lg border border-border bg-muted/50 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors active:scale-[0.97]"
+              disabled={aiTitleLoading}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 h-11 rounded-lg bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white text-sm font-medium hover:opacity-90 transition-all active:scale-[0.97] disabled:opacity-60"
             >
-              <Sparkles size={14} /> AI ilə yaz
+              {aiTitleLoading ? (
+                <RefreshCw size={14} className="animate-spin" />
+              ) : (
+                <Wand2 size={14} />
+              )}
+              AI
             </button>
           </div>
+
+          {/* AI Title Suggestions */}
+          {showTitleSuggestions && titleSuggestions.length > 0 && (
+            <div className="mt-2 rounded-xl border border-[hsl(271,81%,56%)]/20 bg-[hsl(271,81%,96%)] dark:bg-[hsl(271,81%,15%)] p-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Sparkles size={12} className="text-[hsl(271,81%,56%)]" />
+                <span className="text-[11px] font-semibold text-[hsl(271,81%,56%)] uppercase tracking-wide">AI təklifləri</span>
+              </div>
+              <div className="space-y-1.5">
+                {titleSuggestions.map((sug, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => { update("title", sug); setShowTitleSuggestions(false); }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm text-foreground bg-background/70 hover:bg-background border border-transparent hover:border-border transition-all flex items-center gap-2 group"
+                  >
+                    <span className="flex-1">{sug}</span>
+                    <Check size={14} className="text-accent opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={handleAiTitle}
+                className="mt-2 inline-flex items-center gap-1 text-[11px] text-[hsl(271,81%,56%)] hover:underline"
+              >
+                <RefreshCw size={10} /> Yenidən yarat
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Description */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">Təsvir *</label>
-          <div className="space-y-2">
-            <textarea
-              value={formData.description || ""}
-              onChange={(e) => update("description", e.target.value)}
-              rows={4}
-              placeholder="Elanınız haqqında ətraflı yazın..."
-              className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow resize-none"
-            />
+          <textarea
+            value={formData.description || ""}
+            onChange={(e) => { update("description", e.target.value); setShowDescSuggestions(false); }}
+            rows={4}
+            placeholder="Elanınız haqqında ətraflı yazın..."
+            className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow resize-none"
+          />
+          <div className="flex items-center gap-2 mt-2">
             <button
               type="button"
               onClick={handleAiDesc}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border bg-muted/50 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors active:scale-[0.97]"
+              disabled={aiDescLoading}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white text-sm font-medium hover:opacity-90 transition-all active:scale-[0.97] disabled:opacity-60"
             >
-              <Sparkles size={14} /> AI ilə yaz
+              {aiDescLoading ? (
+                <RefreshCw size={14} className="animate-spin" />
+              ) : (
+                <Wand2 size={14} />
+              )}
+              AI ilə yaz
             </button>
+            <span className="text-[11px] text-muted-foreground">
+              Sahələrə əsasən avtomatik təsvir yaradır
+            </span>
           </div>
+
+          {/* AI Description Suggestions */}
+          {showDescSuggestions && (
+            <div className="mt-2 rounded-xl border border-[hsl(271,81%,56%)]/20 bg-[hsl(271,81%,96%)] dark:bg-[hsl(271,81%,15%)] p-3 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Lightbulb size={12} className="text-[hsl(271,81%,56%)]" />
+                <span className="text-[11px] font-semibold text-[hsl(271,81%,56%)] uppercase tracking-wide">Təsvir əlavələri</span>
+              </div>
+              <div className="space-y-1.5">
+                {descSuggestions.map((sug, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      const current = formData.description || "";
+                      update("description", current ? `${current} ${sug}` : sug);
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm text-foreground bg-background/70 hover:bg-background border border-transparent hover:border-border transition-all flex items-center gap-2 group"
+                  >
+                    <span className="text-muted-foreground text-xs">+</span>
+                    <span className="flex-1">{sug}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={handleAiDesc}
+                className="mt-2 inline-flex items-center gap-1 text-[11px] text-[hsl(271,81%,56%)] hover:underline"
+              >
+                <RefreshCw size={10} /> Daha çox təklif
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Price */}
@@ -365,7 +443,7 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
               <input
                 type="number"
                 value={formData.price || ""}
-                onChange={(e) => update("price", e.target.value)}
+                onChange={(e) => { update("price", e.target.value); setShowPriceHint(false); }}
                 placeholder="0"
                 className="flex-1 h-11 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
               />
@@ -384,6 +462,77 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
                 ))}
               </div>
             </div>
+
+            {/* AI Price Suggestion */}
+            <div className="mt-2">
+              {!showPriceHint ? (
+                <button
+                  type="button"
+                  onClick={handleAiPrice}
+                  disabled={aiPriceLoading}
+                  className="inline-flex items-center gap-1.5 text-xs text-[hsl(271,81%,56%)] hover:underline font-medium"
+                >
+                  {aiPriceLoading ? (
+                    <RefreshCw size={11} className="animate-spin" />
+                  ) : (
+                    <TrendingUp size={11} />
+                  )}
+                  AI qiymət aralığını göstər
+                </button>
+              ) : (
+                <div className="rounded-xl border border-[hsl(271,81%,56%)]/20 bg-[hsl(271,81%,96%)] dark:bg-[hsl(271,81%,15%)] p-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <div className="flex items-center gap-1.5 mb-2.5">
+                    <TrendingUp size={12} className="text-[hsl(271,81%,56%)]" />
+                    <span className="text-[11px] font-semibold text-[hsl(271,81%,56%)] uppercase tracking-wide">Bazar qiymət aralığı</span>
+                  </div>
+
+                  {/* Price range bar */}
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1">
+                      <span>{priceRange.min.toLocaleString()} ₼</span>
+                      <span className="font-semibold text-foreground">{priceRange.avg.toLocaleString()} ₼ orta</span>
+                      <span>{priceRange.max.toLocaleString()} ₼</span>
+                    </div>
+                    <div className="relative h-2.5 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="absolute inset-y-0 rounded-full bg-gradient-to-r from-accent via-[hsl(var(--vip-gold))] to-[hsl(var(--destructive))]"
+                        style={{ left: "0%", right: "0%" }}
+                      />
+                      {/* Avg marker */}
+                      <div
+                        className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-foreground border-2 border-background shadow-sm"
+                        style={{ left: `${((priceRange.avg - priceRange.min) / (priceRange.max - priceRange.min)) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick price buttons */}
+                  <div className="flex gap-2">
+                    {[priceRange.min, priceRange.avg, priceRange.max].map((p, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => update("price", String(p))}
+                        className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
+                          formData.price === String(p)
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                        }`}
+                      >
+                        {i === 0 ? "Aşağı" : i === 1 ? "Orta" : "Yuxarı"}
+                        <br />
+                        <span className="font-bold">{p.toLocaleString()} ₼</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
+                    <Lightbulb size={9} /> Oxşar elanlara əsasən hesablanıb
+                  </p>
+                </div>
+              )}
+            </div>
+
             <div className="flex items-center gap-4 mt-3">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="radio" checked={priceType === "fixed"} onChange={() => setPriceType("fixed")} className="w-4 h-4 accent-primary" />
