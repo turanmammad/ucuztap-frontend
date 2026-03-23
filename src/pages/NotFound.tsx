@@ -1,22 +1,52 @@
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Search, Home } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 const NotFound = () => {
   const location = useLocation();
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <SiteHeader />
+      <main className="flex-1 flex items-center justify-center px-4 py-20">
+        <div className="text-center max-w-md">
+          <p className="text-8xl font-extrabold text-primary mb-4" style={{ lineHeight: 1 }}>404</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Səhifə tapılmadı</h1>
+          <p className="text-sm text-muted-foreground mb-8">
+            Axtardığınız səhifə mövcud deyil, silinmiş və ya köçürülmüş ola bilər.
+          </p>
+
+          <div className="flex items-center rounded-xl bg-background border border-border p-1.5 mb-5 shadow-sm">
+            <Search size={16} className="ml-3 text-muted-foreground shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Nə axtarırsınız?"
+              className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none"
+            />
+            <button className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-[hsl(var(--primary-hover))] transition-colors active:scale-[0.97]">
+              Axtar
+            </button>
+          </div>
+
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-[hsl(var(--primary-hover))] transition-colors active:scale-[0.97] shadow-sm"
+          >
+            <Home size={16} /> Ana Səhifəyə qayıt
+          </Link>
+        </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 };
