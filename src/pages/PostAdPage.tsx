@@ -541,16 +541,21 @@ const PostAdPage = () => {
 
               {/* Submit */}
               <div className="rounded-xl border border-border bg-card p-5">
-                <label className="flex items-start gap-3 cursor-pointer mb-4">
+                <label className="flex items-start gap-3 cursor-pointer mb-1">
                   <input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)} className="mt-0.5 w-4 h-4 accent-accent rounded" />
                   <span className="text-sm text-muted-foreground">
                     <a href="/qaydalar" className="text-primary hover:underline">Qaydaları</a> oxudum və qəbul edirəm.
                   </span>
                 </label>
-                <button type="button" onClick={() => canPublish && setShowSuccess(true)} disabled={!canPublish}
-                  className="w-full py-3 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-[hsl(var(--accent-hover))] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] shadow-sm">
+                {tried && errors.accepted && <p className="text-xs text-destructive mb-3 ml-7">{errors.accepted}</p>}
+                {!errors.accepted && <div className="mb-4" />}
+                <button type="button" onClick={handlePublish}
+                  className="w-full py-3 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-[hsl(var(--accent-hover))] transition-colors active:scale-[0.98] shadow-sm">
                   <span className="inline-flex items-center gap-2"><Check size={16} strokeWidth={3} /> Elanı dərc et</span>
                 </button>
+                {tried && Object.keys(errors).length > 0 && (
+                  <p className="text-xs text-destructive text-center mt-3">Zəhmət olmasa bütün məcburi sahələri doldurun</p>
+                )}
               </div>
             </>
           )}
