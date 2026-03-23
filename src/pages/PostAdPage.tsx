@@ -521,8 +521,9 @@ const PostAdPage = () => {
                     <div className="flex gap-1.5">
                       <span className="shrink-0 h-10 px-2 rounded-lg border border-input bg-muted flex items-center text-xs font-medium text-muted-foreground">+994</span>
                       <input type="tel" value={contact.phone} onChange={e => updateContact("phone", e.target.value)} placeholder="50 123 45 67"
-                        className="flex-1 h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow" />
+                        className={`flex-1 h-10 rounded-lg border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow ${tried && errors.phone ? "border-destructive" : "border-input"}`} />
                     </div>
+                    {tried && errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                   </div>
                   <SelectField label="Şəhər *" value={contact.city} onChange={v => { updateContact("city", v); updateContact("district", ""); }} options={cities} />
                   {contact.city && districtMap[contact.city] && (
