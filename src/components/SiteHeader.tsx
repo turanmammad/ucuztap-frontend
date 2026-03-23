@@ -1,12 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const isLoggedIn = true;
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      navigate(`/axtaris?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
@@ -25,16 +33,18 @@ const SiteHeader = () => {
             <span className="text-muted-foreground whitespace-nowrap">Bütün Azərbaycan</span>
             <ChevronDown size={14} className="text-muted-foreground" />
           </div>
-          <div className="flex flex-1 items-center rounded-lg overflow-hidden bg-muted/50 focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
+          <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex flex-1 items-center rounded-lg overflow-hidden bg-muted/50 focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
             <input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Elan axtar..."
               className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
             />
-            <button className="h-full px-4 py-2.5 mr-1 my-0.5 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors active:scale-[0.96]">
+            <button type="submit" className="h-full px-4 py-2.5 mr-1 my-0.5 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors active:scale-[0.96]">
               <Search size={16} />
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Desktop Right */}
@@ -103,16 +113,18 @@ const SiteHeader = () => {
 
       {/* Mobile search */}
       <div className="md:hidden px-4 pb-3">
-        <div className="flex items-center rounded-lg overflow-hidden bg-muted/50">
+        <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex items-center rounded-lg overflow-hidden bg-muted/50">
           <input
             type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Elan axtar..."
             className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
           />
-          <button className="px-4 py-2.5 mr-1 my-0.5 rounded-md bg-primary text-primary-foreground active:scale-[0.96]">
+          <button type="submit" className="px-4 py-2.5 mr-1 my-0.5 rounded-md bg-primary text-primary-foreground active:scale-[0.96]">
             <Search size={16} />
           </button>
-        </div>
+        </form>
       </div>
 
       {/* Mobile menu */}

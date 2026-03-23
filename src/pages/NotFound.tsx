@@ -1,13 +1,19 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search, Home } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 const NotFound = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      navigate(`/axtaris?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
@@ -24,7 +30,7 @@ const NotFound = () => {
             Axtardığınız səhifə mövcud deyil, silinmiş və ya köçürülmüş ola bilər.
           </p>
 
-          <div className="flex items-center rounded-xl bg-background border border-border p-1.5 mb-5 shadow-sm">
+          <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex items-center rounded-xl bg-background border border-border p-1.5 mb-5 shadow-sm">
             <Search size={16} className="ml-3 text-muted-foreground shrink-0" />
             <input
               type="text"
@@ -33,10 +39,10 @@ const NotFound = () => {
               placeholder="Nə axtarırsınız?"
               className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none"
             />
-            <button className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-[hsl(var(--primary-hover))] transition-colors active:scale-[0.97]">
+            <button type="submit" className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-[hsl(var(--primary-hover))] transition-colors active:scale-[0.97]">
               Axtar
             </button>
-          </div>
+          </form>
 
           <Link
             to="/"
