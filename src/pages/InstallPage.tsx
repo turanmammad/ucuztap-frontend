@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Download, Smartphone, Monitor, ChevronRight, Share, MoreVertical, PlusSquare, Check, ArrowLeft } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import logoIcon from "@/assets/logo-icon.png";
 
 const InstallPage = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -54,9 +55,7 @@ const InstallPage = () => {
 
         {/* Hero */}
         <div className="text-center mb-10">
-          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <Download size={36} className="text-primary" />
-          </div>
+          <img src={logoIcon} alt="ucuztap.az" className="w-20 h-20 rounded-2xl mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-foreground mb-2">ucuztap.az Tətbiqini Quraşdır</h1>
           <p className="text-muted-foreground">Tətbiqi telefon və ya kompüterinə quraşdıraraq daha sürətli istifadə edin</p>
         </div>

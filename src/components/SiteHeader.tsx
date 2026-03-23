@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Heart, PlusCircle, User } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import logoImg from "@/assets/logo.png";
 
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -22,9 +23,7 @@ const SiteHeader = () => {
         {/* Desktop */}
         <div className="container hidden md:flex items-center justify-between h-16 gap-4">
           <Link to="/" className="flex items-center shrink-0">
-            <span className="text-xl font-extrabold text-foreground">ucuz</span>
-            <span className="text-xl font-extrabold text-primary">tap</span>
-            <span className="text-xl font-extrabold text-muted-foreground">.az</span>
+            <img src={logoImg} alt="ucuztap.az" className="h-8" />
           </Link>
 
           <div className="flex items-center flex-1 max-w-xl gap-2">
@@ -92,9 +91,7 @@ const SiteHeader = () => {
         <div className="md:hidden">
           <div className="flex items-center justify-between px-4 h-12">
             <Link to="/" className="flex items-center shrink-0">
-              <span className="text-lg font-extrabold text-foreground">ucuz</span>
-              <span className="text-lg font-extrabold text-primary">tap</span>
-              <span className="text-lg font-extrabold text-muted-foreground">.az</span>
+              <img src={logoImg} alt="ucuztap.az" className="h-7" />
             </Link>
             <div className="flex items-center gap-1">
               <ThemeToggle />
