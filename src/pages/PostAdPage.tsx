@@ -37,7 +37,6 @@ const subCategories: Record<string, string[]> = {
 };
 
 const deepCategories: Record<string, string[]> = {
-  "Avtomobil": ["Mercedes-Benz", "BMW", "Toyota", "Hyundai", "Kia", "Lexus", "Audi", "Volkswagen", "Chevrolet", "Nissan"],
   "Telefon": ["iPhone", "Samsung", "Xiaomi", "Huawei", "OnePlus", "Digər"],
   "Mənzil": ["Kirayə", "Satılır", "Günlük"],
 };
