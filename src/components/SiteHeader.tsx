@@ -91,9 +91,7 @@ const SiteHeader = () => {
         <div className="md:hidden">
           <div className="flex items-center justify-between px-4 h-12">
             <Link to="/" className="flex items-center shrink-0">
-              <span className="text-lg font-extrabold text-foreground">ucuz</span>
-              <span className="text-lg font-extrabold text-primary">tap</span>
-              <span className="text-lg font-extrabold text-muted-foreground">.az</span>
+              <img src={logoImg} alt="ucuztap.az" className="h-7" />
             </Link>
             <div className="flex items-center gap-1">
               <ThemeToggle />

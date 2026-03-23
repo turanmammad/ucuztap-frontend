@@ -69,9 +69,7 @@ const SiteFooter = () => (
         {/* Col 1 — Brand */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-2">
           <Link to="/" className="inline-block mb-3" aria-label="Ana səhifə">
-            <span className="text-2xl font-extrabold text-footer-foreground">ucuz</span>
-            <span className="text-2xl font-extrabold text-primary">tap</span>
-            <span className="text-2xl font-extrabold text-footer-muted">.az</span>
+            <img src={logoFull} alt="ucuztap.az — Axtaran Tapar" className="h-12" />
           </Link>
           <p className="text-sm text-footer-muted leading-relaxed max-w-xs mb-5">
             Azərbaycanın ən böyük pulsuz elan platforması. Avtomobil, əmlak, elektronika, iş elanları və daha çoxunu tapın və ya yerləşdirin.
