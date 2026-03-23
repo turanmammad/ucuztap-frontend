@@ -18,6 +18,7 @@ import PrivacyPage from "./pages/PrivacyPage.tsx";
 import AdvertisingPage from "./pages/AdvertisingPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
+import ShopsPage from "./pages/ShopsPage.tsx";
 import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
 import DashboardHome from "./components/dashboard/DashboardHome.tsx";
 import MyAds from "./components/dashboard/MyAds.tsx";
