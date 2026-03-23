@@ -181,6 +181,11 @@ const CategoryListingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
 
+  const handleRefresh = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 800));
+    window.location.reload();
+  }, []);
+
   const category = categoryMap[slug || "neqliyyat"] || categoryMap.neqliyyat;
   const { title, count, ads } = category;
   const activeFilterCount = 3;
