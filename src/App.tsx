@@ -41,6 +41,7 @@ const App = () => (
           <Route path="/daxil-ol" element={<LoginPage />} />
           <Route path="/qeydiyyat" element={<RegisterPage />} />
           <Route path="/sifre-berpa" element={<ForgotPasswordPage />} />
+          <Route path="/elanlar/:id/ireli-cek" element={<PromotionPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
