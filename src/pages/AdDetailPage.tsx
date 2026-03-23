@@ -31,10 +31,15 @@ const similarAds = [
 
 const AdDetailPage = () => {
   const [phoneRevealed, setPhoneRevealed] = useState(false);
+  const handleRefresh = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 800));
+    window.location.reload();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col pb-[120px] md:pb-0">
       <SiteHeader />
+      <PullToRefresh onRefresh={handleRefresh}>
       <main className="flex-1">
         {/* Breadcrumb */}
         <div className="border-b border-border bg-muted/30">
