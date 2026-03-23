@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles } from "lucide-react";
+import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles, Share2, Link2, Copy, Check as CheckIcon } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar } from "@/components/AdBanners";
@@ -81,6 +81,35 @@ const ShopViewPage = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [reviewSortOpen, setReviewSortOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  const shopUrl = `${window.location.origin}/magazalar/${slug || shopData.id}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shopUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  const handleShareWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(`${shopData.name} — ${shopUrl}`)}`, "_blank");
+    setShareOpen(false);
+  };
+
+  const handleShareTelegram = () => {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(shopUrl)}&text=${encodeURIComponent(shopData.name)}`, "_blank");
+    setShareOpen(false);
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shopData.name, url: shopUrl });
+      } catch {}
+    }
+    setShareOpen(false);
+  };
 
   return (
      <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
@@ -550,6 +579,40 @@ const ShopViewPage = () => {
                 }`}>
                   <MessageCircle size={15} /> Mesaj yaz
                 </button>
+
+                {/* Share button */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShareOpen(!shareOpen)}
+                    className="w-full py-2.5 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
+                  >
+                    <Share2 size={15} /> Paylaş
+                  </button>
+                  {shareOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setShareOpen(false)} />
+                      <div className="absolute left-0 right-0 top-full mt-1.5 bg-popover border border-border rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                        <button onClick={handleShareWhatsApp} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                          💬 WhatsApp
+                        </button>
+                        <button onClick={handleShareTelegram} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                          ✈️ Telegram
+                        </button>
+                        {typeof navigator.share === "function" && (
+                          <button onClick={handleNativeShare} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                            <Share2 size={14} /> Digər...
+                          </button>
+                        )}
+                        <div className="border-t border-border mt-1 pt-1">
+                          <button onClick={() => { handleCopyLink(); setShareOpen(false); }} className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-muted transition-colors w-full text-left">
+                            {linkCopied ? <CheckIcon size={14} className="text-accent" /> : <Link2 size={14} />}
+                            {linkCopied ? "Kopyalandı!" : "Linki kopyala"}
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Quick hours */}
