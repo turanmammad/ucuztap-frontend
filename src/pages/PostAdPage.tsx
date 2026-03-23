@@ -3,6 +3,7 @@ import { ChevronRight, ChevronDown, X, Camera, Search, RotateCcw, Check, Upload 
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import SuccessModal from "@/components/post-ad/SuccessModal";
+import LocationMapPicker from "@/components/post-ad/LocationMapPicker";
 import { carBrands, brandList, motoBrands, motoBrandList } from "@/data/carData";
 
 /* ═══ Category data ═══ */
