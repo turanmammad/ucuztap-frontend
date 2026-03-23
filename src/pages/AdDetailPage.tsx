@@ -73,30 +73,8 @@ const AdDetailPage = () => {
             </div>
           </div>
 
-          {/* Description */}
-          <section className="mt-8">
-            <h2 className="text-lg font-bold text-foreground mb-4">Ətraflı məlumat</h2>
-            <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed space-y-3">
-              <p>
-                Mercedes-Benz C200, 2019-cu il buraxılış. Avtomobil əla vəziyyətdədir, heç bir qəzası olmayıb.
-                Tam texniki baxışdan keçib, bütün dəyişikliklər vaxtında aparılıb. Salon tam dəri, oturacaqların
-                isidilməsi və ventilyasiyası mövcuddur.
-              </p>
-              <p>
-                Mühərrik 2.0 litr turbo benzin, 184 at gücü. Avtomat ötürücü qutusu 9G-Tronic. Yanacaq sərfiyyatı
-                şəhərdaxili 8.5L/100km, magistral yolda 5.5L/100km. Yürüş cəmi 45,000 km-dir.
-              </p>
-              <p>
-                Təchizat: AMG paket, panoramik lyuk, 360 dərəcə kamera, adaptiv tempomat, körpə zolaqlara nəzarət,
-                COMAND naviqasiya sistemi, Burmester audio sistemi, LED intellektual fənərlər, açarsız giriş və
-                mühərrik işə salma.
-              </p>
-              <p>
-                Qiymət razılaşma yolu ilə. Barter təklif etməyin. Ciddi alıcıları gözləyirəm.
-                Əlavə məlumat üçün zəng edə bilərsiniz.
-              </p>
-            </div>
-          </section>
+          {/* Description — supports HTML */}
+          <DescriptionSection />
 
           {/* Details table */}
           <section className="mt-8">
