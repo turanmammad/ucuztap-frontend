@@ -93,10 +93,32 @@ const SiteHeader = () => {
           </Link>
 
           <div className="flex items-center flex-1 max-w-xl gap-2">
-            <div className="flex items-center gap-1 px-3 py-2 text-sm border border-border rounded-lg bg-background cursor-pointer hover:border-primary/50 transition-colors">
-              <MapPin size={14} className="text-muted-foreground" />
-              <span className="text-muted-foreground whitespace-nowrap">Bütün Azərbaycan</span>
-              <ChevronDown size={14} className="text-muted-foreground" />
+            <div className="relative" ref={cityRef}>
+              <button
+                onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
+                className="flex items-center gap-1 px-3 py-2 text-sm border border-border rounded-lg bg-background cursor-pointer hover:border-primary/50 transition-colors"
+              >
+                <MapPin size={14} className="text-muted-foreground" />
+                <span className="text-muted-foreground whitespace-nowrap max-w-[120px] truncate">{selectedCity}</span>
+                <ChevronDown size={14} className={`text-muted-foreground transition-transform ${cityDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              {cityDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1.5 w-56 max-h-72 overflow-y-auto bg-popover border border-border rounded-lg shadow-xl z-50 py-1 animate-fade-in">
+                  {CITIES.map((city) => (
+                    <button
+                      key={city}
+                      onClick={() => { setSelectedCity(city); setCityDropdownOpen(false); }}
+                      className={`flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-muted transition-colors ${selectedCity === city ? "text-primary font-medium" : "text-foreground"}`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <MapPin size={13} className="text-muted-foreground" />
+                        {city}
+                      </span>
+                      {selectedCity === city && <Check size={14} className="text-primary" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex flex-1 items-center rounded-lg overflow-hidden bg-muted/50 focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
               <input
