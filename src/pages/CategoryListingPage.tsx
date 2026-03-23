@@ -372,7 +372,7 @@ const CategoryListingPage = () => {
         </button>
 
         {/* Mobile filter sheet */}
-        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />
+        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} />
       </main>
       <SiteFooter />
     </div>
