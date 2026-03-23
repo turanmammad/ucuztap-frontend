@@ -11,6 +11,7 @@ import PostAdPage from "./pages/PostAdPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
+import PromotionPage from "./pages/PromotionPage.tsx";
 import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
 import DashboardHome from "./components/dashboard/DashboardHome.tsx";
 import MyAds from "./components/dashboard/MyAds.tsx";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/daxil-ol" element={<LoginPage />} />
           <Route path="/qeydiyyat" element={<RegisterPage />} />
           <Route path="/sifre-berpa" element={<ForgotPasswordPage />} />
+          <Route path="/elanlar/:id/ireli-cek" element={<PromotionPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
