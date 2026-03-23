@@ -187,20 +187,17 @@ const AdDetailPage = () => {
       </main>
 
       {/* Mobile sticky contact bar — above bottom nav */}
-      <div className="md:hidden fixed bottom-[52px] left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border px-4 py-2.5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex-1 min-w-0">
-            <p className="text-lg font-extrabold text-foreground leading-tight">25,000 ₼</p>
-          </div>
+      <div className="md:hidden fixed bottom-[60px] left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border px-4 py-3">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setPhoneRevealed(!phoneRevealed)}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-accent text-accent-foreground font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97] shrink-0"
+            className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97]"
           >
-            <Phone size={16} />
+            <Phone size={18} />
             {phoneRevealed ? "+994 50 123 45 67" : "Zəng et"}
           </button>
-          <button className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border-2 border-border font-semibold text-sm text-foreground hover:border-primary transition-colors active:scale-[0.97] shrink-0">
-            <MessageCircle size={16} />
+          <button className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary font-bold text-sm text-primary hover:bg-primary/5 transition-colors active:scale-[0.97]">
+            <MessageCircle size={18} />
             Yaz
           </button>
         </div>
