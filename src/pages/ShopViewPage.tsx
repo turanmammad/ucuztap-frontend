@@ -32,11 +32,13 @@ const shopData = {
     { day: "Bazar", hours: "Bağlı", open: false },
   ],
   reviews: [
-    { id: 1, name: "Leyla Əliyeva", rating: 5, comment: "Çox yaxşı satıcıdır. Maşın tam təsvir olunduğu kimi idi. Təşəkkür edirəm!", date: "12.01.2025", avatar: "LƏ" },
-    { id: 2, name: "Rəşad Hüseynov", rating: 5, comment: "Sürətli cavab verdi, əla kommunikasiya. Tövsiyə edirəm.", date: "08.01.2025", avatar: "RH" },
-    { id: 3, name: "Nigar Quliyeva", rating: 4, comment: "Yaxşı idi, amma görüşə bir az gec gəldi. Məhsul keyfiyyətli idi.", date: "03.01.2025", avatar: "NQ" },
-    { id: 4, name: "Kamran İsmayılov", rating: 5, comment: "Etibarlı satıcı. Təkrar alış-veriş edərdim.", date: "28.12.2024", avatar: "Kİ" },
-    { id: 5, name: "Aynur Həsənova", rating: 4, comment: "Qiymət razılaşması yaxşı keçdi. Məhsul gözlədiyim kimi idi.", date: "20.12.2024", avatar: "AH" },
+    { id: 1, name: "Leyla Əliyeva", rating: 5, comment: "Çox yaxşı satıcıdır. Maşın tam təsvir olunduğu kimi idi. Təşəkkür edirəm!", date: "12.01.2025", avatar: "LƏ", helpful: 12, notHelpful: 1 },
+    { id: 2, name: "Rəşad Hüseynov", rating: 5, comment: "Sürətli cavab verdi, əla kommunikasiya. Tövsiyə edirəm.", date: "08.01.2025", avatar: "RH", helpful: 8, notHelpful: 0 },
+    { id: 3, name: "Nigar Quliyeva", rating: 4, comment: "Yaxşı idi, amma görüşə bir az gec gəldi. Məhsul keyfiyyətli idi.", date: "03.01.2025", avatar: "NQ", helpful: 5, notHelpful: 2, reply: { text: "Hörmətli Nigar xanım, gecikməyə görə üzr istəyirik. Bundan sonra daha diqqətli olacağıq.", date: "04.01.2025" } },
+    { id: 4, name: "Kamran İsmayılov", rating: 5, comment: "Etibarlı satıcı. Təkrar alış-veriş edərdim.", date: "28.12.2024", avatar: "Kİ", helpful: 15, notHelpful: 0 },
+    { id: 5, name: "Aynur Həsənova", rating: 4, comment: "Qiymət razılaşması yaxşı keçdi. Məhsul gözlədiyim kimi idi.", date: "20.12.2024", avatar: "AH", helpful: 3, notHelpful: 1 },
+    { id: 6, name: "Tural Məmmədov", rating: 3, comment: "Orta səviyyədə xidmət. Məhsulun vəziyyəti elana tam uyğun deyildi.", date: "15.12.2024", avatar: "TM", helpful: 7, notHelpful: 3 },
+    { id: 7, name: "Günay Həsənli", rating: 5, comment: "Mükəmməl təcrübə! Hər şey çox peşəkar idi. Mütləq tövsiyə edirəm.", date: "10.12.2024", avatar: "GH", helpful: 20, notHelpful: 0 },
   ],
   ads: [
     { id: 1, title: "Mercedes-Benz C200, 2019", price: "25,000", img: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400&h=300&fit=crop", date: "Bugün" },
