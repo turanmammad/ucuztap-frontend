@@ -520,7 +520,17 @@ const ShopViewPage = () => {
             {/* Sidebar */}
             <div className="space-y-4">
               {/* Contact card */}
-              <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+              <div className={`rounded-xl border p-4 space-y-3 ${
+                shopData.premium
+                  ? 'border-[hsl(var(--vip-gold))]/40 bg-gradient-to-b from-[hsl(var(--vip-gold))]/[0.04] to-card shadow-[0_2px_12px_hsl(var(--vip-gold)/0.08)]'
+                  : 'border-border bg-card'
+              }`}>
+                {shopData.premium && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))]/15 to-[hsl(var(--vip-gold))]/5 mb-1">
+                    <Crown size={13} className="text-[hsl(var(--vip-gold))]" />
+                    <span className="text-[10px] font-bold text-[hsl(var(--vip-gold))] uppercase tracking-wide">Premium Mağaza</span>
+                  </div>
+                )}
                 <h3 className="text-sm font-semibold text-foreground">Əlaqə</h3>
                 <a href={`tel:${shopData.phone}`} className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors">
                   <Phone size={14} className="text-muted-foreground" /> {shopData.phone}
@@ -533,7 +543,11 @@ const ShopViewPage = () => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin size={14} /> <span className="text-xs leading-tight">{shopData.address}</span>
                 </div>
-                <button className="w-full py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] flex items-center justify-center gap-2">
+                <button className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-colors active:scale-[0.98] flex items-center justify-center gap-2 ${
+                  shopData.premium
+                    ? 'bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-white hover:opacity-90 shadow-sm'
+                    : 'bg-accent text-accent-foreground hover:bg-accent-hover'
+                }`}>
                   <MessageCircle size={15} /> Mesaj yaz
                 </button>
               </div>
