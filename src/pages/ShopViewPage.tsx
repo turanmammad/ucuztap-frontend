@@ -83,13 +83,18 @@ const ShopViewPage = () => {
   const [reviewSortOpen, setReviewSortOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
+     <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
       <SiteHeader />
       <main className="flex-1">
         {/* Cover + Hero Header */}
-        <div className="relative h-52 md:h-72 overflow-hidden bg-muted">
+        <div className={`relative h-52 md:h-72 overflow-hidden bg-muted ${shopData.premium ? 'ring-b-4 ring-[hsl(var(--vip-gold))]' : ''}`}>
           <img src={shopData.cover} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
+          <div className={`absolute inset-0 ${shopData.premium ? 'bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10' : 'bg-gradient-to-t from-black/80 via-black/40 to-black/10'}`} />
+
+          {/* Premium shimmer overlay */}
+          {shopData.premium && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--vip-gold))]/[0.06] to-transparent pointer-events-none" />
+          )}
 
           {/* Shop info overlay on cover */}
           <div className="absolute inset-x-0 bottom-0 z-10">
@@ -99,18 +104,34 @@ const ShopViewPage = () => {
                   <img
                     src={shopData.logo}
                     alt={shopData.name}
-                    className="w-20 h-20 md:w-28 md:h-28 rounded-2xl border-[3px] border-white/20 object-cover shadow-2xl ring-2 ring-white/10"
+                    className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl object-cover shadow-2xl ${
+                      shopData.premium
+                        ? 'border-[3px] border-[hsl(var(--vip-gold))]/60 ring-2 ring-[hsl(var(--vip-gold))]/30'
+                        : 'border-[3px] border-white/20 ring-2 ring-white/10'
+                    }`}
                   />
                   {shopData.verified && (
                     <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-7 md:h-7 rounded-full bg-accent flex items-center justify-center shadow-lg ring-2 ring-black/20">
                       <ShieldCheck size={14} className="text-accent-foreground" />
                     </div>
                   )}
+                  {shopData.premium && (
+                    <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(var(--vip-gold))] to-[hsl(35,80%,45%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
+                      <Crown size={14} className="text-white" />
+                    </div>
+                  )}
                 </div>
                 <div className="pb-0.5 min-w-0 flex-1">
-                  <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
-                    {shopData.name}
-                  </h1>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
+                      {shopData.name}
+                    </h1>
+                    {shopData.premium && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[10px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
+                        <Crown size={10} /> Premium
+                      </span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
                     <span className="inline-flex items-center gap-1 text-sm text-white/90 bg-white/15 backdrop-blur-sm px-2.5 py-0.5 rounded-full font-medium">
                       <Store size={12} /> {shopData.category}
@@ -132,6 +153,11 @@ const ShopViewPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Premium accent bar */}
+        {shopData.premium && (
+          <div className="h-1 bg-gradient-to-r from-[hsl(var(--vip-gold))]/60 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/60" />
+        )}
 
         <div className="container mt-5 relative z-10">
 
