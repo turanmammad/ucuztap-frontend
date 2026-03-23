@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Sparkles, ChevronDown, LayoutGrid, List, SearchX } from "lucide-react";
+import { Search, Sparkles, ChevronDown, LayoutGrid, List, SearchX, SlidersHorizontal, X, MapPin, Tag, ArrowUpDown } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
