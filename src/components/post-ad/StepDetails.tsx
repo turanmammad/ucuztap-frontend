@@ -174,6 +174,38 @@ function getSectionTitle(path: string[]): string {
   return titles[path[0]] || "Əlavə məlumatlar";
 }
 
+function getTitlePlaceholder(path: string[]): string {
+  const cat = path[0];
+  const sub = path[1];
+  const placeholders: Record<string, string> = {
+    "Nəqliyyat/Avtomobil": "Məsələn: Toyota Camry 2.5 Hybrid, 2021",
+    "Nəqliyyat/Motosiklet": "Məsələn: Yamaha MT-07, 2022",
+    "Nəqliyyat": "Məsələn: Ford Transit, 2020",
+    "Daşınmaz Əmlak/Mənzil": "Məsələn: 3 otaqlı mənzil, 28 May m.",
+    "Daşınmaz Əmlak/Ev / Villa": "Məsələn: 4 otaqlı həyət evi, Mərdəkan",
+    "Daşınmaz Əmlak/Torpaq": "Məsələn: 6 sot torpaq, Şüvəlan",
+    "Daşınmaz Əmlak": "Məsələn: Ofis icarəyə verilir, Nəsimi",
+    "Elektronika/Telefon": "Məsələn: iPhone 15 Pro Max, 256GB",
+    "Elektronika/Kompüter": "Məsələn: MacBook Pro M2, 16GB RAM",
+    "Elektronika": "Məsələn: Samsung TV 55 düym, 4K",
+    "Ev və Bağ/Mebel": "Məsələn: Künc divan, yeni, qəhvəyi",
+    "Ev və Bağ/Məişət texnikası": "Məsələn: Bosch paltaryuyan, 8 kq",
+    "Ev və Bağ": "Məsələn: Bağ üçün masa dəsti",
+    "İş Elanları": "Məsələn: Satış meneceri — Bakı",
+    "Xidmətlər": "Məsələn: Ev təmiri xidməti, təcrübəli usta",
+    "Geyim və Aksesuar": "Məsələn: Nike Air Force 1, ölçü 42",
+    "Heyvanlar": "Məsələn: Labrador bala, 3 aylıq",
+    "Hobbi və Asudə": "Məsələn: Akustik gitara, Yamaha",
+    "Uşaq Aləmi": "Məsələn: Uşaq arabası, az işlənmiş",
+    "Tikinti və Təmir": "Məsələn: Laminat döşəmə, 50 m²",
+  };
+  if (sub) {
+    const key = `${cat}/${sub}`;
+    if (placeholders[key]) return placeholders[key];
+  }
+  return placeholders[cat] || "Elanın başlığını daxil edin";
+}
+
 const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
   const [currency, setCurrency] = useState("₼");
   const [priceType, setPriceType] = useState<"fixed" | "negotiable">("fixed");
