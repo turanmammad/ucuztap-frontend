@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin } from "lucide-react";
+import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,7 +38,17 @@ const SiteHeader = () => {
         </div>
 
         {/* Desktop Right */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2">
+          <Link
+            to="/magazalar"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors"
+          >
+            <Store size={16} />
+            <span className="hidden lg:inline">Mağazalar</span>
+          </Link>
+
+          <ThemeToggle />
+
           <Link
             to="/elan-yerlesdir"
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-md bg-accent text-accent-foreground hover:bg-accent-hover transition-colors active:scale-[0.97]"
@@ -82,9 +93,12 @@ const SiteHeader = () => {
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button className="p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile search */}
@@ -105,6 +119,7 @@ const SiteHeader = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-2 animate-fade-in">
           <Link to="/elan-yerlesdir" onClick={() => setMobileMenuOpen(false)} className="block w-full text-center py-2.5 rounded-md bg-accent text-accent-foreground font-semibold text-sm">＋ Elan yerləşdir</Link>
+          <Link to="/magazalar" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 py-2 text-sm hover:text-primary transition-colors"><Store size={16} /> Mağazalar</Link>
           <Link to="/panel" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Profilim</Link>
           <Link to="/panel/elanlarim" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Elanlarım</Link>
           <Link to="/panel/favoritler" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Favoritlərim</Link>
