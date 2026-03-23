@@ -81,6 +81,35 @@ const ShopViewPage = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [reviewSortOpen, setReviewSortOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  const shopUrl = `${window.location.origin}/magazalar/${slug || shopData.id}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shopUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  const handleShareWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(`${shopData.name} — ${shopUrl}`)}`, "_blank");
+    setShareOpen(false);
+  };
+
+  const handleShareTelegram = () => {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(shopUrl)}&text=${encodeURIComponent(shopData.name)}`, "_blank");
+    setShareOpen(false);
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shopData.name, url: shopUrl });
+      } catch {}
+    }
+    setShareOpen(false);
+  };
 
   return (
      <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
