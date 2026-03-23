@@ -540,6 +540,21 @@ const PostAdPage = () => {
                     <span className={`block absolute top-[2px] left-[2px] w-4 h-4 rounded-full bg-white shadow transition-transform ${contact.whatsapp ? "translate-x-4" : ""}`} />
                   </button>
                 </div>
+
+                {/* Map for real estate */}
+                {categoryPath[0] === "Daşınmaz Əmlak" && (
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <LocationMapPicker
+                      lat={mapLat}
+                      lng={mapLng}
+                      onSelect={(lat, lng, addr) => {
+                        setMapLat(lat || null);
+                        setMapLng(lng || null);
+                        if (addr !== undefined) setMapAddress(addr);
+                      }}
+                    />
+                  </div>
+                )}
               </FieldSection>
 
               {/* Submit */}
