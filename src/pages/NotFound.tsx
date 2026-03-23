@@ -6,7 +6,14 @@ import SiteFooter from "@/components/SiteFooter";
 
 const NotFound = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      navigate(`/axtaris?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
