@@ -63,8 +63,23 @@ const isOpenNow = () => {
   return shopData.workingHours[dayIndex]?.open ?? false;
 };
 
+const REVIEW_SORT_OPTIONS = [
+  { value: "newest", label: "Ən yeni" },
+  { value: "oldest", label: "Ən köhnə" },
+  { value: "highest", label: "Ən yüksək reytinq" },
+  { value: "lowest", label: "Ən aşağı reytinq" },
+  { value: "helpful", label: "Ən faydalı" },
+];
+
 const ShopViewPage = () => {
   const { slug } = useParams();
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewSort, setReviewSort] = useState("newest");
+  const [reviewFilterStar, setReviewFilterStar] = useState<number | null>(null);
+  const [newRating, setNewRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewSortOpen, setReviewSortOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
