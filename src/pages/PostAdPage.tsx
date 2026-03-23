@@ -187,6 +187,8 @@ const PostAdPage = () => {
   const [contact, setContact] = useState({
     fullName: "", phone: "", city: "Bakı", district: "", whatsapp: true,
   });
+  const [contactHoursFrom, setContactHoursFrom] = useState("09:00");
+  const [contactHoursTo, setContactHoursTo] = useState("22:00");
   const [mapLat, setMapLat] = useState<number | null>(null);
   const [mapLng, setMapLng] = useState<number | null>(null);
   const [mapAddress, setMapAddress] = useState("");
