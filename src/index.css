@@ -111,8 +111,15 @@
   * {
     @apply border-border;
   }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
   }
   h1, h2, h3, h4 {
     @apply tracking-tight;
@@ -122,6 +129,23 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  /* PWA safe areas */
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  /* Bottom bar spacer for mobile */
+  .pb-mobile-bar {
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
   }
 }
 
