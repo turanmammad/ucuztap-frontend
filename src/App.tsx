@@ -19,9 +19,12 @@ import AdvertisingPage from "./pages/AdvertisingPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import ShopsPage from "./pages/ShopsPage.tsx";
+import CreateShopPage from "./pages/CreateShopPage.tsx";
+import ShopViewPage from "./pages/ShopViewPage.tsx";
 import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
 import DashboardHome from "./components/dashboard/DashboardHome.tsx";
 import MyAds from "./components/dashboard/MyAds.tsx";
+import MyShop from "./components/dashboard/MyShop.tsx";
 import Favorites from "./components/dashboard/Favorites.tsx";
 import Messages from "./components/dashboard/Messages.tsx";
 import Notifications from "./components/dashboard/Notifications.tsx";
@@ -56,9 +59,12 @@ const App = () => (
           <Route path="/elaqe" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/magazalar" element={<ShopsPage />} />
+          <Route path="/magazalar/yarat" element={<CreateShopPage />} />
+          <Route path="/magazalar/:slug" element={<ShopViewPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
+            <Route path="magazam" element={<MyShop />} />
             <Route path="favoritler" element={<Favorites />} />
             <Route path="mesajlar" element={<Messages />} />
             <Route path="bildirisler" element={<Notifications />} />

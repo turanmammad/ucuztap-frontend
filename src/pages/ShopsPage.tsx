@@ -17,16 +17,21 @@ const ShopsPage = () => (
     <SiteHeader />
     <main className="flex-1">
       <section className="bg-muted/30 border-b border-border">
-        <div className="container py-10 md:py-14">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">Mağazalar</h1>
-          <p className="text-muted-foreground max-w-lg">Etibarlı satıcıların rəsmi mağazalarını kəşf edin.</p>
+        <div className="container py-10 md:py-14 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">Mağazalar</h1>
+            <p className="text-muted-foreground max-w-lg">Etibarlı satıcıların rəsmi mağazalarını kəşf edin.</p>
+          </div>
+          <Link to="/magazalar/yarat" className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.98]">
+            <Store size={16} /> Mağaza yarat
+          </Link>
         </div>
       </section>
 
       <div className="container py-8 md:py-10">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {shops.map((shop) => (
-            <Link key={shop.id} to="#" className="group">
+            <Link key={shop.id} to={`/magazalar/${shop.name.toLowerCase().replace(/\s+/g, '-')}`} className="group">
               <div className="bg-card rounded-xl border border-border p-4 card-lift flex items-start gap-4">
                 <img src={shop.img} alt={shop.name} className="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" />
                 <div className="flex-1 min-w-0">

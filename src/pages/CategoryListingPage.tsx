@@ -4,6 +4,7 @@ import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal } from "
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
+import { AdBannerSidebar, AdCardInFeed, AdBannerHorizontal } from "@/components/AdBanners";
 
 const sortOptions = ["Tarixə görə", "Ucuzdan bahaya", "Bahalıdan ucuza", "Populyarlığa görə"];
 
@@ -223,8 +224,9 @@ const CategoryListingPage = () => {
 
           <div className="flex gap-8">
             {/* Sidebar */}
-            <div className="hidden lg:block w-[260px] shrink-0">
+            <div className="hidden lg:block w-[260px] shrink-0 space-y-4">
               <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} />
+              <AdBannerSidebar />
             </div>
 
             {/* Main content */}
@@ -287,20 +289,23 @@ const CategoryListingPage = () => {
               {/* Ad cards */}
               {view === "grid" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {ads.map((ad) => (
-                    <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
-                      <div className="aspect-[4/3] overflow-hidden">
-                        <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                      </div>
-                      <div className="p-3">
-                        <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
-                        <p className="text-base font-bold text-foreground mt-1">{ad.price} ₼</p>
-                        <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
-                          <span>📍 {ad.location}</span>
-                          <span>{ad.date}</span>
+                  {ads.map((ad, i) => (
+                    <>
+                      {i === 3 && <AdCardInFeed key="ad-feed" />}
+                      <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
+                        <div className="aspect-[4/3] overflow-hidden">
+                          <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                         </div>
-                      </div>
-                    </Link>
+                        <div className="p-3">
+                          <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
+                          <p className="text-base font-bold text-foreground mt-1">{ad.price} ₼</p>
+                          <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
+                            <span>📍 {ad.location}</span>
+                            <span>{ad.date}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    </>
                   ))}
                 </div>
               ) : (
