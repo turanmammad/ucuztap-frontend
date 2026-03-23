@@ -5,6 +5,7 @@ import SiteFooter from "@/components/SiteFooter";
 import AdImageGallery from "@/components/AdImageGallery";
 import AdSidebar from "@/components/AdSidebar";
 import { ChevronRight, Phone, MessageCircle } from "lucide-react";
+import PullToRefresh from "@/components/PullToRefresh";
 
 const breadcrumbs = [
   { label: "Ana Səhifə", to: "/" },
