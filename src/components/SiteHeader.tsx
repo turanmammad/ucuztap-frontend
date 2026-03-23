@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Heart, PlusCircle, User } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import logoImg from "@/assets/logo.png";
 
 const SiteHeader = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
