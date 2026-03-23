@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube, Send, MapPin, Mail, Phone, Smartphone, Apple, Play } from "lucide-react";
+import logoFull from "@/assets/logo-full.png";
 
 const categoryLinks = [
   { label: "Nəqliyyat", to: "/kateqoriya/neqliyyat" },
