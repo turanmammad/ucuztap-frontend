@@ -112,13 +112,20 @@ const AdDetailPage = () => {
             </div>
           </section>
 
-          {/* Map placeholder */}
-          <section className="mt-8">
-            <h2 className="text-lg font-bold text-foreground mb-4">Yerləşmə</h2>
-            <div className="border border-border rounded-lg bg-muted/30 h-48 flex items-center justify-center">
-              <p className="text-muted-foreground text-sm">📍 Bakı, Nəsimi</p>
-            </div>
-          </section>
+          {/* Map — only shown if location was provided */}
+          {/* Mock: this ad has location data */}
+          {(() => {
+            const hasLocation = true; // In real app: check if ad.lat && ad.lng exist
+            if (!hasLocation) return null;
+            return (
+              <section className="mt-8">
+                <h2 className="text-lg font-bold text-foreground mb-4">Yerləşmə</h2>
+                <div className="border border-border rounded-lg bg-muted/30 h-48 flex items-center justify-center">
+                  <p className="text-muted-foreground text-sm">📍 Bakı, Nəsimi</p>
+                </div>
+              </section>
+            );
+          })()}
 
           {/* AI price analysis */}
           <section className="mt-8">
