@@ -173,6 +173,54 @@ const categoryMap: Record<string, CategoryData> = {
 
 const TOTAL_PAGES = 117;
 
+// Subcategory data per category
+const subcategoryMap: Record<string, { name: string; count: string; emoji: string }[]> = {
+  neqliyyat: [
+    { name: "Avtomobil", count: "25,000", emoji: "🚗" }, { name: "Motosiklet", count: "500", emoji: "🏍️" },
+    { name: "Ehtiyat hissələri", count: "3,000", emoji: "🔧" }, { name: "Velosiped", count: "800", emoji: "🚲" },
+    { name: "Su nəqliyyatı", count: "200", emoji: "🚤" },
+  ],
+  emlak: [
+    { name: "Mənzil", count: "15,000", emoji: "🏢" }, { name: "Ev / Villa", count: "3,200", emoji: "🏠" },
+    { name: "Torpaq", count: "2,100", emoji: "🌍" }, { name: "Qaraj", count: "800", emoji: "🅿️" }, { name: "Obyekt", count: "2,356", emoji: "🏪" },
+  ],
+  elektronika: [
+    { name: "Telefon", count: "18,000", emoji: "📱" }, { name: "Kompüter", count: "6,500", emoji: "💻" },
+    { name: "TV və Audio", count: "4,200", emoji: "📺" }, { name: "Foto / Video", count: "2,800", emoji: "📷" },
+  ],
+  "ev-ve-bag": [
+    { name: "Mebel", count: "5,200", emoji: "🛋️" }, { name: "Məişət texnikası", count: "4,100", emoji: "🧹" },
+    { name: "Bağ ləvazimatları", count: "1,800", emoji: "🌿" },
+  ],
+  "is-elanlari": [
+    { name: "Tam iş", count: "4,500", emoji: "💼" }, { name: "Yarım iş", count: "1,200", emoji: "⏰" },
+    { name: "Freelance", count: "800", emoji: "🏠" }, { name: "Staj", count: "2,401", emoji: "🎓" },
+  ],
+  xidmetler: [
+    { name: "Təmir", count: "4,200", emoji: "🔧" }, { name: "Təmizlik", count: "2,300", emoji: "🧹" },
+    { name: "Nəqliyyat", count: "3,100", emoji: "🚚" }, { name: "Təhsil", count: "2,800", emoji: "📚" },
+  ],
+  "geyim-aksesuar": [
+    { name: "Kişi", count: "6,400", emoji: "👔" }, { name: "Qadın", count: "8,200", emoji: "👗" },
+    { name: "Uşaq", count: "2,100", emoji: "👶" }, { name: "Aksesuar", count: "2,534", emoji: "💍" },
+  ],
+  heyvanlar: [
+    { name: "İt", count: "1,200", emoji: "🐕" }, { name: "Pişik", count: "800", emoji: "🐈" },
+    { name: "Quş", count: "500", emoji: "🐦" },
+  ],
+  "hobbi-asude": [
+    { name: "İdman", count: "1,800", emoji: "⚽" }, { name: "Musiqi", count: "900", emoji: "🎸" },
+    { name: "Kitab", count: "1,200", emoji: "📖" }, { name: "Oyun", count: "1,000", emoji: "🎮" },
+  ],
+  "usaq-alemi": [
+    { name: "Geyim", count: "2,800", emoji: "👕" }, { name: "Oyuncaq", count: "2,100", emoji: "🧸" },
+    { name: "Araba", count: "1,200", emoji: "🚼" },
+  ],
+  "tikinti-temir": [
+    { name: "Material", count: "2,100", emoji: "🧱" }, { name: "Alət", count: "1,200", emoji: "🔨" }, { name: "Xidmət", count: "1,267", emoji: "👷" },
+  ],
+};
+
 const CategoryListingPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -180,6 +228,8 @@ const CategoryListingPage = () => {
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [activeSub, setActiveSub] = useState<string | null>(null);
+  const [searchInCategory, setSearchInCategory] = useState("");
 
   const handleRefresh = useCallback(async () => {
     await new Promise((r) => setTimeout(r, 800));
@@ -188,6 +238,7 @@ const CategoryListingPage = () => {
 
   const category = categoryMap[slug || "neqliyyat"] || categoryMap.neqliyyat;
   const { title, count, ads } = category;
+  const subcategories = subcategoryMap[slug || "neqliyyat"] || [];
   const activeFilterCount = 3;
 
   const getPageNumbers = () => {
@@ -214,24 +265,84 @@ const CategoryListingPage = () => {
         {/* Breadcrumb */}
         <div className="border-b border-border bg-muted/30">
           <div className="container py-3">
-            <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+            <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
               <Link to="/" className="hover:text-primary transition-colors">Ana Səhifə</Link>
-              <ChevronRight size={14} className="text-muted-foreground/50" />
+              <ChevronRight size={14} className="text-muted-foreground/40" />
               <span className="text-foreground font-medium">{title}</span>
+              {activeSub && (
+                <>
+                  <ChevronRight size={14} className="text-muted-foreground/40" />
+                  <span className="text-primary font-medium">{activeSub}</span>
+                </>
+              )}
             </nav>
           </div>
         </div>
 
-        <div className="container py-6 md:py-8">
-          {/* Page title */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-extrabold text-foreground">{title}</h1>
-            <p className="text-sm text-muted-foreground mt-1">{count} elan</p>
-          </div>
+        {/* Category Hero Header */}
+        <div className="bg-card border-b border-border">
+          <div className="container py-5 md:py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{title}</h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  <span className="font-semibold text-foreground">{count}</span> aktiv elan
+                </p>
+              </div>
 
+              {/* Search within category */}
+              <div className="flex items-center rounded-xl bg-background border border-border p-1 w-full md:w-[360px] shadow-sm focus-within:ring-2 focus-within:ring-primary/30 focus-within:border-primary/50 transition-all">
+                <Search size={16} className="ml-3 text-muted-foreground shrink-0" />
+                <input
+                  type="text"
+                  value={searchInCategory}
+                  onChange={(e) => setSearchInCategory(e.target.value)}
+                  placeholder={`${title} daxilində axtar...`}
+                  className="flex-1 px-2.5 py-2 text-sm bg-transparent outline-none placeholder:text-muted-foreground/60"
+                />
+                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-semibold text-xs hover:bg-primary-hover transition-colors shrink-0 active:scale-[0.96]">
+                  Axtar
+                </button>
+              </div>
+            </div>
+
+            {/* Subcategory chips */}
+            {subcategories.length > 0 && (
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                <button
+                  onClick={() => setActiveSub(null)}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                    !activeSub
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                  }`}
+                >
+                  <Grid3X3 size={13} /> Hamısı
+                </button>
+                {subcategories.map((sub) => (
+                  <button
+                    key={sub.name}
+                    onClick={() => setActiveSub(activeSub === sub.name ? null : sub.name)}
+                    className={`shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                      activeSub === sub.name
+                        ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                        : "bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    <span>{sub.emoji}</span>
+                    {sub.name}
+                    <span className="text-[11px] opacity-70">({sub.count})</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="container py-6 md:py-8">
           <div className="flex gap-8">
             {/* Sidebar */}
-            <div className="hidden lg:block w-[260px] shrink-0 space-y-4">
+            <div className="hidden lg:block w-[280px] shrink-0 space-y-4">
               <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} />
               <AdBannerSidebar />
             </div>
