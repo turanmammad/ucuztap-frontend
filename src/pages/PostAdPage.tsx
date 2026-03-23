@@ -187,6 +187,8 @@ const PostAdPage = () => {
   const [contact, setContact] = useState({
     fullName: "", phone: "", city: "Bakı", district: "", whatsapp: true,
   });
+  const [contactHoursFrom, setContactHoursFrom] = useState("09:00");
+  const [contactHoursTo, setContactHoursTo] = useState("22:00");
   const [mapLat, setMapLat] = useState<number | null>(null);
   const [mapLng, setMapLng] = useState<number | null>(null);
   const [mapAddress, setMapAddress] = useState("");
@@ -539,6 +541,27 @@ const PostAdPage = () => {
                     className={`relative rounded-full transition-colors ${contact.whatsapp ? "bg-accent" : "bg-border"}`} style={{ width: 36, height: 20 }}>
                     <span className={`block absolute top-[2px] left-[2px] w-4 h-4 rounded-full bg-white shadow transition-transform ${contact.whatsapp ? "translate-x-4" : ""}`} />
                   </button>
+                </div>
+
+                {/* Contact hours */}
+                <div className="mt-3 pt-3 border-t border-border">
+                  <label className="block text-xs font-medium text-muted-foreground mb-2">🕐 Əlaqə saatları</label>
+                  <div className="flex items-center gap-2">
+                    <select value={contactHoursFrom} onChange={e => setContactHoursFrom(e.target.value)}
+                      className="h-9 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:ring-2 focus:ring-ring">
+                      {Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`).map(t => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                    <span className="text-xs text-muted-foreground">—</span>
+                    <select value={contactHoursTo} onChange={e => setContactHoursTo(e.target.value)}
+                      className="h-9 rounded-lg border border-input bg-background px-2 text-xs outline-none focus:ring-2 focus:ring-ring">
+                      {Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`).map(t => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-1">Bu saatlar arasında sizinlə əlaqə saxlanacaq</p>
                 </div>
 
                 {/* Map for real estate */}

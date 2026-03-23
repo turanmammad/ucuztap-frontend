@@ -141,6 +141,11 @@ const AdSidebar = () => {
           <span className="flex items-center gap-1"><Check size={12} className="text-accent" /> Telefon təsdiqlənib</span>
         </div>
 
+        <div className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-muted text-xs text-muted-foreground">
+          <span>🕐</span>
+          <span>Əlaqə saatları: <span className="font-semibold text-foreground">09:00 — 22:00</span></span>
+        </div>
+
         <a href="#" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
           Bütün elanları (23) <ChevronRight size={14} />
         </a>
