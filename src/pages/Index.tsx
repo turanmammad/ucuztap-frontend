@@ -4,7 +4,7 @@ import CategoryGrid from "@/components/CategoryGrid";
 import VipAds from "@/components/VipAds";
 import RecentAds from "@/components/RecentAds";
 import AiSearchBanner from "@/components/AiSearchBanner";
-import AppDownloadBanner from "@/components/AppDownloadBanner";
+
 import StatsBar from "@/components/StatsBar";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerHorizontal, AdBannerInline } from "@/components/AdBanners";
