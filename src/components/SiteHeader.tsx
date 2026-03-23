@@ -75,7 +75,7 @@ const SiteHeader = () => {
               </div>
             </>
           ) : (
-            <a href="/login" className="text-sm font-medium text-primary-foreground hover:text-white transition-colors">Daxil ol</a>
+            <a href="/login" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Daxil ol</a>
           )}
         </div>
 
