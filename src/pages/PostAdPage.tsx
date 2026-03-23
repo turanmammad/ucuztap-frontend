@@ -220,9 +220,25 @@ const PostAdPage = () => {
   const activeSide = hoveredMain || mainCat;
   const activeSubs = activeSide ? (subCategories[activeSide] || []) : [];
 
-  const canPublish = categoryComplete && formData.title && formData.description &&
-    (isJobCategory || formData.price || priceType === "negotiable") &&
-    images.length >= 1 && contact.phone && contact.city && accepted;
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!formData.title?.trim()) e.title = "Başlıq daxil edin";
+    if (!formData.description?.trim()) e.description = "Elan mətni daxil edin";
+    if (!isJobCategory && priceType !== "negotiable" && !formData.price) e.price = "Qiymət daxil edin";
+    if (images.length < 1) e.images = "Minimum 1 şəkil yükləyin";
+    if (!contact.phone?.trim()) e.phone = "Telefon nömrəsi daxil edin";
+    if (!contact.city) e.city = "Şəhər seçin";
+    if (!accepted) e.accepted = "Qaydaları qəbul edin";
+    if ((isCarCategory || isMotoCategory) && !formData.brand) e.brand = "Marka seçin";
+    return e;
+  };
+
+  const handlePublish = () => {
+    setTried(true);
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length === 0) setShowSuccess(true);
+  };
 
   const handleReset = () => {
     setCategoryPath([]);
@@ -230,6 +246,8 @@ const PostAdPage = () => {
     setImages([]);
     setAccepted(false);
     setShowSuccess(false);
+    setTried(false);
+    setErrors({});
     setContact({ fullName: "", phone: "", city: "Bakı", district: "", whatsapp: true });
   };
 
