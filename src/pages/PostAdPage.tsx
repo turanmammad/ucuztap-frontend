@@ -417,8 +417,9 @@ const PostAdPage = () => {
                       onChange={e => update("title", e.target.value)}
                       placeholder={isJobCategory ? "Məs: Satış meneceri — Bakı" : "Məs: Toyota Camry 2.5, 2021"}
                       maxLength={100}
-                      className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                      className={`w-full h-10 rounded-lg border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow ${tried && errors.title ? "border-destructive" : "border-input"}`}
                     />
+                    {tried && errors.title && <p className="text-xs text-destructive mt-1">{errors.title}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-muted-foreground mb-1">Mətn *</label>
@@ -427,8 +428,9 @@ const PostAdPage = () => {
                       onChange={e => update("description", e.target.value)}
                       rows={4}
                       placeholder="Elanınız haqqında ətraflı yazın..."
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow resize-none"
+                      className={`w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow resize-none ${tried && errors.description ? "border-destructive" : "border-input"}`}
                     />
+                    {tried && errors.description && <p className="text-xs text-destructive mt-1">{errors.description}</p>}
                   </div>
                 </div>
               </FieldSection>
