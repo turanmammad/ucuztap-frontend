@@ -175,9 +175,18 @@ const ShopViewPage = () => {
                 <TabsContent value="ads">
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {shopData.ads.map((ad) => (
-                      <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
-                        <div className="aspect-[4/3] overflow-hidden">
+                      <Link key={ad.id} to={`/elanlar/${ad.id}`} className={`rounded-lg border overflow-hidden card-lift group ${
+                        shopData.premium
+                          ? 'border-[hsl(var(--vip-gold))]/30 bg-card shadow-sm hover:shadow-[0_4px_20px_hsl(var(--vip-gold)/0.1)]'
+                          : 'border-border bg-card'
+                      }`}>
+                        <div className="aspect-[4/3] overflow-hidden relative">
                           <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                          {shopData.premium && (
+                            <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[9px] font-bold text-white uppercase shadow">
+                              <Crown size={8} /> Premium
+                            </span>
+                          )}
                         </div>
                         <div className="p-3">
                           <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
