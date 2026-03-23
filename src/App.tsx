@@ -11,6 +11,16 @@ import PostAdPage from "./pages/PostAdPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
+import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
+import DashboardHome from "./components/dashboard/DashboardHome.tsx";
+import MyAds from "./components/dashboard/MyAds.tsx";
+import Favorites from "./components/dashboard/Favorites.tsx";
+import Messages from "./components/dashboard/Messages.tsx";
+import Notifications from "./components/dashboard/Notifications.tsx";
+import Payments from "./components/dashboard/Payments.tsx";
+import Statistics from "./components/dashboard/Statistics.tsx";
+import Reviews from "./components/dashboard/Reviews.tsx";
+import SettingsPage from "./components/dashboard/SettingsPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -30,6 +40,17 @@ const App = () => (
           <Route path="/daxil-ol" element={<LoginPage />} />
           <Route path="/qeydiyyat" element={<RegisterPage />} />
           <Route path="/sifre-berpa" element={<ForgotPasswordPage />} />
+          <Route path="/panel" element={<DashboardLayout />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="elanlarim" element={<MyAds />} />
+            <Route path="favoritler" element={<Favorites />} />
+            <Route path="mesajlar" element={<Messages />} />
+            <Route path="bildirisler" element={<Notifications />} />
+            <Route path="odenisler" element={<Payments />} />
+            <Route path="statistika" element={<Statistics />} />
+            <Route path="reyler" element={<Reviews />} />
+            <Route path="tenzimlemer" element={<SettingsPage />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
