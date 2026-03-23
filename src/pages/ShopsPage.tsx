@@ -32,6 +32,7 @@ const ShopsPage = () => {
   const [sortBy, setSortBy] = useState("popular");
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"large" | "compact" | "list">("large");
 
   const filtered = useMemo(() => {
     let result = [...allShops];
