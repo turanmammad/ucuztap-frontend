@@ -77,31 +77,11 @@ const SearchResultsPage = () => {
       <SiteHeader />
       <main className="flex-1">
         {/* Search section */}
-        <section className="bg-hero-bg border-b border-border py-8">
+        <section className={`border-b border-border py-8 transition-colors duration-300 ${aiMode ? "bg-gradient-to-br from-[hsl(217,91%,96%)] to-[hsl(271,81%,96%)]" : "bg-hero-bg"}`}>
           <div className="container max-w-2xl">
-            {/* AI toggle */}
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <span className="text-sm text-muted-foreground">Standart axtarış</span>
-              <button
-                onClick={() => setAiMode(!aiMode)}
-                className={`relative w-12 h-6 rounded-full transition-colors ${
-                  aiMode ? "bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)]" : "bg-border"
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
-                    aiMode ? "translate-x-6" : "translate-x-0.5"
-                  }`}
-                />
-              </button>
-              <span className={`text-sm font-medium ${aiMode ? "text-foreground" : "text-muted-foreground"}`}>
-                AI Axtarış ✨
-              </span>
-            </div>
-
             {/* Search bar */}
-            <div className={`flex items-center rounded-lg overflow-hidden bg-background shadow-md border-2 transition-colors ${
-              aiMode ? "border-[hsl(271,81%,56%)]/50" : "border-primary"
+            <div className={`flex items-center rounded-xl overflow-hidden bg-background shadow-lg border-2 transition-all duration-300 ${
+              aiMode ? "border-[hsl(271,81%,56%)]/40" : "border-primary"
             }`}>
               {aiMode ? (
                 <Sparkles size={18} className="ml-4 text-[hsl(271,81%,56%)] shrink-0" />
@@ -117,9 +97,9 @@ const SearchResultsPage = () => {
                     ? "Təbii dildə yazın: 'Bakıda 5000 manatdan ucuz yaxşı vəziyyətdə telefon'"
                     : "Nə axtarırsınız?"
                 }
-                className="flex-1 px-3 py-3.5 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
+                className="flex-1 px-3 py-4 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
               />
-              <button className={`px-6 py-3.5 font-semibold text-sm transition-colors shrink-0 active:scale-[0.97] ${
+              <button className={`px-6 py-4 font-semibold text-sm transition-all duration-300 shrink-0 active:scale-[0.97] ${
                 aiMode
                   ? "bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white hover:opacity-90"
                   : "bg-primary text-primary-foreground hover:bg-primary-hover"
@@ -128,9 +108,34 @@ const SearchResultsPage = () => {
               </button>
             </div>
 
-            <p className="text-sm text-muted-foreground mt-3 text-center">
-              Bu sözlər üçün axtardınız: <span className="font-medium text-foreground">{query}</span>
-            </p>
+            {/* AI toggle row */}
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-sm text-muted-foreground">
+                Bu sözlər üçün axtardınız: <span className="font-medium text-foreground">{query}</span>
+              </p>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={aiMode}
+                onClick={() => setAiMode(!aiMode)}
+                className={`relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 active:scale-[0.97] ${
+                  aiMode
+                    ? "bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white shadow-md"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                <span className={`relative w-8 h-[18px] rounded-full transition-colors duration-300 ${aiMode ? "bg-white/30" : "bg-border"}`}>
+                  <span className={`absolute top-[2px] w-[14px] h-[14px] rounded-full bg-white shadow-sm transition-transform duration-300 ease-out ${
+                    aiMode ? "translate-x-[15px]" : "translate-x-[2px]"
+                  }`} />
+                </span>
+                <span className="flex items-center gap-1">
+                  {aiMode && <Sparkles size={12} />}
+                  AI Axtarış
+                </span>
+              </button>
+            </div>
           </div>
         </section>
 
