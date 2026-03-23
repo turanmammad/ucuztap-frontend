@@ -266,7 +266,9 @@ const ShopsPage = () => {
                         <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                         {shop.premium && (
-                          <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-wide">Premium</span>
+                          <span className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
+                            <Crown size={10} /> Premium
+                          </span>
                         )}
                         <div className="absolute -bottom-5 left-4">
                           <img src={shop.img} alt={shop.name} className="w-14 h-14 rounded-xl object-cover border-[3px] border-card shadow-lg" loading="lazy" />
