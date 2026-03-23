@@ -446,7 +446,7 @@ const PostAdPage = () => {
                         onChange={e => update("price", e.target.value)}
                         placeholder="Qiymət"
                         disabled={priceType === "negotiable"}
-                        className="flex-1 h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow disabled:opacity-40"
+                        className={`flex-1 h-10 rounded-lg border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow disabled:opacity-40 ${tried && errors.price ? "border-destructive" : "border-input"}`}
                       />
                       <div className="flex border border-border rounded-lg overflow-hidden">
                         {currencies.map(c => (
