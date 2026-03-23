@@ -96,7 +96,7 @@ const SiteHeader = () => {
             <div className="relative" ref={cityRef}>
               <button
                 onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
-                className="flex items-center gap-1 px-3 py-2 text-sm border border-border rounded-lg bg-background cursor-pointer hover:border-primary/50 transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 text-sm border-2 border-primary/40 rounded-full bg-background cursor-pointer hover:border-primary transition-colors"
               >
                 <MapPin size={14} className="text-muted-foreground" />
                 <span className="text-muted-foreground whitespace-nowrap max-w-[120px] truncate">{selectedCity}</span>
