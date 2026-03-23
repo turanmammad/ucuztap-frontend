@@ -461,6 +461,7 @@ const PostAdPage = () => {
                       <input type="checkbox" checked={priceType === "negotiable"} onChange={e => setPriceType(e.target.checked ? "negotiable" : "fixed")} className="w-3.5 h-3.5 accent-primary rounded" />
                       <span className="text-xs text-muted-foreground">Razılaşma yolu ilə</span>
                     </label>
+                    {tried && errors.price && <p className="text-xs text-destructive mt-1">{errors.price}</p>}
                   </div>
                 ) : (
                   <div className="flex gap-2 items-center">
