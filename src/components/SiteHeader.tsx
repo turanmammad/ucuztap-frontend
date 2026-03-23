@@ -11,9 +11,9 @@ const SiteHeader = () => {
       <div className="container flex items-center justify-between h-16 gap-4">
         {/* Logo */}
         <a href="/" className="flex items-center shrink-0">
-          <span className="text-xl font-extrabold text-primary-foreground">ucuz</span>
-          <span className="text-xl font-extrabold text-white">tap</span>
-          <span className="text-xl font-extrabold text-primary-foreground/60">.az</span>
+          <span className="text-xl font-extrabold text-foreground">ucuz</span>
+          <span className="text-xl font-extrabold text-primary">tap</span>
+          <span className="text-xl font-extrabold text-muted-foreground">.az</span>
         </a>
 
         {/* Desktop Search */}
