@@ -59,9 +59,12 @@ const App = () => (
           <Route path="/elaqe" element={<ContactPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/magazalar" element={<ShopsPage />} />
+          <Route path="/magazalar/yarat" element={<CreateShopPage />} />
+          <Route path="/magazalar/:slug" element={<ShopViewPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
+            <Route path="magazam" element={<MyShop />} />
             <Route path="favoritler" element={<Favorites />} />
             <Route path="mesajlar" element={<Messages />} />
             <Route path="bildirisler" element={<Notifications />} />
