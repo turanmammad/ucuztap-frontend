@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import AdImageGallery from "@/components/AdImageGallery";
 import AdSidebar from "@/components/AdSidebar";
 import { ChevronRight, Phone, MessageCircle } from "lucide-react";
+import PullToRefresh from "@/components/PullToRefresh";
 
 const breadcrumbs = [
   { label: "Ana Səhifə", to: "/" },
@@ -30,10 +31,15 @@ const similarAds = [
 
 const AdDetailPage = () => {
   const [phoneRevealed, setPhoneRevealed] = useState(false);
+  const handleRefresh = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 800));
+    window.location.reload();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col pb-[120px] md:pb-0">
       <SiteHeader />
+      <PullToRefresh onRefresh={handleRefresh}>
       <main className="flex-1">
         {/* Breadcrumb */}
         <div className="border-b border-border bg-muted/30">
@@ -194,6 +200,7 @@ const AdDetailPage = () => {
       </div>
 
       <SiteFooter />
+      </PullToRefresh>
     </div>
   );
 };
