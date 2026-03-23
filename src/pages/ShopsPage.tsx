@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck, LayoutGrid, List, Grid3X3 } from "lucide-react";
+import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck, LayoutGrid, List, Grid3X3, Crown } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -51,12 +51,15 @@ const ShopsPage = () => {
       result = result.filter(s => s.verified);
     }
 
+    // Sort, but always keep premium shops first
     switch (sortBy) {
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
       case "newest": result.sort((a, b) => Number(b.since) - Number(a.since)); break;
       case "ads": result.sort((a, b) => b.adsCount - a.adsCount); break;
       default: result.sort((a, b) => b.reviews - a.reviews);
     }
+    // Premium shops always appear first
+    result.sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
 
     return result;
   }, [searchQuery, selectedCategory, selectedLocation, sortBy, onlyVerified]);
@@ -258,12 +261,14 @@ const ShopsPage = () => {
               {filtered.map(shop => (
                 <Link key={shop.id} to={`/magazalar/${shop.slug}`} className="group">
                   {viewMode === "large" && (
-                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift">
+                    <div className={`bg-card rounded-xl border overflow-hidden card-lift ${shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/20" : "border-border"}`}>
                       <div className="relative h-28 overflow-hidden">
                         <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                         {shop.premium && (
-                          <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-wide">Premium</span>
+                          <span className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
+                            <Crown size={10} /> Premium
+                          </span>
                         )}
                         <div className="absolute -bottom-5 left-4">
                           <img src={shop.img} alt={shop.name} className="w-14 h-14 rounded-xl object-cover border-[3px] border-card shadow-lg" loading="lazy" />

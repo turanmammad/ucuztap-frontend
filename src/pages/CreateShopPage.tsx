@@ -37,7 +37,7 @@ const packages = [
     icon: Crown,
     color: "text-[hsl(var(--vip-gold))]",
     borderColor: "border-[hsl(var(--vip-gold))]",
-    features: ["Limitsiz elan", "Premium mağaza", "Logo brending", "Aylıq 10 VIP elan", "Ətraflı statistika", "Prioritet dəstək", "API girişi"],
+    features: ["Limitsiz elan", "Premium mağaza nişanı", "Mağaza ön sıralarda", "Elanlar ön sıralarda", "Aylıq 10 VIP elan", "Ətraflı statistika", "Prioritet dəstək", "API girişi"],
     missing: [],
   },
 ];
