@@ -3,6 +3,7 @@ import { ChevronRight, ChevronDown, X, Camera, Search, RotateCcw, Check, Upload 
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import SuccessModal from "@/components/post-ad/SuccessModal";
+import LocationMapPicker from "@/components/post-ad/LocationMapPicker";
 import { carBrands, brandList, motoBrands, motoBrandList } from "@/data/carData";
 
 /* ═══ Category data ═══ */
@@ -186,6 +187,9 @@ const PostAdPage = () => {
   const [contact, setContact] = useState({
     fullName: "", phone: "", city: "Bakı", district: "", whatsapp: true,
   });
+  const [mapLat, setMapLat] = useState<number | null>(null);
+  const [mapLng, setMapLng] = useState<number | null>(null);
+  const [mapAddress, setMapAddress] = useState("");
 
   const [accepted, setAccepted] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -536,6 +540,21 @@ const PostAdPage = () => {
                     <span className={`block absolute top-[2px] left-[2px] w-4 h-4 rounded-full bg-white shadow transition-transform ${contact.whatsapp ? "translate-x-4" : ""}`} />
                   </button>
                 </div>
+
+                {/* Map for real estate */}
+                {categoryPath[0] === "Daşınmaz Əmlak" && (
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <LocationMapPicker
+                      lat={mapLat}
+                      lng={mapLng}
+                      onSelect={(lat, lng, addr) => {
+                        setMapLat(lat || null);
+                        setMapLng(lng || null);
+                        if (addr !== undefined) setMapAddress(addr);
+                      }}
+                    />
+                  </div>
+                )}
               </FieldSection>
 
               {/* Submit */}
