@@ -63,8 +63,8 @@ const InstallPage = () => {
 
         {/* Install Button (if available) */}
         {isInstalled ? (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20 mb-8">
-            <Check size={24} className="text-green-500 shrink-0" />
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/10 border border-primary/20 mb-8">
+            <Check size={24} className="text-primary shrink-0" />
             <div>
               <p className="font-semibold text-foreground">Artıq quraşdırılıb!</p>
               <p className="text-sm text-muted-foreground">Tətbiq cihazınıza uğurla əlavə edilib</p>
