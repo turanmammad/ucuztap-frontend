@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin } from "lucide-react";
 
 const SiteHeader = () => {
@@ -10,11 +11,11 @@ const SiteHeader = () => {
     <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
       <div className="container flex items-center justify-between h-16 gap-4">
         {/* Logo */}
-        <a href="/" className="flex items-center shrink-0">
+        <Link to="/" className="flex items-center shrink-0">
           <span className="text-xl font-extrabold text-foreground">ucuz</span>
           <span className="text-xl font-extrabold text-primary">tap</span>
           <span className="text-xl font-extrabold text-muted-foreground">.az</span>
-        </a>
+        </Link>
 
         {/* Desktop Search */}
         <div className="hidden md:flex items-center flex-1 max-w-xl gap-2">
@@ -37,22 +38,22 @@ const SiteHeader = () => {
 
         {/* Desktop Right */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="/elan-yerleshdir"
+          <Link
+            to="/elan-yerlesdir"
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-md bg-accent text-accent-foreground hover:bg-accent-hover transition-colors active:scale-[0.97]"
           >
             ＋ Elan yerləşdir
-          </a>
+          </Link>
 
           {isLoggedIn ? (
             <>
-              <button className="relative p-2 rounded-md hover:bg-muted transition-colors">
+              <Link to="/panel/bildirisler" className="relative p-2 rounded-md hover:bg-muted transition-colors">
                 <Bell size={20} className="text-muted-foreground" />
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 text-[10px] font-bold bg-destructive text-destructive-foreground rounded-full flex items-center justify-center">3</span>
-              </button>
-              <button className="p-2 rounded-md hover:bg-muted transition-colors">
+              </Link>
+              <Link to="/panel/mesajlar" className="p-2 rounded-md hover:bg-muted transition-colors">
                 <MessageCircle size={20} className="text-muted-foreground" />
-              </button>
+              </Link>
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -64,18 +65,19 @@ const SiteHeader = () => {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                     <div className="absolute right-0 top-full mt-2 w-48 bg-popover border border-border rounded-lg shadow-xl z-50 py-1 animate-fade-in">
-                      {["Profilim", "Elanlarım", "Favoritlərim", "Tənzimləmələr"].map((item) => (
-                        <a key={item} href="#" className="block px-4 py-2 text-sm hover:bg-muted transition-colors">{item}</a>
-                      ))}
+                      <Link to="/panel" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm hover:bg-muted transition-colors">Profilim</Link>
+                      <Link to="/panel/elanlarim" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm hover:bg-muted transition-colors">Elanlarım</Link>
+                      <Link to="/panel/favoritler" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm hover:bg-muted transition-colors">Favoritlərim</Link>
+                      <Link to="/panel/tenzimlemer" onClick={() => setUserMenuOpen(false)} className="block px-4 py-2 text-sm hover:bg-muted transition-colors">Tənzimləmələr</Link>
                       <hr className="my-1 border-border" />
-                      <a href="#" className="block px-4 py-2 text-sm text-destructive hover:bg-muted transition-colors">Çıxış</a>
+                      <button className="block w-full text-left px-4 py-2 text-sm text-destructive hover:bg-muted transition-colors">Çıxış</button>
                     </div>
                   </>
                 )}
               </div>
             </>
           ) : (
-            <a href="/login" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Daxil ol</a>
+            <Link to="/daxil-ol" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Daxil ol</Link>
           )}
         </div>
 
@@ -102,11 +104,14 @@ const SiteHeader = () => {
       {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-2 animate-fade-in">
-          <a href="/elan-yerleshdir" className="block w-full text-center py-2.5 rounded-md bg-accent text-accent-foreground font-semibold text-sm">＋ Elan yerləşdir</a>
-          {["Profilim", "Elanlarım", "Favoritlərim", "Bildirişlər", "Mesajlar", "Tənzimləmələr"].map((item) => (
-            <a key={item} href="#" className="block py-2 text-sm hover:text-primary transition-colors">{item}</a>
-          ))}
-          <a href="#" className="block py-2 text-sm text-destructive">Çıxış</a>
+          <Link to="/elan-yerlesdir" onClick={() => setMobileMenuOpen(false)} className="block w-full text-center py-2.5 rounded-md bg-accent text-accent-foreground font-semibold text-sm">＋ Elan yerləşdir</Link>
+          <Link to="/panel" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Profilim</Link>
+          <Link to="/panel/elanlarim" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Elanlarım</Link>
+          <Link to="/panel/favoritler" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Favoritlərim</Link>
+          <Link to="/panel/bildirisler" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Bildirişlər</Link>
+          <Link to="/panel/mesajlar" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Mesajlar</Link>
+          <Link to="/panel/tenzimlemer" onClick={() => setMobileMenuOpen(false)} className="block py-2 text-sm hover:text-primary transition-colors">Tənzimləmələr</Link>
+          <button className="block py-2 text-sm text-destructive">Çıxış</button>
         </div>
       )}
     </header>

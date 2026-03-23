@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 const vipAds = [
@@ -18,15 +19,15 @@ const VipAds = () => (
         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
           <span>⭐</span> VIP Elanlar
         </h2>
-        <a href="#" className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1">
+        <Link to="/axtaris" className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1">
           Hamısını gör <ChevronRight size={14} />
-        </a>
+        </Link>
       </div>
       <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory scrollbar-hide">
         {vipAds.map((ad) => (
-          <a
+          <Link
             key={ad.id}
-            href="#"
+            to={`/elanlar/${ad.id}`}
             className="shrink-0 w-[220px] rounded-lg border border-border bg-card overflow-hidden card-lift snap-start group"
           >
             <div className="relative aspect-[4/3] overflow-hidden">
@@ -41,7 +42,7 @@ const VipAds = () => (
                 <span>{ad.date}</span>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>
