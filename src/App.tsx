@@ -21,6 +21,7 @@ import BlogPage from "./pages/BlogPage.tsx";
 import ShopsPage from "./pages/ShopsPage.tsx";
 import CreateShopPage from "./pages/CreateShopPage.tsx";
 import ShopViewPage from "./pages/ShopViewPage.tsx";
+import ServiceDetailPage from "./pages/ServiceDetailPage.tsx";
 import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
 import DashboardHome from "./components/dashboard/DashboardHome.tsx";
 import MyAds from "./components/dashboard/MyAds.tsx";
@@ -61,6 +62,7 @@ const App = () => (
           <Route path="/magazalar" element={<ShopsPage />} />
           <Route path="/magazalar/yarat" element={<CreateShopPage />} />
           <Route path="/magazalar/:slug" element={<ShopViewPage />} />
+          <Route path="/xidmetler/:id" element={<ServiceDetailPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
