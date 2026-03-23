@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Heart, Share2, Flag, Phone, MessageCircle, Star, ChevronRight, Check, Link2, Zap, Crown, TrendingUp } from "lucide-react";
+import { Heart, Share2, Flag, Phone, MessageCircle, Star, ChevronRight, Check, Link2, Zap, Crown, TrendingUp, AlertTriangle, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 type PromotionTier = "boost" | "vip" | "premium";
 
@@ -22,10 +23,38 @@ const promotionTiers: { key: PromotionTier; icon: typeof Zap; label: string; pri
   },
 ];
 
+const reportReasons = [
+  "Saxta elan",
+  "Yanlış qiymət",
+  "Təkrar elan",
+  "Qeyri-qanuni məhsul/xidmət",
+  "Şəkillər uyğun deyil",
+  "Fırıldaqçılıq şübhəsi",
+  "Digər",
+];
+
 const AdSidebar = () => {
   const [fav, setFav] = useState(false);
   const [phoneRevealed, setPhoneRevealed] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDetails, setReportDetails] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+
+  const handleReport = () => {
+    if (!reportReason) return;
+    setReportSubmitting(true);
+    setTimeout(() => {
+      setReportSubmitting(false);
+      setReportOpen(false);
+      setReportReason("");
+      setReportDetails("");
+      toast.success("Şikayətiniz qəbul edildi", {
+        description: "Moderasiya komandamız yaxın zamanda yoxlayacaq.",
+      });
+    }, 800);
+  };
 
   return (
     <div className="space-y-4">
@@ -117,10 +146,90 @@ const AdSidebar = () => {
           )}
         </div>
 
-        <button className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-md border border-border text-sm font-medium text-muted-foreground hover:border-destructive hover:text-destructive transition-all active:scale-[0.97]">
+        <button
+          onClick={() => setReportOpen(true)}
+          className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-md border border-border text-sm font-medium text-muted-foreground hover:border-destructive hover:text-destructive transition-all active:scale-[0.97]"
+        >
           <Flag size={16} />
         </button>
       </div>
+
+      {/* Report modal */}
+      {reportOpen && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setReportOpen(false)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            <div className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-md pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                <h3 className="text-base font-bold text-foreground flex items-center gap-2">
+                  <AlertTriangle size={18} className="text-destructive" />
+                  Elanı şikayət et
+                </h3>
+                <button onClick={() => setReportOpen(false)} className="p-1 rounded-md hover:bg-muted transition-colors">
+                  <X size={18} className="text-muted-foreground" />
+                </button>
+              </div>
+              <div className="px-5 py-4 space-y-4 max-h-[60vh] overflow-y-auto">
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Səbəb seçin</p>
+                  <div className="space-y-1.5">
+                    {reportReasons.map((reason) => (
+                      <label
+                        key={reason}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border cursor-pointer transition-all text-sm ${
+                          reportReason === reason
+                            ? "border-primary bg-primary/5 text-foreground font-medium"
+                            : "border-border hover:border-primary/30 text-muted-foreground"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="report-reason"
+                          value={reason}
+                          checked={reportReason === reason}
+                          onChange={() => setReportReason(reason)}
+                          className="sr-only"
+                        />
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          reportReason === reason ? "border-primary" : "border-muted-foreground/40"
+                        }`}>
+                          {reportReason === reason && <div className="w-2 h-2 rounded-full bg-primary" />}
+                        </div>
+                        {reason}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-1.5">Əlavə qeyd <span className="text-muted-foreground font-normal">(istəyə bağlı)</span></p>
+                  <textarea
+                    value={reportDetails}
+                    onChange={(e) => setReportDetails(e.target.value)}
+                    placeholder="Ətraflı izah edin..."
+                    rows={3}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                  />
+                </div>
+              </div>
+              <div className="px-5 py-4 border-t border-border flex gap-2">
+                <button
+                  onClick={() => setReportOpen(false)}
+                  className="flex-1 py-2.5 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+                >
+                  Ləğv et
+                </button>
+                <button
+                  onClick={handleReport}
+                  disabled={!reportReason || reportSubmitting}
+                  className="flex-1 py-2.5 rounded-lg bg-destructive text-destructive-foreground text-sm font-bold hover:bg-destructive/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+                >
+                  {reportSubmitting ? "Göndərilir..." : "Şikayət et"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Seller card */}
       <div className="border border-border rounded-lg p-4 space-y-4">
