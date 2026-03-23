@@ -31,7 +31,7 @@ const ShopsPage = () => (
       <div className="container py-8 md:py-10">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {shops.map((shop) => (
-            <Link key={shop.id} to="#" className="group">
+            <Link key={shop.id} to={`/magazalar/${shop.name.toLowerCase().replace(/\s+/g, '-')}`} className="group">
               <div className="bg-card rounded-xl border border-border p-4 card-lift flex items-start gap-4">
                 <img src={shop.img} alt={shop.name} className="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" />
                 <div className="flex-1 min-w-0">
