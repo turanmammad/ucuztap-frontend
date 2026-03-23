@@ -7,7 +7,7 @@ const SiteHeader = () => {
   const isLoggedIn = true;
 
   return (
-    <header className="sticky top-0 z-50 bg-background border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-primary border-b border-primary-hover shadow-sm">
       <div className="container flex items-center justify-between h-16 gap-4">
         {/* Logo */}
         <a href="/" className="flex items-center shrink-0">
