@@ -190,6 +190,8 @@ const PostAdPage = () => {
 
   const [accepted, setAccepted] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [tried, setTried] = useState(false);
 
   const update = (key: string, val: string) => setFormData(d => ({ ...d, [key]: val }));
   const updateContact = <K extends keyof typeof contact>(key: K, val: typeof contact[K]) =>
