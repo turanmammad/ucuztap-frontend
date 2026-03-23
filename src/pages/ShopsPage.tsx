@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck } from "lucide-react";
+import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck, LayoutGrid, List, Grid3X3 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -32,6 +32,7 @@ const ShopsPage = () => {
   const [sortBy, setSortBy] = useState("popular");
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"large" | "compact" | "list">("large");
 
   const filtered = useMemo(() => {
     let result = [...allShops];
@@ -200,7 +201,7 @@ const ShopsPage = () => {
 
           {/* Mobile filter button */}
           <div className="md:hidden flex items-center justify-between mb-4">
-            <p className="text-sm text-muted-foreground">{filtered.length} mağaza tapıldı</p>
+            <p className="text-sm text-muted-foreground">{filtered.length} mağaza</p>
             <button
               onClick={() => setMobileFilterOpen(true)}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border bg-card text-sm font-medium text-foreground active:scale-[0.97]"
@@ -215,71 +216,126 @@ const ShopsPage = () => {
             </button>
           </div>
 
-          {/* Results count - desktop */}
-          <div className="hidden md:flex items-center justify-between mb-4">
+          {/* Results count + View toggle */}
+          <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">{filtered.length}</span> mağaza tapıldı
+              {searchQuery && (
+                <span className="hidden md:inline"> — "<span className="font-medium text-foreground">{searchQuery}</span>" üçün</span>
+              )}
             </p>
-            {searchQuery && (
-              <p className="text-sm text-muted-foreground">
-                "<span className="font-medium text-foreground">{searchQuery}</span>" üçün nəticələr
-              </p>
-            )}
+            <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5">
+              {([
+                { key: "large" as const, icon: LayoutGrid, tip: "Böyük" },
+                { key: "compact" as const, icon: Grid3X3, tip: "Kiçik" },
+                { key: "list" as const, icon: List, tip: "Siyahı" },
+              ]).map((v) => (
+                <button
+                  key={v.key}
+                  onClick={() => setViewMode(v.key)}
+                  title={v.tip}
+                  className={`p-1.5 rounded-md transition-all ${
+                    viewMode === v.key
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <v.icon size={16} />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Shop Grid */}
           {filtered.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className={
+              viewMode === "large"
+                ? "grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                : viewMode === "compact"
+                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
+                : "flex flex-col gap-3"
+            }>
               {filtered.map(shop => (
                 <Link key={shop.id} to={`/magazalar/${shop.slug}`} className="group">
-                  <div className="bg-card rounded-xl border border-border overflow-hidden card-lift">
-                    {/* Cover */}
-                    <div className="relative h-28 overflow-hidden">
-                      <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      {shop.premium && (
-                        <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-wide">
-                          Premium
-                        </span>
-                      )}
-                      {/* Avatar on cover */}
-                      <div className="absolute -bottom-5 left-4">
-                        <img src={shop.img} alt={shop.name} className="w-14 h-14 rounded-xl object-cover border-[3px] border-card shadow-lg" loading="lazy" />
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="pt-7 px-4 pb-4">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <h2 className="text-sm font-bold text-foreground truncate flex items-center gap-1.5">
-                            {shop.name}
-                            {shop.verified && <BadgeCheck size={14} className="text-primary shrink-0" />}
-                          </h2>
-                          <p className="text-xs text-muted-foreground mt-0.5">{shop.description}</p>
+                  {viewMode === "large" && (
+                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift">
+                      <div className="relative h-28 overflow-hidden">
+                        <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        {shop.premium && (
+                          <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-accent text-accent-foreground text-[10px] font-bold uppercase tracking-wide">Premium</span>
+                        )}
+                        <div className="absolute -bottom-5 left-4">
+                          <img src={shop.img} alt={shop.name} className="w-14 h-14 rounded-xl object-cover border-[3px] border-card shadow-lg" loading="lazy" />
                         </div>
-                        <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-0.5" />
                       </div>
-
-                      <div className="flex items-center gap-3 mt-3 flex-wrap">
-                        <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                          <MapPin size={11} /> {shop.location}
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary">
-                          <Star size={11} fill="currentColor" /> {shop.rating}
-                          <span className="text-muted-foreground font-normal">({shop.reviews})</span>
-                        </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                          <Clock size={11} /> {shop.since}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                        <span className="text-xs font-medium text-foreground">{shop.adsCount} aktiv elan</span>
-                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{shop.category}</span>
+                      <div className="pt-7 px-4 pb-4">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h2 className="text-sm font-bold text-foreground truncate flex items-center gap-1.5">
+                              {shop.name}
+                              {shop.verified && <BadgeCheck size={14} className="text-primary shrink-0" />}
+                            </h2>
+                            <p className="text-xs text-muted-foreground mt-0.5">{shop.description}</p>
+                          </div>
+                          <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-0.5" />
+                        </div>
+                        <div className="flex items-center gap-3 mt-3 flex-wrap">
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin size={11} /> {shop.location}</span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary"><Star size={11} fill="currentColor" /> {shop.rating} <span className="text-muted-foreground font-normal">({shop.reviews})</span></span>
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><Clock size={11} /> {shop.since}</span>
+                        </div>
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                          <span className="text-xs font-medium text-foreground">{shop.adsCount} aktiv elan</span>
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{shop.category}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
+                  {viewMode === "compact" && (
+                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift p-3">
+                      <div className="flex items-center gap-2.5 mb-2.5">
+                        <img src={shop.img} alt={shop.name} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" />
+                        <div className="min-w-0 flex-1">
+                          <h2 className="text-xs font-bold text-foreground truncate flex items-center gap-1">
+                            {shop.name}
+                            {shop.verified && <BadgeCheck size={11} className="text-primary shrink-0" />}
+                          </h2>
+                          <p className="text-[10px] text-muted-foreground truncate">{shop.category} · {shop.location}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary">
+                          <Star size={10} fill="currentColor" /> {shop.rating}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">{shop.adsCount} elan</span>
+                      </div>
+                      {shop.premium && (
+                        <span className="mt-2 block text-center text-[9px] font-bold uppercase tracking-wider text-accent bg-accent/10 rounded-md py-0.5">Premium</span>
+                      )}
+                    </div>
+                  )}
+
+                  {viewMode === "list" && (
+                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift flex items-center gap-3 p-3">
+                      <img src={shop.img} alt={shop.name} className="w-12 h-12 rounded-lg object-cover shrink-0" loading="lazy" />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <h2 className="text-sm font-bold text-foreground truncate">{shop.name}</h2>
+                          {shop.verified && <BadgeCheck size={13} className="text-primary shrink-0" />}
+                          {shop.premium && <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent text-[9px] font-bold uppercase">Premium</span>}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">{shop.description}</p>
+                        <div className="flex items-center gap-3 mt-1.5">
+                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin size={10} /> {shop.location}</span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary"><Star size={10} fill="currentColor" /> {shop.rating}</span>
+                          <span className="text-[11px] text-muted-foreground">{shop.adsCount} elan</span>
+                        </div>
+                      </div>
+                      <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                    </div>
+                  )}
                 </Link>
               ))}
             </div>
