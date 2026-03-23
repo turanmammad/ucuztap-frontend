@@ -80,13 +80,13 @@ const SearchResultsPage = () => {
         <section className={`border-b border-border py-8 transition-colors duration-300 ${aiMode ? "bg-gradient-to-br from-[hsl(217,91%,96%)] to-[hsl(271,81%,96%)]" : "bg-hero-bg"}`}>
           <div className="container max-w-2xl">
             {/* Search bar */}
-            <div className={`flex items-center rounded-xl overflow-hidden bg-background shadow-lg border-2 transition-all duration-300 ${
-              aiMode ? "border-[hsl(271,81%,56%)]/40" : "border-primary"
+            <div className={`flex items-center rounded-xl bg-background shadow-lg p-1.5 transition-all duration-300 ${
+              aiMode ? "ring-2 ring-[hsl(271,81%,56%)]/30" : "ring-2 ring-primary/20"
             }`}>
               {aiMode ? (
-                <Sparkles size={18} className="ml-4 text-[hsl(271,81%,56%)] shrink-0" />
+                <Sparkles size={18} className="ml-3 text-[hsl(271,81%,56%)] shrink-0" />
               ) : (
-                <Search size={18} className="ml-4 text-muted-foreground shrink-0" />
+                <Search size={18} className="ml-3 text-muted-foreground shrink-0" />
               )}
               <input
                 type="text"
@@ -97,9 +97,9 @@ const SearchResultsPage = () => {
                     ? "Təbii dildə yazın: 'Bakıda 5000 manatdan ucuz yaxşı vəziyyətdə telefon'"
                     : "Nə axtarırsınız?"
                 }
-                className="flex-1 px-3 py-4 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
+                className="flex-1 px-3 py-3 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
               />
-              <button className={`px-6 py-4 font-semibold text-sm transition-all duration-300 shrink-0 active:scale-[0.97] ${
+              <button className={`px-7 py-3 rounded-lg font-semibold text-sm transition-all duration-300 shrink-0 active:scale-[0.96] shadow-sm ${
                 aiMode
                   ? "bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white hover:opacity-90"
                   : "bg-primary text-primary-foreground hover:bg-primary-hover"

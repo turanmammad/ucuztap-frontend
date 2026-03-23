@@ -44,14 +44,14 @@ const HeroSearch = () => (
       <h1 className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-6 text-balance animate-fade-up" style={{ lineHeight: "1.15" }}>
         İstədiyiniz hər şeyi tapın
       </h1>
-      <div className="flex items-center border-2 border-white/20 rounded-lg overflow-hidden bg-background shadow-xl animate-fade-up" style={{ animationDelay: "80ms" }}>
-        <Search size={20} className="ml-4 text-muted-foreground shrink-0" />
+      <div className="flex items-center rounded-xl bg-background shadow-xl animate-fade-up p-1.5" style={{ animationDelay: "80ms" }}>
+        <Search size={20} className="ml-3 text-muted-foreground shrink-0" />
         <input
           type="text"
           placeholder="Nə axtarırsınız? Məsələn: iPhone 15, mənzil kirayəsi..."
-          className="flex-1 px-3 py-3.5 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
+          className="flex-1 px-3 py-3 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
         />
-        <button className="px-6 py-3.5 bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover transition-colors shrink-0 active:scale-[0.97]">
+        <button className="px-7 py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover transition-colors shrink-0 active:scale-[0.96] shadow-sm">
           Axtar
         </button>
       </div>
