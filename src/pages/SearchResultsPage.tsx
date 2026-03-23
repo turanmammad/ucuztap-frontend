@@ -121,22 +121,22 @@ const SearchResultsPage = () => {
                 onClick={() => setAiMode((prev) => !prev)}
                 className={`relative inline-flex items-center gap-2.5 pl-2 pr-3.5 py-2 rounded-full text-sm font-semibold cursor-pointer select-none transition-all duration-300 active:scale-[0.96] ${
                   aiMode
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white shadow-md"
                     : "border border-border bg-muted text-muted-foreground hover:bg-muted/80"
                 }`}
               >
                 <span
                   aria-hidden="true"
-                  className={`pointer-events-none relative w-9 h-5 rounded-full transition-colors duration-300 ${aiMode ? "bg-primary-foreground/25" : "bg-background"}`}
+                  className={`pointer-events-none relative w-9 h-5 rounded-full transition-colors duration-300 ${aiMode ? "bg-white/25" : "bg-background"}`}
                 >
                   <span
-                    className={`block absolute top-[3px] left-[3px] h-[14px] w-[14px] rounded-full bg-background shadow-sm transition-transform duration-300 ease-out ${
+                    className={`block absolute top-[3px] left-[3px] h-[14px] w-[14px] rounded-full bg-white shadow-sm transition-transform duration-300 ease-out ${
                       aiMode ? "translate-x-[16px]" : "translate-x-0"
                     }`}
                   />
                 </span>
                 <span className="pointer-events-none inline-flex items-center gap-1">
-                  {aiMode && <Sparkles size={12} />}
+                  <Sparkles size={12} />
                   AI Axtarış
                 </span>
               </button>
