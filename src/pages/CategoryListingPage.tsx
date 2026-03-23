@@ -224,7 +224,7 @@ const CategoryListingPage = () => {
           <div className="flex gap-8">
             {/* Sidebar */}
             <div className="hidden lg:block w-[260px] shrink-0">
-              <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} />
+              <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} />
             </div>
 
             {/* Main content */}
@@ -372,7 +372,7 @@ const CategoryListingPage = () => {
         </button>
 
         {/* Mobile filter sheet */}
-        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />
+        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} />
       </main>
       <SiteFooter />
     </div>
