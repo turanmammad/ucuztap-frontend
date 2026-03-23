@@ -216,16 +216,34 @@ const ShopsPage = () => {
             </button>
           </div>
 
-          {/* Results count - desktop */}
-          <div className="hidden md:flex items-center justify-between mb-4">
+          {/* Results count + View toggle */}
+          <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">{filtered.length}</span> mağaza tapıldı
+              {searchQuery && (
+                <span className="hidden md:inline"> — "<span className="font-medium text-foreground">{searchQuery}</span>" üçün</span>
+              )}
             </p>
-            {searchQuery && (
-              <p className="text-sm text-muted-foreground">
-                "<span className="font-medium text-foreground">{searchQuery}</span>" üçün nəticələr
-              </p>
-            )}
+            <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5">
+              {([
+                { key: "large" as const, icon: LayoutGrid, tip: "Böyük" },
+                { key: "compact" as const, icon: Grid3X3, tip: "Kiçik" },
+                { key: "list" as const, icon: List, tip: "Siyahı" },
+              ]).map((v) => (
+                <button
+                  key={v.key}
+                  onClick={() => setViewMode(v.key)}
+                  title={v.tip}
+                  className={`p-1.5 rounded-md transition-all ${
+                    viewMode === v.key
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <v.icon size={16} />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Shop Grid */}
