@@ -208,6 +208,7 @@ const CategoryListingPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
+      <SiteHeader />
       <PullToRefresh onRefresh={handleRefresh}>
       <main className="flex-1">
         {/* Breadcrumb */}
