@@ -12,6 +12,12 @@ import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.tsx";
 import PromotionPage from "./pages/PromotionPage.tsx";
+import AboutPage from "./pages/AboutPage.tsx";
+import RulesPage from "./pages/RulesPage.tsx";
+import PrivacyPage from "./pages/PrivacyPage.tsx";
+import AdvertisingPage from "./pages/AdvertisingPage.tsx";
+import ContactPage from "./pages/ContactPage.tsx";
+import BlogPage from "./pages/BlogPage.tsx";
 import DashboardLayout from "./components/dashboard/DashboardLayout.tsx";
 import DashboardHome from "./components/dashboard/DashboardHome.tsx";
 import MyAds from "./components/dashboard/MyAds.tsx";
@@ -42,6 +48,12 @@ const App = () => (
           <Route path="/qeydiyyat" element={<RegisterPage />} />
           <Route path="/sifre-berpa" element={<ForgotPasswordPage />} />
           <Route path="/elanlar/:id/ireli-cek" element={<PromotionPage />} />
+          <Route path="/haqqimizda" element={<AboutPage />} />
+          <Route path="/qaydalar" element={<RulesPage />} />
+          <Route path="/mexfilik" element={<PrivacyPage />} />
+          <Route path="/reklam" element={<AdvertisingPage />} />
+          <Route path="/elaqe" element={<ContactPage />} />
+          <Route path="/blog" element={<BlogPage />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
