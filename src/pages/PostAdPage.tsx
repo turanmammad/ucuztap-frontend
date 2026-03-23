@@ -190,6 +190,8 @@ const PostAdPage = () => {
 
   const [accepted, setAccepted] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [tried, setTried] = useState(false);
 
   const update = (key: string, val: string) => setFormData(d => ({ ...d, [key]: val }));
   const updateContact = <K extends keyof typeof contact>(key: K, val: typeof contact[K]) =>
@@ -218,9 +220,25 @@ const PostAdPage = () => {
   const activeSide = hoveredMain || mainCat;
   const activeSubs = activeSide ? (subCategories[activeSide] || []) : [];
 
-  const canPublish = categoryComplete && formData.title && formData.description &&
-    (isJobCategory || formData.price || priceType === "negotiable") &&
-    images.length >= 1 && contact.phone && contact.city && accepted;
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!formData.title?.trim()) e.title = "Başlıq daxil edin";
+    if (!formData.description?.trim()) e.description = "Elan mətni daxil edin";
+    if (!isJobCategory && priceType !== "negotiable" && !formData.price) e.price = "Qiymət daxil edin";
+    if (images.length < 1) e.images = "Minimum 1 şəkil yükləyin";
+    if (!contact.phone?.trim()) e.phone = "Telefon nömrəsi daxil edin";
+    if (!contact.city) e.city = "Şəhər seçin";
+    if (!accepted) e.accepted = "Qaydaları qəbul edin";
+    if ((isCarCategory || isMotoCategory) && !formData.brand) e.brand = "Marka seçin";
+    return e;
+  };
+
+  const handlePublish = () => {
+    setTried(true);
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length === 0) setShowSuccess(true);
+  };
 
   const handleReset = () => {
     setCategoryPath([]);
@@ -228,6 +246,8 @@ const PostAdPage = () => {
     setImages([]);
     setAccepted(false);
     setShowSuccess(false);
+    setTried(false);
+    setErrors({});
     setContact({ fullName: "", phone: "", city: "Bakı", district: "", whatsapp: true });
   };
 
@@ -397,8 +417,9 @@ const PostAdPage = () => {
                       onChange={e => update("title", e.target.value)}
                       placeholder={isJobCategory ? "Məs: Satış meneceri — Bakı" : "Məs: Toyota Camry 2.5, 2021"}
                       maxLength={100}
-                      className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                      className={`w-full h-10 rounded-lg border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow ${tried && errors.title ? "border-destructive" : "border-input"}`}
                     />
+                    {tried && errors.title && <p className="text-xs text-destructive mt-1">{errors.title}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-muted-foreground mb-1">Mətn *</label>
@@ -407,8 +428,9 @@ const PostAdPage = () => {
                       onChange={e => update("description", e.target.value)}
                       rows={4}
                       placeholder="Elanınız haqqında ətraflı yazın..."
-                      className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow resize-none"
+                      className={`w-full rounded-lg border bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow resize-none ${tried && errors.description ? "border-destructive" : "border-input"}`}
                     />
+                    {tried && errors.description && <p className="text-xs text-destructive mt-1">{errors.description}</p>}
                   </div>
                 </div>
               </FieldSection>
@@ -424,7 +446,7 @@ const PostAdPage = () => {
                         onChange={e => update("price", e.target.value)}
                         placeholder="Qiymət"
                         disabled={priceType === "negotiable"}
-                        className="flex-1 h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow disabled:opacity-40"
+                        className={`flex-1 h-10 rounded-lg border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow disabled:opacity-40 ${tried && errors.price ? "border-destructive" : "border-input"}`}
                       />
                       <div className="flex border border-border rounded-lg overflow-hidden">
                         {currencies.map(c => (
@@ -439,6 +461,7 @@ const PostAdPage = () => {
                       <input type="checkbox" checked={priceType === "negotiable"} onChange={e => setPriceType(e.target.checked ? "negotiable" : "fixed")} className="w-3.5 h-3.5 accent-primary rounded" />
                       <span className="text-xs text-muted-foreground">Razılaşma yolu ilə</span>
                     </label>
+                    {tried && errors.price && <p className="text-xs text-destructive mt-1">{errors.price}</p>}
                   </div>
                 ) : (
                   <div className="flex gap-2 items-center">
@@ -484,7 +507,9 @@ const PostAdPage = () => {
                   )}
                 </div>
                 <input ref={fileRef} type="file" accept="image/*" multiple onChange={e => addFiles(e.target.files)} className="hidden" />
-                <p className="text-[10px] text-muted-foreground mt-2">Minimum 1 şəkil. İlk şəkil elanın üz qabığıdır.</p>
+                <p className={`text-[10px] mt-2 ${tried && errors.images ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                  {tried && errors.images ? errors.images : "Minimum 1 şəkil. İlk şəkil elanın üz qabığıdır."}
+                </p>
               </FieldSection>
 
               {/* Contact */}
@@ -496,8 +521,9 @@ const PostAdPage = () => {
                     <div className="flex gap-1.5">
                       <span className="shrink-0 h-10 px-2 rounded-lg border border-input bg-muted flex items-center text-xs font-medium text-muted-foreground">+994</span>
                       <input type="tel" value={contact.phone} onChange={e => updateContact("phone", e.target.value)} placeholder="50 123 45 67"
-                        className="flex-1 h-10 rounded-lg border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow" />
+                        className={`flex-1 h-10 rounded-lg border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-ring transition-shadow ${tried && errors.phone ? "border-destructive" : "border-input"}`} />
                     </div>
+                    {tried && errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                   </div>
                   <SelectField label="Şəhər *" value={contact.city} onChange={v => { updateContact("city", v); updateContact("district", ""); }} options={cities} />
                   {contact.city && districtMap[contact.city] && (
@@ -515,16 +541,21 @@ const PostAdPage = () => {
 
               {/* Submit */}
               <div className="rounded-xl border border-border bg-card p-5">
-                <label className="flex items-start gap-3 cursor-pointer mb-4">
+                <label className="flex items-start gap-3 cursor-pointer mb-1">
                   <input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)} className="mt-0.5 w-4 h-4 accent-accent rounded" />
                   <span className="text-sm text-muted-foreground">
                     <a href="/qaydalar" className="text-primary hover:underline">Qaydaları</a> oxudum və qəbul edirəm.
                   </span>
                 </label>
-                <button type="button" onClick={() => canPublish && setShowSuccess(true)} disabled={!canPublish}
-                  className="w-full py-3 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-[hsl(var(--accent-hover))] transition-colors disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] shadow-sm">
+                {tried && errors.accepted && <p className="text-xs text-destructive mb-3 ml-7">{errors.accepted}</p>}
+                {!errors.accepted && <div className="mb-4" />}
+                <button type="button" onClick={handlePublish}
+                  className="w-full py-3 rounded-lg bg-accent text-accent-foreground text-sm font-bold hover:bg-[hsl(var(--accent-hover))] transition-colors active:scale-[0.98] shadow-sm">
                   <span className="inline-flex items-center gap-2"><Check size={16} strokeWidth={3} /> Elanı dərc et</span>
                 </button>
+                {tried && Object.keys(errors).length > 0 && (
+                  <p className="text-xs text-destructive text-center mt-3">Zəhmət olmasa bütün məcburi sahələri doldurun</p>
+                )}
               </div>
             </>
           )}
