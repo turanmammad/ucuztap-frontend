@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal, Search, MapPin, ArrowUpDown, Grid3X3 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
