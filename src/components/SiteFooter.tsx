@@ -7,8 +7,8 @@ const categoryLinks = [
   { label: "Elektronika", to: "/kateqoriya/elektronika" },
   { label: "İş Elanları", to: "/kateqoriya/is-elanlari" },
   { label: "Xidmətlər", to: "/kateqoriya/xidmetler" },
-  { label: "Ev və Bağ", to: "/kateqoriya/ev-bag" },
-  { label: "Geyim", to: "/kateqoriya/geyim" },
+  { label: "Ev və Bağ", to: "/kateqoriya/ev-ve-bag" },
+  { label: "Geyim", to: "/kateqoriya/geyim-aksesuar" },
 ];
 
 const infoLinks = [

@@ -7,9 +7,9 @@ import { ChevronRight } from "lucide-react";
 
 const breadcrumbs = [
   { label: "Ana Səhifə", to: "/" },
-  { label: "Nəqliyyat", to: "#" },
-  { label: "Avtomobil", to: "#" },
-  { label: "Mercedes-Benz", to: "#" },
+  { label: "Nəqliyyat", to: "/kateqoriya/neqliyyat" },
+  { label: "Avtomobil", to: "/kateqoriya/neqliyyat" },
+  { label: "Mercedes-Benz", to: "/axtaris?q=Mercedes-Benz" },
 ];
 
 const details = [

@@ -42,7 +42,7 @@ const NotFound = () => {
             <button type="submit" className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-[hsl(var(--primary-hover))] transition-colors active:scale-[0.97]">
               Axtar
             </button>
-          </div>
+          </form>
 
           <Link
             to="/"
