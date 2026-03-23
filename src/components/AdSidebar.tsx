@@ -1,5 +1,26 @@
 import { useState } from "react";
-import { Heart, Share2, Flag, Phone, MessageCircle, Star, ChevronRight, Check, Link2 } from "lucide-react";
+import { Heart, Share2, Flag, Phone, MessageCircle, Star, ChevronRight, Check, Link2, Zap, Crown, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+
+type PromotionTier = "boost" | "vip" | "premium";
+
+const promotionTiers: { key: PromotionTier; icon: typeof Zap; label: string; price: string; duration: string; color: string; bg: string; border: string; features: string[] }[] = [
+  {
+    key: "boost", icon: TrendingUp, label: "İrəli Çək", price: "2 ₼", duration: "3 gün",
+    color: "text-[hsl(var(--boost-orange))]", bg: "bg-[hsl(var(--boost-orange)/0.1)]", border: "border-[hsl(var(--boost-orange)/0.3)]",
+    features: ["Axtarışda üstə çıxır", "3 gün müddətinə"],
+  },
+  {
+    key: "vip", icon: Star, label: "VIP", price: "5 ₼", duration: "7 gün",
+    color: "text-[hsl(var(--vip-gold))]", bg: "bg-[hsl(var(--vip-gold)/0.1)]", border: "border-[hsl(var(--vip-gold)/0.3)]",
+    features: ["Ana səhifədə görünür", "VIP nişanı", "7 gün müddətinə"],
+  },
+  {
+    key: "premium", icon: Crown, label: "Premium", price: "10 ₼", duration: "14 gün",
+    color: "text-[hsl(var(--premium-blue))]", bg: "bg-[hsl(var(--premium-blue)/0.1)]", border: "border-[hsl(var(--premium-blue)/0.3)]",
+    features: ["Prioritet yerləşmə", "Premium nişanı", "Xüsusi çərçivə", "14 gün müddətinə"],
+  },
+];
 
 const AdSidebar = () => {
   const [fav, setFav] = useState(false);
@@ -10,7 +31,9 @@ const AdSidebar = () => {
     <div className="space-y-4">
       {/* VIP Badge + Title + Price */}
       <div>
-        <span className="inline-block px-2.5 py-0.5 text-xs font-bold rounded bg-vip-gold text-foreground mb-3">⭐ VIP</span>
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-bold rounded bg-[hsl(var(--vip-gold)/0.15)] text-[hsl(var(--vip-gold))] mb-3">
+          <Star size={12} fill="currentColor" /> VIP
+        </span>
         <h1 className="text-2xl font-extrabold text-foreground leading-tight">Mercedes-Benz C200, 2019</h1>
       </div>
 
@@ -38,6 +61,27 @@ const AdSidebar = () => {
             <span className="text-muted-foreground">{item.text}</span>
           </div>
         ))}
+      </div>
+
+      {/* Promotion buttons */}
+      <div className="border border-border rounded-xl p-4 space-y-3">
+        <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
+          <Zap size={15} className="text-primary" /> Elanı irəli çək
+        </h3>
+        <div className="grid grid-cols-3 gap-2">
+          {promotionTiers.map((tier) => (
+            <Link
+              key={tier.key}
+              to="/elanlar/1/ireli-cek"
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border ${tier.border} ${tier.bg} hover:shadow-md transition-all active:scale-[0.97] group`}
+            >
+              <tier.icon size={20} className={`${tier.color} group-hover:scale-110 transition-transform`} fill={tier.key === "vip" ? "currentColor" : "none"} />
+              <span className={`text-xs font-bold ${tier.color}`}>{tier.label}</span>
+              <span className="text-[10px] font-semibold text-foreground">{tier.price}</span>
+              <span className="text-[9px] text-muted-foreground">{tier.duration}</span>
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Action buttons */}
@@ -85,7 +129,7 @@ const AdSidebar = () => {
           <div className="min-w-0">
             <p className="font-semibold text-foreground">Əli Məmmədov</p>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Star size={14} className="text-vip-gold fill-vip-gold" />
+              <Star size={14} className="text-[hsl(var(--vip-gold))] fill-[hsl(var(--vip-gold))]" />
               <span className="font-medium text-foreground">4.8</span>
               <span>(23 rəy)</span>
             </div>
