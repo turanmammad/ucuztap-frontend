@@ -177,6 +177,41 @@ function getSectionTitle(path: string[]): string {
 const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
   const [currency, setCurrency] = useState("₼");
   const [priceType, setPriceType] = useState<"fixed" | "negotiable">("fixed");
+  const [aiTitleLoading, setAiTitleLoading] = useState(false);
+  const [aiDescLoading, setAiDescLoading] = useState(false);
+  const [aiPriceLoading, setAiPriceLoading] = useState(false);
+  const [showTitleSuggestions, setShowTitleSuggestions] = useState(false);
+  const [showDescSuggestions, setShowDescSuggestions] = useState(false);
+  const [showPriceHint, setShowPriceHint] = useState(false);
+
+  // Mock AI suggestions (will be replaced with real AI calls)
+  const titleSuggestions = [
+    formData.brand && formData.model ? `${formData.brand} ${formData.model}${formData.year ? `, ${formData.year}` : ""}` : null,
+    formData.brand && formData.model ? `${formData.brand} ${formData.model}${formData.year ? ` ${formData.year}` : ""} — əla vəziyyətdə` : null,
+    formData.brand && formData.model && formData.mileage ? `${formData.brand} ${formData.model}, ${formData.mileage} km, ${formData.year || ""}` : null,
+    categoryPath[0] === "Daşınmaz Əmlak" && formData.rooms ? `${formData.rooms} otaqlı mənzil, ${formData.area || ""} m²` : null,
+    categoryPath[0] === "İş Elanları" && formData.position ? `${formData.position} — ${formData.company || "şirkət"}` : null,
+  ].filter(Boolean) as string[];
+
+  const descSuggestions = [
+    "Tam texniki baxışdan keçib, heç bir problemi yoxdur.",
+    "Sənədləri qaydasındadır. Real alıcıya endirim mümkündür.",
+    "Təcili satılır, qiymətdə razılaşma var.",
+  ];
+
+  // Mock price range (will be replaced with real AI logic)
+  const getPriceRange = () => {
+    const cat = categoryPath.join("/");
+    const ranges: Record<string, { min: number; max: number; avg: number }> = {
+      "Nəqliyyat/Avtomobil": { min: 8000, max: 65000, avg: 25000 },
+      "Daşınmaz Əmlak/Mənzil": { min: 45000, max: 350000, avg: 120000 },
+      "Elektronika/Telefon": { min: 200, max: 3500, avg: 1200 },
+      "Elektronika/Kompüter": { min: 400, max: 5000, avg: 1800 },
+    };
+    return ranges[cat] || { min: 50, max: 5000, avg: 500 };
+  };
+
+  const priceRange = getPriceRange();
 
   const update = (key: string, value: string) => {
     onUpdate({ ...formData, [key]: value });
@@ -185,21 +220,28 @@ const StepDetails = ({ categoryPath, formData, onUpdate }: Props) => {
   const fields = getFieldsForCategory(categoryPath);
 
   const handleAiTitle = () => {
-    const parts = categoryPath.filter(Boolean);
-    const extras = [formData.brand, formData.model, formData.year, formData.position].filter(Boolean);
-    const combined = [...extras, ...parts.slice(0, 1)].filter(Boolean);
-    if (combined.length > 0) {
-      update("title", combined.join(" "));
-    }
+    setAiTitleLoading(true);
+    // Simulate AI loading
+    setTimeout(() => {
+      setAiTitleLoading(false);
+      setShowTitleSuggestions(true);
+    }, 600);
   };
 
   const handleAiDesc = () => {
-    const lines: string[] = [];
-    if (formData.title) lines.push(formData.title);
-    fields.forEach((f) => {
-      if (formData[f.key]) lines.push(`${f.label.replace(" *", "")}: ${formData[f.key]}`);
-    });
-    update("description", lines.length > 0 ? lines.join(". ") + ". Əla vəziyyətdə." : "");
+    setAiDescLoading(true);
+    setTimeout(() => {
+      setAiDescLoading(false);
+      setShowDescSuggestions(true);
+    }, 600);
+  };
+
+  const handleAiPrice = () => {
+    setAiPriceLoading(true);
+    setTimeout(() => {
+      setAiPriceLoading(false);
+      setShowPriceHint(true);
+    }, 500);
   };
 
   const isJobCategory = categoryPath[0] === "İş Elanları";
