@@ -1,13 +1,18 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package, TrendingUp } from "lucide-react";
 
-const quickCategories = [
-  { emoji: "🚗", label: "Avtomobil", to: "/kateqoriya/neqliyyat" },
-  { emoji: "🏠", label: "Əmlak", to: "/kateqoriya/emlak" },
-  { emoji: "📱", label: "Telefon", to: "/kateqoriya/elektronika" },
-  { emoji: "💼", label: "İş", to: "/kateqoriya/is-elanlari" },
-  { emoji: "🔧", label: "Xidmət", to: "/kateqoriya/xidmetler" },
+const trendSearches = [
+  "iPhone 15 Pro Max",
+  "Mercedes-Benz E-Class",
+  "Mənzil kirayə Bakı",
+  "Samsung Galaxy S24",
+  "Toyota Camry 2024",
+  "Laptop Lenovo",
+  "2 otaqlı mənzil",
+  "BMW X5",
+  "Kia Sportage",
+  "Kondisioner",
 ];
 
 const floatingIcons = [
@@ -27,13 +32,33 @@ const floatingIcons = [
 
 const HeroSearch = () => {
   const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
   const navigate = useNavigate();
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = () => {
-    if (query.trim()) {
-      navigate(`/axtaris?q=${encodeURIComponent(query.trim())}`);
+  const handleSearch = (q?: string) => {
+    const term = (q || query).trim();
+    if (term) {
+      setFocused(false);
+      navigate(`/axtaris?q=${encodeURIComponent(term)}`);
     }
   };
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const filtered = query.trim()
+    ? trendSearches.filter(t => t.toLowerCase().includes(query.toLowerCase()))
+    : trendSearches;
+
+  const showDropdown = focused && filtered.length > 0;
 
   return (
     <section className="relative bg-primary overflow-hidden section-padding">
@@ -54,34 +79,52 @@ const HeroSearch = () => {
         <h1 className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-6 text-balance animate-fade-up" style={{ lineHeight: "1.15" }}>
           İstədiyiniz hər şeyi tapın
         </h1>
-        <form
-          onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
-          className="flex items-center rounded-xl bg-background shadow-xl animate-fade-up p-1.5"
-          style={{ animationDelay: "80ms" }}
-        >
-          <Search size={20} className="ml-3 text-muted-foreground shrink-0" />
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Nə axtarırsınız? Məsələn: iPhone 15, mənzil kirayəsi..."
-            className="flex-1 px-3 py-3 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
-          />
-          <button type="submit" className="px-7 py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover transition-colors shrink-0 active:scale-[0.96] shadow-sm">
-            Axtar
-          </button>
-        </form>
-        <div className="flex items-center justify-center gap-2 mt-5 flex-wrap animate-fade-up" style={{ animationDelay: "160ms" }}>
-          {quickCategories.map((cat) => (
-            <Link
-              key={cat.label}
-              to={cat.to}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm bg-white/90 backdrop-blur-sm border border-white/50 text-foreground hover:bg-white hover:shadow-md transition-all active:scale-[0.96]"
-            >
-              <span>{cat.emoji}</span>
-              <span className="font-medium">{cat.label}</span>
-            </Link>
-          ))}
+
+        <div ref={wrapperRef} className="relative animate-fade-up" style={{ animationDelay: "80ms" }}>
+          <form
+            onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
+            className="flex items-center rounded-xl bg-background shadow-xl p-1.5"
+          >
+            <Search size={20} className="ml-3 text-muted-foreground shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setFocused(true)}
+              placeholder="Nə axtarırsınız? Məsələn: iPhone 15, mənzil kirayəsi..."
+              className="flex-1 px-3 py-3 text-sm md:text-base bg-transparent outline-none placeholder:text-muted-foreground"
+            />
+            <button type="submit" className="px-7 py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary-hover transition-colors shrink-0 active:scale-[0.96] shadow-sm">
+              Axtar
+            </button>
+          </form>
+
+          {showDropdown && (
+            <div className="absolute left-0 right-0 top-full mt-1.5 rounded-xl bg-background border border-border shadow-2xl z-50 overflow-hidden animate-fade-up">
+              <div className="px-4 py-2.5 border-b border-border flex items-center gap-2">
+                <TrendingUp size={14} className="text-primary" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  {query.trim() ? "Nəticələr" : "Trend axtarışlar"}
+                </span>
+              </div>
+              <div className="max-h-[240px] overflow-y-auto">
+                {filtered.map((term, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setQuery(term);
+                      handleSearch(term);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm text-foreground hover:bg-muted/60 transition-colors"
+                  >
+                    <Search size={14} className="text-muted-foreground shrink-0" />
+                    <span>{term}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
