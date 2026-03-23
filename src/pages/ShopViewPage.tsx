@@ -10,6 +10,7 @@ const shopData = {
   id: "autoplus",
   name: "AutoPlus MMC",
   category: "Nəqliyyat",
+  premium: true,
   description: "Bakının ən etibarlı avtomobil satış mərkəzi. 2015-ci ildən fəaliyyət göstəririk. Yeni və ikinci əl avtomobillər, lizinq imkanları, texniki xidmət.",
   location: "Bakı, Nəsimi r.",
   address: "Təbriz küç. 42, Nəsimi rayonu, Bakı, AZ1007",
