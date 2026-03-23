@@ -82,7 +82,7 @@ const CreateShopPage = () => {
   const pkg = packages.find((p) => p.id === selectedPackage)!;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
       <SiteHeader />
       <main className="flex-1">
         <section className="bg-muted/30 border-b border-border">

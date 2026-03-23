@@ -64,7 +64,7 @@ const ShopViewPage = () => {
   const { slug } = useParams();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
       <SiteHeader />
       <main className="flex-1">
         {/* Cover */}
