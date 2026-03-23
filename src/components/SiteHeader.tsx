@@ -1,60 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Search, Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Heart, PlusCircle, User, Check } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Bell, MessageCircle, Menu, X, ChevronDown, MapPin, Store, Home, Search, Heart, PlusCircle, User, Check } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import logoImg from "@/assets/logo.png";
 
 const CITIES = [
-  "Bütün Azərbaycan",
-  "Bakı",
-  "Sumqayıt",
-  "Gəncə",
-  "Mingəçevir",
-  "Lənkəran",
-  "Şirvan",
-  "Naxçıvan",
-  "Şəki",
-  "Yevlax",
-  "Xaçmaz",
-  "Quba",
-  "Qusar",
-  "İsmayıllı",
-  "Qəbələ",
-  "Balakən",
-  "Zaqatala",
-  "Şamaxı",
-  "Göyçay",
-  "Bərdə",
-  "Ağdam",
-  "Füzuli",
-  "Şuşa",
-  "Ağdaş",
-  "Biləsuvar",
-  "Salyan",
-  "Kürdəmir",
-  "Sabirabad",
-  "Hacıqabul",
-  "Masallı",
-  "Cəlilabad",
-  "Astara",
-  "Lerik",
-  "Yardımlı",
-  "Tovuz",
-  "Qazax",
-  "Ağstafa",
-  "Samux",
-  "Göygöl",
-  "Daşkəsən",
-  "Gədəbəy",
-  "Oğuz",
-  "İmişli",
-  "Beyləqan",
-  "Zəngilan",
-  "Cəbrayıl",
-  "Kəlbəcər",
-  "Laçın",
-  "Xocalı",
-  "Xankəndi",
+  "Bütün Azərbaycan","Bakı","Sumqayıt","Gəncə","Mingəçevir","Lənkəran","Şirvan","Naxçıvan","Şəki","Yevlax","Xaçmaz","Quba","Qusar","İsmayıllı","Qəbələ","Balakən","Zaqatala","Şamaxı","Göyçay","Bərdə","Ağdam","Füzuli","Şuşa","Ağdaş","Biləsuvar","Salyan","Kürdəmir","Sabirabad","Hacıqabul","Masallı","Cəlilabad","Astara","Lerik","Yardımlı","Tovuz","Qazax","Ağstafa","Samux","Göygöl","Daşkəsən","Gədəbəy","Oğuz","İmişli","Beyləqan","Zəngilan","Cəbrayıl","Kəlbəcər","Laçın","Xocalı","Xankəndi",
 ];
 
 const SiteHeader = () => {
@@ -62,9 +13,7 @@ const SiteHeader = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState("Bütün Azərbaycan");
-  const navigate = useNavigate();
   const isLoggedIn = true;
-  const navigate = useNavigate();
   const cityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,12 +26,6 @@ const SiteHeader = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [cityDropdownOpen]);
 
-  const handleSearch = () => {
-    if (query.trim()) {
-      navigate(`/axtaris?q=${encodeURIComponent(query.trim())}`);
-    }
-  };
-
   return (
     <>
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/60 safe-top">
@@ -92,7 +35,8 @@ const SiteHeader = () => {
             <img src={logoImg} alt="ucuztap.az" className="h-8" />
           </Link>
 
-          <div className="flex items-center flex-1 max-w-xl gap-2">
+          <div className="flex items-center gap-2">
+            {/* City selector */}
             <div className="relative" ref={cityRef}>
               <button
                 onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
@@ -120,21 +64,7 @@ const SiteHeader = () => {
                 </div>
               )}
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex flex-1 items-center rounded-lg overflow-hidden bg-muted/50 focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Elan axtar..."
-                className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
-              />
-              <button type="submit" className="h-full px-4 py-2.5 mr-1 my-0.5 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors active:scale-[0.96]">
-                <Search size={16} />
-              </button>
-            </form>
-          </div>
 
-          <div className="flex items-center gap-2">
             <Link to="/magazalar" className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted transition-colors">
               <Store size={16} />
               <span className="hidden lg:inline">Mağazalar</span>
@@ -193,25 +123,6 @@ const SiteHeader = () => {
                 {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
-          </div>
-
-          {/* Mobile search bar */}
-          <div className="px-3 pb-2.5">
-            <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="flex items-center rounded-xl bg-muted/60 border border-border/50">
-              <Search size={16} className="ml-3 text-muted-foreground shrink-0" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Nə axtarırsınız?"
-                className="flex-1 px-2.5 py-2.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
-              />
-              {query && (
-                <button type="button" onClick={() => setQuery("")} className="p-1.5 mr-1">
-                  <X size={14} className="text-muted-foreground" />
-                </button>
-              )}
-            </form>
           </div>
         </div>
 
