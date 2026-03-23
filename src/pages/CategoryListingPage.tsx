@@ -289,20 +289,23 @@ const CategoryListingPage = () => {
               {/* Ad cards */}
               {view === "grid" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {ads.map((ad) => (
-                    <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
-                      <div className="aspect-[4/3] overflow-hidden">
-                        <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                      </div>
-                      <div className="p-3">
-                        <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
-                        <p className="text-base font-bold text-foreground mt-1">{ad.price} ₼</p>
-                        <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
-                          <span>📍 {ad.location}</span>
-                          <span>{ad.date}</span>
+                  {ads.map((ad, i) => (
+                    <>
+                      {i === 3 && <AdCardInFeed key="ad-feed" />}
+                      <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
+                        <div className="aspect-[4/3] overflow-hidden">
+                          <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                         </div>
-                      </div>
-                    </Link>
+                        <div className="p-3">
+                          <p className="text-sm font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
+                          <p className="text-base font-bold text-foreground mt-1">{ad.price} ₼</p>
+                          <div className="flex items-center justify-between mt-1.5 text-xs text-muted-foreground">
+                            <span>📍 {ad.location}</span>
+                            <span>{ad.date}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    </>
                   ))}
                 </div>
               ) : (
