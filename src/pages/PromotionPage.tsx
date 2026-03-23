@@ -1,54 +1,50 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Star, Check, Zap, Crown, Lock, CreditCard, X, CheckCircle, Eye } from "lucide-react";
+import { ArrowUp, Star, Crown, Lock, CreditCard, X, CheckCircle, Eye, Check, ChevronRight } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 const plans = [
   {
     id: "boost",
-    name: "İrəli Çək",
-    icon: Zap,
-    price: 2,
-    days: 3,
-    color: "border-border",
-    badgeColor: "",
-    recommended: false,
-    features: ["Kateqoriyada yuxarıda 3 gün"],
-    btnClass: "border border-border text-foreground hover:bg-muted",
+    name: "İrəli çək",
+    icon: "⬆️",
+    price: 1,
+    priceLabel: "1,00 AZN-dən",
+    days: 1,
+    description: "Axtarış nəticələrində birinci yerə qaldırılması",
+    includes: [],
+    borderClass: "border-border",
+    bgClass: "bg-card",
+    labelClass: "text-foreground",
   },
   {
     id: "vip",
     name: "VIP",
-    icon: Star,
+    icon: "🔶",
     price: 5,
+    priceLabel: "5,00 AZN",
     days: 7,
-    color: "border-[hsl(var(--vip-gold))] ring-1 ring-[hsl(var(--vip-gold))]/30",
-    badgeColor: "bg-[hsl(var(--vip-gold))]",
-    recommended: true,
-    features: [
-      "Ana səhifədə VIP bölmə",
-      "VIP badge",
-      "Kateqoriyada yuxarıda 7 gün",
-    ],
-    btnClass: "bg-[hsl(var(--vip-gold))] text-foreground hover:opacity-90 shadow-sm",
+    description: "Axtarışda birinci yerə qaldırılması və xüsusi bölmədə göstərilməsi",
+    includes: ["+HƏR GÜN İRƏLİ ÇƏK"],
+    borderClass: "border-[hsl(var(--destructive))]",
+    bgClass: "bg-[hsl(var(--destructive))]/[0.04]",
+    labelClass: "text-foreground",
+    includeBadgeClass: "bg-[hsl(var(--destructive))] text-white",
   },
   {
     id: "premium",
-    name: "Premium",
-    icon: Crown,
+    name: "Premium elan",
+    icon: "👑",
     price: 10,
+    priceLabel: "10,00 AZN",
     days: 14,
-    color: "border-border",
-    badgeColor: "",
-    recommended: false,
-    features: [
-      "Hər yerdə ən yuxarıda",
-      "Premium badge",
-      "Böyük card dizayn",
-      "14 gün müddət",
-    ],
-    btnClass: "border border-border text-foreground hover:bg-muted",
+    description: "Axtarışda birinci yerə qaldırılması və əsas səhifədə göstərilməsi",
+    includes: ["+HƏR GÜN İRƏLİ ÇƏK", "+VIP"],
+    borderClass: "border-[hsl(var(--boost-orange))]",
+    bgClass: "bg-[hsl(var(--boost-orange))]/[0.04]",
+    labelClass: "text-foreground",
+    includeBadgeClass: "bg-[hsl(var(--destructive))] text-white",
   },
 ];
 
@@ -96,61 +92,77 @@ const PromotionPage = () => {
       <SiteHeader />
 
       <main className="flex-1 container py-8 md:py-10">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl font-extrabold text-foreground mb-6">Elanınızı irəli çəkin</h1>
+        <div className="max-w-lg mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-xl font-bold text-foreground">Xidməti seçin</h1>
+          </div>
 
           {/* Ad preview */}
-          <div className="flex items-center gap-3 bg-card rounded-xl border border-border p-3 mb-8">
-            <img src={ad.img} alt={ad.title} className="w-20 h-16 rounded-lg object-cover shrink-0" />
-            <div className="min-w-0">
+          <div className="flex items-center gap-3 bg-card rounded-xl border border-border p-3 mb-6">
+            <img src={ad.img} alt={ad.title} className="w-16 h-14 rounded-lg object-cover shrink-0" />
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-foreground truncate">{ad.title}</p>
-              <p className="text-base font-bold text-foreground mt-0.5">{ad.price}</p>
-              <p className="text-xs text-muted-foreground">📍 {ad.location}</p>
+              <p className="text-sm font-bold text-foreground mt-0.5">{ad.price}</p>
             </div>
+            <ChevronRight size={16} className="text-muted-foreground shrink-0" />
           </div>
 
-          {/* Plan cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Plan cards — stacked like reference */}
+          <div className="space-y-4">
             {plans.map((plan) => (
-              <div
+              <button
                 key={plan.id}
-                className={`relative rounded-xl border-2 bg-card p-5 flex flex-col transition-all ${plan.color} ${
-                  selected === plan.id ? "shadow-lg scale-[1.02]" : ""
+                onClick={() => handleSelect(plan.id)}
+                className={`w-full text-left rounded-2xl border-2 p-5 transition-all active:scale-[0.98] ${plan.borderClass} ${plan.bgClass} ${
+                  selected === plan.id ? "shadow-lg ring-2 ring-primary/20" : "hover:shadow-md"
                 }`}
               >
-                {plan.recommended && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[hsl(var(--vip-gold))] text-foreground text-xs font-bold shadow-sm">
-                    <Star size={12} fill="currentColor" /> Tövsiyə
-                  </span>
-                )}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    {/* Title row */}
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <h3 className={`text-lg font-bold ${plan.labelClass}`}>{plan.name}</h3>
+                      <span className="text-lg">{plan.icon}</span>
+                    </div>
 
-                <div className="flex items-center gap-2 mb-3 mt-1">
-                  <plan.icon size={20} className={plan.recommended ? "text-[hsl(var(--vip-gold))]" : "text-muted-foreground"} />
-                  <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
+                    {/* Description */}
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {plan.description}
+                    </p>
+
+                    {/* Include badges */}
+                    {plan.includes.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {plan.includes.map((inc) => (
+                          <span
+                            key={inc}
+                            className={`inline-flex items-center px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wide ${plan.includeBadgeClass}`}
+                          >
+                            {inc}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Price badge (only for boost which has simple price) */}
+                  {plan.id === "boost" && (
+                    <span className="shrink-0 inline-flex items-center px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-bold shadow-sm">
+                      {plan.priceLabel}
+                    </span>
+                  )}
                 </div>
-
-                <p className="text-3xl font-extrabold text-foreground mb-4">
-                  {plan.price} <span className="text-base font-medium text-muted-foreground">₼</span>
-                </p>
-
-                <ul className="space-y-2 mb-6 flex-1">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-foreground">
-                      <Check size={16} className="text-accent shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  onClick={() => handleSelect(plan.id)}
-                  className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all active:scale-[0.97] ${plan.btnClass}`}
-                >
-                  Seç
-                </button>
-              </div>
+              </button>
             ))}
           </div>
+
+          {/* Info note */}
+          <p className="text-xs text-muted-foreground text-center mt-6 leading-relaxed">
+            VIP və Premium elanlar avtomatik olaraq hər gün irəli çəkilir.
+            <br />
+            Ödəniş etdikdən sonra xidmət dərhal aktivləşir.
+          </p>
         </div>
       </main>
 
@@ -172,11 +184,23 @@ const PromotionPage = () => {
                 <h2 className="text-lg font-bold text-foreground mb-1">Ödəniş</h2>
 
                 {/* Summary */}
-                <div className="bg-muted rounded-lg px-4 py-3 mb-5 mt-3">
+                <div className="bg-muted rounded-xl px-4 py-3.5 mb-5 mt-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">{selectedPlan.name} Elan — {selectedPlan.days} gün</span>
-                    <span className="font-bold text-foreground">{selectedPlan.price.toFixed(2)} ₼</span>
+                    <div>
+                      <span className="font-semibold text-foreground">{selectedPlan.name}</span>
+                      <span className="text-muted-foreground"> — {selectedPlan.days} gün</span>
+                    </div>
+                    <span className="font-bold text-foreground text-base">{selectedPlan.price.toFixed(2)} ₼</span>
                   </div>
+                  {selectedPlan.includes.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {selectedPlan.includes.map(inc => (
+                        <span key={inc} className="text-[10px] font-bold text-accent bg-accent/10 px-2 py-0.5 rounded">
+                          {inc}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Card form */}
