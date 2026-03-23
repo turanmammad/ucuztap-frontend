@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const tabs = ["Hamısı", "Nəqliyyat", "Əmlak", "Elektronika"];
 
@@ -50,7 +51,7 @@ const RecentAds = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {filtered.map((ad) => (
-            <a key={ad.id} href="#" className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
+            <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
               <div className="aspect-[4/3] overflow-hidden">
                 <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               </div>
@@ -62,13 +63,13 @@ const RecentAds = () => {
                   <span>{ad.date}</span>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
         <div className="text-center mt-8">
-          <button className="px-6 py-2.5 border-2 border-border rounded-lg text-sm font-semibold text-foreground hover:border-primary hover:shadow-sm transition-all active:scale-[0.97]">
+          <Link to="/axtaris" className="px-6 py-2.5 border-2 border-border rounded-lg text-sm font-semibold text-foreground hover:border-primary hover:shadow-sm transition-all active:scale-[0.97] inline-block">
             Daha çox göstər →
-          </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,11 +1,12 @@
+import { Link } from "react-router-dom";
 import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package } from "lucide-react";
 
 const quickCategories = [
-  { emoji: "🚗", label: "Avtomobil" },
-  { emoji: "🏠", label: "Əmlak" },
-  { emoji: "📱", label: "Telefon" },
-  { emoji: "💼", label: "İş" },
-  { emoji: "🔧", label: "Xidmət" },
+  { emoji: "🚗", label: "Avtomobil", to: "/neqliyyat" },
+  { emoji: "🏠", label: "Əmlak", to: "/neqliyyat" },
+  { emoji: "📱", label: "Telefon", to: "/neqliyyat" },
+  { emoji: "💼", label: "İş", to: "/neqliyyat" },
+  { emoji: "🔧", label: "Xidmət", to: "/neqliyyat" },
 ];
 
 const floatingIcons = [
@@ -57,14 +58,14 @@ const HeroSearch = () => (
       </div>
       <div className="flex items-center justify-center gap-2 mt-5 flex-wrap animate-fade-up" style={{ animationDelay: "160ms" }}>
         {quickCategories.map((cat) => (
-          <a
+          <Link
             key={cat.label}
-            href="#"
+            to={cat.to}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm bg-white/90 backdrop-blur-sm border border-white/50 text-foreground hover:bg-white hover:shadow-md transition-all active:scale-[0.96]"
           >
             <span>{cat.emoji}</span>
             <span className="font-medium">{cat.label}</span>
-          </a>
+          </Link>
         ))}
       </div>
     </div>
