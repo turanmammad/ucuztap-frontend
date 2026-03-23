@@ -80,7 +80,7 @@ const SiteHeader = () => {
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden p-2 text-primary-foreground" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
