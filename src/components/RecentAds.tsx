@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Star, Crown, TrendingUp } from "lucide-react";
+import { Star, Crown, TrendingUp, RefreshCw, Loader2 } from "lucide-react";
 import { AdCardInFeed } from "@/components/AdBanners";
 
-const tabs = ["Hamısı", "Nəqliyyat", "Əmlak", "Elektronika"];
+const tabs = ["Hamısı", "Nəqliyyat", "Əmlak", "Elektronika", "Ev və Bağ", "Geyim"];
 
 type AdType = {
   id: number;
@@ -14,9 +14,10 @@ type AdType = {
   img: string;
   cat: string;
   badge?: "vip" | "premium" | "boost";
+  isNew?: boolean;
 };
 
-const allAds: AdType[] = [
+const adPool: AdType[] = [
   { id: 1, title: "Hyundai Tucson 2.0 GDI", price: "22,000", location: "Bakı", date: "5 dəq əvvəl", img: "https://images.unsplash.com/photo-1633695427587-dfa6a56f6572?w=400&h=300&fit=crop", cat: "Nəqliyyat", badge: "premium" },
   { id: 2, title: "1 otaqlı mənzil, Yasamal", price: "65,000", location: "Bakı", date: "12 dəq əvvəl", img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop", cat: "Əmlak", badge: "vip" },
   { id: 3, title: "AirPods Pro 2-ci nəsil", price: "280", location: "Bakı", date: "20 dəq əvvəl", img: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=400&h=300&fit=crop", cat: "Elektronika" },
@@ -38,6 +39,27 @@ const allAds: AdType[] = [
   { id: 19, title: "Lexus RX 350 F-Sport", price: "55,000", location: "Bakı", date: "8 saat əvvəl", img: "https://images.unsplash.com/photo-1619682817481-e994891cd1f5?w=400&h=300&fit=crop", cat: "Nəqliyyat", badge: "premium" },
   { id: 20, title: "Torpaq sahəsi, 10 sot", price: "45,000", location: "Şamaxı", date: "8 saat əvvəl", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=300&fit=crop", cat: "Əmlak" },
 ];
+
+// Extra ads that simulate "new arrivals"
+const newAdTemplates: Omit<AdType, "id" | "date" | "isNew">[] = [
+  { title: "Volkswagen Passat CC 2.0 TDI", price: "18,900", location: "Bakı", img: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=400&h=300&fit=crop", cat: "Nəqliyyat" },
+  { title: "3 otaqlı mənzil, Binəqədi", price: "155,000", location: "Bakı", img: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=400&h=300&fit=crop", cat: "Əmlak" },
+  { title: "Apple Watch Ultra 2", price: "1,350", location: "Bakı", img: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&h=300&fit=crop", cat: "Elektronika" },
+  { title: "Audi A4 2.0 TFSI S-Line", price: "27,500", location: "Sumqayıt", img: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400&h=300&fit=crop", cat: "Nəqliyyat" },
+  { title: "Guşə divan, yeni", price: "850", location: "Bakı", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop", cat: "Ev və Bağ" },
+  { title: "Nike Air Max 90, 42 ölçü", price: "120", location: "Bakı", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop", cat: "Geyim" },
+  { title: "Sony WH-1000XM5", price: "580", location: "Bakı", img: "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400&h=300&fit=crop", cat: "Elektronika" },
+  { title: "Peugeot 3008 1.6 THP", price: "21,000", location: "Gəncə", img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?w=400&h=300&fit=crop", cat: "Nəqliyyat" },
+  { title: "Studio mənzil, 28 kv.m", price: "72,000", location: "Bakı", img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop", cat: "Əmlak" },
+  { title: "Mətbəx mebeli dəsti", price: "2,400", location: "Bakı", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop", cat: "Ev və Bağ" },
+];
+
+const timeAgo = (seconds: number) => {
+  if (seconds < 60) return `${seconds} san əvvəl`;
+  const mins = Math.floor(seconds / 60);
+  if (mins < 60) return `${mins} dəq əvvəl`;
+  return `${Math.floor(mins / 60)} saat əvvəl`;
+};
 
 const AD_POSITIONS = [4, 12];
 
@@ -67,7 +89,48 @@ const badgeConfig = {
 
 const RecentAds = () => {
   const [activeTab, setActiveTab] = useState("Hamısı");
-  const filtered = activeTab === "Hamısı" ? allAds : allAds.filter((ad) => ad.cat === activeTab);
+  const [ads, setAds] = useState<AdType[]>(adPool);
+  const [newCount, setNewCount] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const nextIdRef = useRef(100);
+  const templateIndexRef = useRef(0);
+
+  // Simulate new ads arriving every 15 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const template = newAdTemplates[templateIndexRef.current % newAdTemplates.length];
+      templateIndexRef.current++;
+      const newAd: AdType = {
+        ...template,
+        id: nextIdRef.current++,
+        date: "İndi",
+        isNew: true,
+      };
+      setAds(prev => [newAd, ...prev]);
+      setNewCount(prev => prev + 1);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Clear "new" highlight after 5 seconds
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAds(prev => prev.map(a => a.isNew ? { ...a, isNew: false } : a));
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, [ads]);
+
+  const handleRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    setNewCount(0);
+    // Simulate loading
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  }, []);
+
+  const filtered = activeTab === "Hamısı" ? ads : ads.filter((ad) => ad.cat === activeTab);
 
   const itemsWithAds: (AdType | "ad")[] = [];
   filtered.forEach((ad, i) => {
@@ -79,13 +142,24 @@ const RecentAds = () => {
     <section className="section-padding">
       <div className="container">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-          <h2 className="text-xl font-bold text-foreground">Son Elanlar</h2>
-          <div className="flex gap-1 bg-muted rounded-lg p-1">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold text-foreground">Son Elanlar</h2>
+            {newCount > 0 && (
+              <button
+                onClick={handleRefresh}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-semibold hover:bg-accent/15 transition-colors animate-in fade-in slide-in-from-top-2 duration-300"
+              >
+                <RefreshCw size={11} className={isRefreshing ? "animate-spin" : ""} />
+                {newCount} yeni elan
+              </button>
+            )}
+          </div>
+          <div className="flex gap-1 bg-muted rounded-lg p-1 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-3 py-1.5 text-sm rounded-md font-medium transition-all ${
+                className={`px-3 py-1.5 text-sm rounded-md font-medium transition-all whitespace-nowrap ${
                   activeTab === tab ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -104,7 +178,7 @@ const RecentAds = () => {
                 to={`/elanlar/${item.id}`}
                 className={`rounded-lg border bg-card overflow-hidden card-lift group ${
                   item.badge ? `${badgeConfig[item.badge].borderClass} border-transparent` : "border-border"
-                }`}
+                } ${item.isNew ? "animate-in fade-in slide-in-from-top-3 duration-500 ring-2 ring-accent/30" : ""}`}
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
@@ -112,6 +186,11 @@ const RecentAds = () => {
                     <span className={`absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded shadow-sm ${badgeConfig[item.badge].badgeClass}`}>
                       {(() => { const Icon = badgeConfig[item.badge!].icon; return <Icon size={11} fill={badgeConfig[item.badge!].fill ? "currentColor" : "none"} />; })()}
                       {badgeConfig[item.badge].label}
+                    </span>
+                  )}
+                  {item.isNew && !item.badge && (
+                    <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded shadow-sm bg-accent text-accent-foreground">
+                      Yeni
                     </span>
                   )}
                 </div>
