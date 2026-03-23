@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, CheckCircle2, RotateCcw } from "lucide-react";
 
 const categories = [
   { emoji: "🚗", name: "Nəqliyyat" },
