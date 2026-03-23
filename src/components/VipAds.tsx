@@ -32,7 +32,7 @@ const VipAds = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const vipAds = useMemo(() => shuffle(allVipAds).slice(0, 6), [shuffleKey]);
+  const vipAds = useMemo(() => shuffle(allVipAds), [shuffleKey]);
 
   return (
     <section className="section-padding bg-gradient-to-b from-[hsl(var(--vip-gold)/0.06)] to-transparent">
