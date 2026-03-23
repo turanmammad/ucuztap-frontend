@@ -149,6 +149,14 @@
   .pb-mobile-bar {
     padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
   }
+  /* Hide scrollbar for horizontal scroll areas */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer components {
