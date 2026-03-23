@@ -2,12 +2,13 @@ import { useCallback } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import HeroSearch from "@/components/HeroSearch";
 import CategoryGrid from "@/components/CategoryGrid";
+import PremiumAds from "@/components/PremiumAds";
 import VipAds from "@/components/VipAds";
 import RecentAds from "@/components/RecentAds";
 import AiSearchBanner from "@/components/AiSearchBanner";
 import StatsBar from "@/components/StatsBar";
 import SiteFooter from "@/components/SiteFooter";
-import { AdBannerHorizontal, AdBannerInline } from "@/components/AdBanners";
+import { AdBannerHorizontal } from "@/components/AdBanners";
 import PullToRefresh from "@/components/PullToRefresh";
 
 const Index = () => {
@@ -24,6 +25,7 @@ const Index = () => {
           <HeroSearch />
           <CategoryGrid />
           <AdBannerHorizontal variant="slim" className="py-4" />
+          <PremiumAds />
           <VipAds />
           <AdBannerHorizontal className="py-4" />
           <RecentAds />
