@@ -17,9 +17,14 @@ const ShopsPage = () => (
     <SiteHeader />
     <main className="flex-1">
       <section className="bg-muted/30 border-b border-border">
-        <div className="container py-10 md:py-14">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">Mağazalar</h1>
-          <p className="text-muted-foreground max-w-lg">Etibarlı satıcıların rəsmi mağazalarını kəşf edin.</p>
+        <div className="container py-10 md:py-14 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">Mağazalar</h1>
+            <p className="text-muted-foreground max-w-lg">Etibarlı satıcıların rəsmi mağazalarını kəşf edin.</p>
+          </div>
+          <Link to="/magazalar/yarat" className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.98]">
+            <Store size={16} /> Mağaza yarat
+          </Link>
         </div>
       </section>
 
