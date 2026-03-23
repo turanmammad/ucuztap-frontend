@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package } from "lucide-react";
 
 const quickCategories = [
   { emoji: "🚗", label: "Avtomobil" },
@@ -8,13 +8,43 @@ const quickCategories = [
   { emoji: "🔧", label: "Xidmət" },
 ];
 
+const floatingIcons = [
+  { Icon: ShoppingBag, size: 28, style: { top: "8%", left: "5%", animationDuration: "18s", animationDelay: "0s" } },
+  { Icon: Car, size: 24, style: { top: "20%", right: "8%", animationDuration: "22s", animationDelay: "2s" } },
+  { Icon: Home, size: 26, style: { bottom: "15%", left: "10%", animationDuration: "20s", animationDelay: "4s" } },
+  { Icon: Smartphone, size: 20, style: { top: "60%", right: "5%", animationDuration: "16s", animationDelay: "1s" } },
+  { Icon: Tag, size: 22, style: { top: "12%", left: "20%", animationDuration: "24s", animationDelay: "3s" } },
+  { Icon: Gift, size: 26, style: { bottom: "25%", right: "15%", animationDuration: "19s", animationDelay: "5s" } },
+  { Icon: Briefcase, size: 20, style: { top: "35%", left: "3%", animationDuration: "21s", animationDelay: "2.5s" } },
+  { Icon: Heart, size: 18, style: { top: "15%", right: "20%", animationDuration: "17s", animationDelay: "1.5s" } },
+  { Icon: Star, size: 22, style: { bottom: "10%", right: "25%", animationDuration: "23s", animationDelay: "4.5s" } },
+  { Icon: Wrench, size: 20, style: { bottom: "30%", left: "18%", animationDuration: "20s", animationDelay: "0.5s" } },
+  { Icon: Zap, size: 18, style: { top: "45%", right: "12%", animationDuration: "15s", animationDelay: "3.5s" } },
+  { Icon: Package, size: 24, style: { top: "70%", left: "8%", animationDuration: "25s", animationDelay: "6s" } },
+];
+
 const HeroSearch = () => (
-  <section className="bg-hero-bg section-padding">
-    <div className="container max-w-3xl text-center">
-      <h1 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6 text-balance animate-fade-up" style={{ lineHeight: "1.15" }}>
+  <section className="relative bg-primary overflow-hidden section-padding">
+    {/* Floating animated icons */}
+    {floatingIcons.map(({ Icon, size, style }, i) => (
+      <div
+        key={i}
+        className="absolute pointer-events-none animate-hero-float"
+        style={style as React.CSSProperties}
+      >
+        <Icon size={size} className="text-primary-foreground/[0.08]" strokeWidth={1.5} />
+      </div>
+    ))}
+
+    {/* Decorative circles */}
+    <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-white/[0.06] animate-hero-pulse" />
+    <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-white/[0.04] animate-hero-pulse" style={{ animationDelay: "3s" }} />
+
+    <div className="container max-w-3xl text-center relative z-10">
+      <h1 className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-6 text-balance animate-fade-up" style={{ lineHeight: "1.15" }}>
         İstədiyiniz hər şeyi tapın
       </h1>
-      <div className="flex items-center border-2 border-primary rounded-lg overflow-hidden bg-background shadow-md animate-fade-up" style={{ animationDelay: "80ms" }}>
+      <div className="flex items-center border-2 border-white/20 rounded-lg overflow-hidden bg-background shadow-xl animate-fade-up" style={{ animationDelay: "80ms" }}>
         <Search size={20} className="ml-4 text-muted-foreground shrink-0" />
         <input
           type="text"
@@ -30,7 +60,7 @@ const HeroSearch = () => (
           <a
             key={cat.label}
             href="#"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm bg-background border border-border hover:border-primary hover:shadow-sm transition-all active:scale-[0.96]"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm bg-white/90 backdrop-blur-sm border border-white/50 text-foreground hover:bg-white hover:shadow-md transition-all active:scale-[0.96]"
           >
             <span>{cat.emoji}</span>
             <span className="font-medium">{cat.label}</span>
