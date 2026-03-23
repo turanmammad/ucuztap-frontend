@@ -18,18 +18,18 @@ const SiteHeader = () => {
 
         {/* Desktop Search */}
         <div className="hidden md:flex items-center flex-1 max-w-xl gap-2">
-          <div className="flex items-center gap-1 px-3 py-2 text-sm border border-border rounded-md bg-background cursor-pointer hover:border-primary/50 transition-colors">
+          <div className="flex items-center gap-1 px-3 py-2 text-sm border border-border rounded-lg bg-background cursor-pointer hover:border-primary/50 transition-colors">
             <MapPin size={14} className="text-muted-foreground" />
             <span className="text-muted-foreground whitespace-nowrap">Bütün Azərbaycan</span>
             <ChevronDown size={14} className="text-muted-foreground" />
           </div>
-          <div className="flex flex-1 items-center border border-border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
+          <div className="flex flex-1 items-center rounded-lg overflow-hidden bg-muted/50 focus-within:ring-2 focus-within:ring-primary/30 transition-shadow">
             <input
               type="text"
               placeholder="Elan axtar..."
-              className="flex-1 px-3 py-2 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
+              className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
             />
-            <button className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary-hover transition-colors">
+            <button className="h-full px-4 py-2.5 mr-1 my-0.5 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors active:scale-[0.96]">
               <Search size={16} />
             </button>
           </div>
