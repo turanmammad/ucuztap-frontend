@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, Sparkles, ChevronDown, LayoutGrid, List, SearchX } from "lucide-react";
+import { Search, Sparkles, ChevronDown, LayoutGrid, List, SearchX, SlidersHorizontal, X, MapPin, Tag, ArrowUpDown } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
@@ -44,6 +44,12 @@ const NoResults = ({ onAiSearch }: { onAiSearch: () => void }) => (
   </div>
 );
 
+const quickFilters = [
+  { label: "Şəhər", icon: MapPin },
+  { label: "Qiymət", icon: Tag },
+  { label: "Sıralama", icon: ArrowUpDown },
+];
+
 const SearchResultsPage = () => {
   const [query, setQuery] = useState("toyota camry bakı");
   const [aiMode, setAiMode] = useState(false);
@@ -53,6 +59,7 @@ const SearchResultsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [showResults, setShowResults] = useState(true);
+  const [activeQuickFilter, setActiveQuickFilter] = useState<string | null>(null);
 
   const activeFilterCount = 0;
 
@@ -108,7 +115,7 @@ const SearchResultsPage = () => {
               </button>
             </div>
 
-            {/* AI toggle row */}
+            {/* AI toggle + search info */}
             <div className="flex items-center justify-between mt-4">
               <p className="text-sm text-muted-foreground">
                 Bu sözlər üçün axtardınız: <span className="font-medium text-foreground">{query}</span>
@@ -141,6 +148,32 @@ const SearchResultsPage = () => {
                 </span>
               </button>
             </div>
+
+            {/* Quick filter chips (mobile-friendly) */}
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-1 scrollbar-hide">
+              {quickFilters.map((qf) => (
+                <button
+                  key={qf.label}
+                  onClick={() => setActiveQuickFilter(activeQuickFilter === qf.label ? null : qf.label)}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all border ${
+                    activeQuickFilter === qf.label
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-muted-foreground border-border hover:border-primary/40"
+                  }`}
+                >
+                  <qf.icon size={13} />
+                  {qf.label}
+                  <ChevronDown size={11} />
+                </button>
+              ))}
+              <button
+                onClick={() => setFilterOpen(true)}
+                className="shrink-0 lg:hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all border border-border bg-background text-muted-foreground hover:border-primary/40"
+              >
+                <SlidersHorizontal size={13} />
+                Bütün filterlər
+              </button>
+            </div>
           </div>
         </section>
 
@@ -154,7 +187,7 @@ const SearchResultsPage = () => {
 
           <div className="flex gap-8">
             {/* Sidebar */}
-            <div className="hidden lg:block w-[260px] shrink-0">
+            <div className="hidden lg:block w-[280px] shrink-0">
               <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} />
             </div>
 
