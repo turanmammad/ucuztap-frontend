@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
 const categoryLinks = [
-  { label: "Nəqliyyat", to: "/neqliyyat" },
-  { label: "Daşınmaz Əmlak", to: "/neqliyyat" },
-  { label: "Elektronika", to: "/neqliyyat" },
-  { label: "İş Elanları", to: "/neqliyyat" },
-  { label: "Xidmətlər", to: "/neqliyyat" },
+  { label: "Nəqliyyat", to: "/kateqoriya/neqliyyat" },
+  { label: "Daşınmaz Əmlak", to: "/kateqoriya/emlak" },
+  { label: "Elektronika", to: "/kateqoriya/elektronika" },
+  { label: "İş Elanları", to: "/kateqoriya/is-elanlari" },
+  { label: "Xidmətlər", to: "/kateqoriya/xidmetler" },
 ];
 
 const infoLinks = [

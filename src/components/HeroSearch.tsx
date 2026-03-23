@@ -2,11 +2,11 @@ import { Link } from "react-router-dom";
 import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package } from "lucide-react";
 
 const quickCategories = [
-  { emoji: "🚗", label: "Avtomobil", to: "/neqliyyat" },
-  { emoji: "🏠", label: "Əmlak", to: "/neqliyyat" },
-  { emoji: "📱", label: "Telefon", to: "/neqliyyat" },
-  { emoji: "💼", label: "İş", to: "/neqliyyat" },
-  { emoji: "🔧", label: "Xidmət", to: "/neqliyyat" },
+  { emoji: "🚗", label: "Avtomobil", to: "/kateqoriya/neqliyyat" },
+  { emoji: "🏠", label: "Əmlak", to: "/kateqoriya/emlak" },
+  { emoji: "📱", label: "Telefon", to: "/kateqoriya/elektronika" },
+  { emoji: "💼", label: "İş", to: "/kateqoriya/is-elanlari" },
+  { emoji: "🔧", label: "Xidmət", to: "/kateqoriya/xidmetler" },
 ];
 
 const floatingIcons = [
@@ -26,7 +26,6 @@ const floatingIcons = [
 
 const HeroSearch = () => (
   <section className="relative bg-primary overflow-hidden section-padding">
-    {/* Floating animated icons */}
     {floatingIcons.map(({ Icon, size, style }, i) => (
       <div
         key={i}
@@ -37,7 +36,6 @@ const HeroSearch = () => (
       </div>
     ))}
 
-    {/* Decorative circles */}
     <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-white/[0.06] animate-hero-pulse" />
     <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-white/[0.04] animate-hero-pulse" style={{ animationDelay: "3s" }} />
 

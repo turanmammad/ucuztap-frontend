@@ -41,7 +41,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/elanlar/:id" element={<AdDetailPage />} />
-          <Route path="/neqliyyat" element={<CategoryListingPage />} />
+          <Route path="/kateqoriya/:slug" element={<CategoryListingPage />} />
           <Route path="/axtaris" element={<SearchResultsPage />} />
           <Route path="/elan-yerlesdir" element={<PostAdPage />} />
           <Route path="/daxil-ol" element={<LoginPage />} />
