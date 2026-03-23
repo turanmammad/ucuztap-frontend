@@ -51,12 +51,15 @@ const ShopsPage = () => {
       result = result.filter(s => s.verified);
     }
 
+    // Sort, but always keep premium shops first
     switch (sortBy) {
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
       case "newest": result.sort((a, b) => Number(b.since) - Number(a.since)); break;
       case "ads": result.sort((a, b) => b.adsCount - a.adsCount); break;
       default: result.sort((a, b) => b.reviews - a.reviews);
     }
+    // Premium shops always appear first
+    result.sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
 
     return result;
   }, [searchQuery, selectedCategory, selectedLocation, sortBy, onlyVerified]);
