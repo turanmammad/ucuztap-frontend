@@ -86,7 +86,7 @@ const bannerDesignPackages = [
 ];
 
 const MyShop = () => {
-  const [hasShop] = useState(true);
+  const [hasShop] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "edit" | "stats" | "upgrade">("overview");
   const [currentPlan, setCurrentPlan] = useState("business");
   const [showPayment, setShowPayment] = useState(false);
