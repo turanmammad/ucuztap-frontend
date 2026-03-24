@@ -86,7 +86,7 @@ const bannerDesignPackages = [
 ];
 
 const MyShop = () => {
-  const [hasShop] = useState(true);
+  const [hasShop] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "edit" | "stats" | "upgrade">("overview");
   const [currentPlan, setCurrentPlan] = useState("business");
   const [showPayment, setShowPayment] = useState(false);
@@ -155,29 +155,101 @@ const MyShop = () => {
   };
 
   if (!hasShop) {
+    const shopBenefits = [
+      { icon: Store, title: "Professional görünüş", desc: "Xüsusi mağaza səhifəsi ilə müştərilərinizə etibarlı görüntü təqdim edin" },
+      { icon: TrendingUp, title: "Daha çox satış", desc: "Elanlarınız mağaza altında toplanır, müştərilər sizi asanlıqla tapır" },
+      { icon: BarChart3, title: "Ətraflı statistika", desc: "Baxış sayı, klikləmələr və müştəri analizləri ilə satışlarınızı artırın" },
+      { icon: Star, title: "Rəy sistemi", desc: "Müştəri rəyləri ilə etibarınızı artırın və yeni müştərilər cəlb edin" },
+      { icon: Shield, title: "Verifikasiya nişanı", desc: "Doğrulanmış mağaza statusu ilə etibarlılığınızı göstərin" },
+      { icon: Sparkles, title: "Brending imkanları", desc: "Logo, banner və xüsusi dizayn ilə brendinizi yaradın" },
+    ];
+
     return (
       <div className="space-y-6">
         <h1 className="text-xl font-bold text-foreground">Mağazam</h1>
-        <div className="rounded-xl border border-border bg-card p-8 text-center">
-          <Store size={40} className="mx-auto text-muted-foreground/30 mb-4" />
-          <h2 className="text-lg font-bold text-foreground mb-2">Hələ mağazanız yoxdur</h2>
-          <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
-            Öz mağazanızı yaradın, elanlarınızı bir yerdə toplayın və professional görüntü təqdim edin.
-          </p>
-          <div className="grid sm:grid-cols-3 gap-3 mb-6 max-w-lg mx-auto">
-            {packages.map((p) => (
-              <div key={p.id} className={`rounded-lg border p-3 text-center ${p.borderColor}`}>
-                <p.icon size={20} className={`mx-auto ${p.color} mb-1`} />
-                <p className="text-sm font-bold text-foreground">{p.name}</p>
-                <p className="text-xs text-muted-foreground">{p.price} ₼/ay</p>
+
+        {/* Hero banner */}
+        <div className="rounded-xl border border-border bg-gradient-to-br from-primary/5 via-card to-accent/5 p-6 md:p-8 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.08),transparent_50%)] pointer-events-none" />
+          <div className="relative">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Store size={32} className="text-primary" />
+            </div>
+            <h2 className="text-xl md:text-2xl font-extrabold text-foreground mb-2">Öz mağazanızı açın!</h2>
+            <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto leading-relaxed">
+              Elanlarınızı bir yerdə toplayın, professional görüntü təqdim edin və satışlarınızı artırın. Minlərlə satıcı artıq mağaza sahibidir!
+            </p>
+            <Link
+              to="/magazalar/yarat"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.98] shadow-md"
+            >
+              <Store size={16} /> Pulsuz mağaza yarat
+            </Link>
+          </div>
+        </div>
+
+        {/* Benefits grid */}
+        <div>
+          <h3 className="text-sm font-bold text-foreground mb-3">Mağaza sahibi olun, nə qazanırsınız?</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {shopBenefits.map((b, i) => (
+              <div key={i} className="rounded-xl border border-border bg-card p-4 flex items-start gap-3 hover:border-primary/30 transition-colors">
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <b.icon size={18} className="text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{b.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">{b.desc}</p>
+                </div>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Packages preview */}
+        <div>
+          <h3 className="text-sm font-bold text-foreground mb-3">Paketlərimiz</h3>
+          <div className="grid sm:grid-cols-3 gap-3">
+            {packages.map((p) => (
+              <div key={p.id} className={`rounded-xl border-2 p-4 text-center relative ${p.borderColor} bg-card`}>
+                {p.id === "business" && (
+                  <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold bg-primary text-primary-foreground">Populyar</span>
+                )}
+                <p.icon size={24} className={`mx-auto ${p.color} mb-2`} />
+                <p className="text-sm font-bold text-foreground">{p.name}</p>
+                <div className="flex items-baseline justify-center gap-0.5 mt-1 mb-3">
+                  <span className="text-xl font-extrabold text-foreground">{p.price}</span>
+                  <span className="text-xs text-muted-foreground"> ₼ {p.period}</span>
+                </div>
+                <ul className="space-y-1 text-left mb-3">
+                  {p.features.slice(0, 3).map((f) => (
+                    <li key={f} className="flex items-center gap-1.5 text-xs text-foreground">
+                      <Check size={11} className="text-accent shrink-0" /> {f}
+                    </li>
+                  ))}
+                  {p.features.length > 3 && (
+                    <li className="text-[10px] text-muted-foreground pl-5">+{p.features.length - 3} xüsusiyyət daha</li>
+                  )}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="rounded-xl border border-[hsl(var(--vip-gold))]/30 bg-gradient-to-r from-[hsl(var(--vip-gold))]/5 to-transparent p-5 flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex-1 text-center sm:text-left">
+            <p className="text-sm font-bold text-foreground flex items-center gap-2 justify-center sm:justify-start">
+              <Crown size={16} className="text-[hsl(var(--vip-gold))]" />
+              Premium mağaza ilə fərqlənin!
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">Elanlarınız ön sıralarda, mağazanız premium nişanla</p>
+          </div>
           <Link
             to="/magazalar/yarat"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.98]"
+            className="shrink-0 px-5 py-2.5 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-sm font-bold hover:opacity-90 transition-opacity active:scale-[0.98]"
           >
-            <Store size={16} /> Mağaza yarat
+            İndi başla →
           </Link>
         </div>
       </div>
