@@ -547,8 +547,7 @@ const CategoryListingPage = () => {
           Filter ({activeFilterCount})
         </button>
 
-        {/* Mobile filter sheet */}
-        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} onFilterChange={handleFilterChange} />
+        {/* Mobile filter sheet handled by the sidebar component above */}
       </main>
       <SiteFooter />
       </PullToRefresh>
