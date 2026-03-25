@@ -12,6 +12,7 @@ const ScrollToTop = () => {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import AdDetailPage from "./pages/AdDetailPage.tsx";
+import EditAdPage from "./pages/EditAdPage.tsx";
 import CategoryListingPage from "./pages/CategoryListingPage.tsx";
 import SearchResultsPage from "./pages/SearchResultsPage.tsx";
 import PostAdPage from "./pages/PostAdPage.tsx";
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/elanlar/:id" element={<AdDetailPage />} />
           <Route path="/kateqoriya/:slug" element={<CategoryListingPage />} />
+          <Route path="/elanlar/:id/redakte" element={<EditAdPage />} />
           <Route path="/axtaris" element={<SearchResultsPage />} />
           <Route path="/elan-yerlesdir" element={<PostAdPage />} />
           <Route path="/daxil-ol" element={<LoginPage />} />
