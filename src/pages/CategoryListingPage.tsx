@@ -230,12 +230,13 @@ const subcategoryMap: Record<string, { name: string; count: string; emoji: strin
 const CategoryListingPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [sort, setSortValue] = useState(sortOptions[0]);
+  const [sort, setSort] = useState(sortOptions[0]);
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [searchInCategory, setSearchInCategory] = useState("");
+  const [sidebarFilters, setSidebarFilters] = useState<SidebarFilterState | null>(null);
 
   const handleRefresh = useCallback(async () => {
     await new Promise((r) => setTimeout(r, 800));
@@ -243,9 +244,54 @@ const CategoryListingPage = () => {
   }, []);
 
   const category = categoryMap[slug || "neqliyyat"] || categoryMap.neqliyyat;
-  const { title, count, ads } = category;
+  const { title, ads } = category;
   const subcategories = subcategoryMap[slug || "neqliyyat"] || [];
-  const activeFilterCount = 3;
+
+  const handleFilterChange = useCallback((state: SidebarFilterState) => {
+    setSidebarFilters(state);
+  }, []);
+
+  // Filter and sort ads reactively
+  const filteredAds = useMemo(() => {
+    let result = [...ads];
+
+    // Subcategory filter from chips
+    // (subcategory selection from sidebar is separate)
+
+    // Search within category
+    if (searchInCategory.trim()) {
+      const q = searchInCategory.toLowerCase();
+      result = result.filter(ad => ad.title.toLowerCase().includes(q) || ad.desc.toLowerCase().includes(q));
+    }
+
+    // City filter from sidebar
+    if (sidebarFilters?.city && sidebarFilters.city !== "Bütün şəhərlər") {
+      result = result.filter(ad => ad.location === sidebarFilters.city);
+    }
+
+    // Price range from sidebar
+    const priceRange = sidebarFilters?.ranges?.price;
+    if (priceRange && (priceRange.min || priceRange.max)) {
+      result = result.filter(ad => {
+        const p = parseFloat(ad.price.replace(/[^0-9.]/g, ""));
+        if (isNaN(p)) return true;
+        if (priceRange.min && p < parseFloat(priceRange.min)) return false;
+        if (priceRange.max && p > parseFloat(priceRange.max)) return false;
+        return true;
+      });
+    }
+
+    // Sort
+    if (sort.value === "price-asc") {
+      result.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, "")) - parseFloat(b.price.replace(/[^0-9.]/g, "")));
+    } else if (sort.value === "price-desc") {
+      result.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, "")) - parseFloat(a.price.replace(/[^0-9.]/g, "")));
+    }
+
+    return result;
+  }, [ads, searchInCategory, sidebarFilters, sort]);
+
+  const activeFilterCount = sidebarFilters?.activeCount || 0;
 
   const getPageNumbers = () => {
     const pages: (number | "...")[] = [];
