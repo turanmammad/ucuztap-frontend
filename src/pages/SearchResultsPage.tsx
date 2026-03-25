@@ -418,7 +418,7 @@ const SearchResultsPage = () => {
 
             {/* Main content */}
             <div className="flex-1 min-w-0">
-              {showResults ? (
+              {filteredResults.length > 0 ? (
                 <>
                   {/* Top results bar */}
                   <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
