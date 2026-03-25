@@ -48,22 +48,27 @@ const FilterDropdown = ({
   trigger,
   open,
   onToggle,
+  onClose,
   children,
 }: {
   trigger: React.ReactNode;
   open: boolean;
   onToggle: () => void;
+  onClose: () => void;
   children: React.ReactNode;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onToggle();
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        onClose();
+      }
     };
-    if (open) document.addEventListener("mousedown", handler);
+    document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open, onToggle]);
+  }, [open, onClose]);
 
   return (
     <div ref={ref} className="relative">
@@ -179,9 +184,13 @@ const SearchResultsPage = () => {
     return results;
   }, [selectedCity, selectedPrice, priceMin, priceMax, sort, sidebarFilters]);
 
-  const toggleDropdown = (key: string) => {
-    setOpenDropdown(openDropdown === key ? null : key);
-  };
+  const toggleDropdown = useCallback((key: string) => {
+    setOpenDropdown(prev => prev === key ? null : key);
+  }, []);
+
+  const closeDropdown = useCallback(() => {
+    setOpenDropdown(null);
+  }, []);
 
   const toggleFav = (id: number) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
@@ -272,6 +281,7 @@ const SearchResultsPage = () => {
               <FilterDropdown
                 open={openDropdown === "city"}
                 onToggle={() => toggleDropdown("city")}
+                onClose={closeDropdown}
                 trigger={
                   <button className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all border ${
                     selectedCity !== "Hamısı"
@@ -302,6 +312,7 @@ const SearchResultsPage = () => {
               <FilterDropdown
                 open={openDropdown === "price"}
                 onToggle={() => toggleDropdown("price")}
+                onClose={closeDropdown}
                 trigger={
                   <button className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all border ${
                     selectedPrice.label !== "Hamısı" || priceMin || priceMax
@@ -352,6 +363,7 @@ const SearchResultsPage = () => {
               <FilterDropdown
                 open={openDropdown === "sort"}
                 onToggle={() => toggleDropdown("sort")}
+                onClose={closeDropdown}
                 trigger={
                   <button className="shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all border bg-background text-foreground border-border hover:border-primary/40">
                     <ArrowUpDown size={13} />
