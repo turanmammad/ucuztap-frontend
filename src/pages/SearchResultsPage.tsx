@@ -424,7 +424,7 @@ const SearchResultsPage = () => {
                   <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
                     <div>
                       <h1 className="text-lg md:text-xl font-bold text-foreground">
-                        "{query.split(" ")[0]}" üçün <span className="text-primary">1,203</span> nəticə
+                        "{query.split(" ")[0]}" üçün <span className="text-primary">{filteredResults.length}</span> nəticə
                       </h1>
                       <p className="text-xs text-muted-foreground mt-0.5">Səhifə {currentPage} / {TOTAL_PAGES}</p>
                     </div>
