@@ -169,11 +169,22 @@ const categoryFilters: Record<string, FilterField[]> = {
 
 const defaultFilters = categoryFilters.neqliyyat;
 
+export type SidebarFilterState = {
+  activeSub: string | null;
+  checked: Record<string, string[]>;
+  ranges: Record<string, { min: string; max: string }>;
+  selects: Record<string, string>;
+  dateFilter: string;
+  city: string;
+  activeCount: number;
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
   activeFilters: number;
   slug?: string;
+  onFilterChange?: (state: SidebarFilterState) => void;
 }
 
 /* ── Collapsible Section ── */
