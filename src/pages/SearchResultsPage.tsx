@@ -444,7 +444,7 @@ const SearchResultsPage = () => {
                   {/* Grid view */}
                   {view === "grid" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                      {searchResults.map((ad) => (
+                      {filteredResults.map((ad) => (
                         <div key={ad.id} className="rounded-xl border border-border bg-card overflow-hidden group relative hover:shadow-lg hover:border-primary/20 transition-all duration-200">
                           {aiMode && ad.ai && (
                             <span className="absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white text-[10px] font-bold shadow-sm">
