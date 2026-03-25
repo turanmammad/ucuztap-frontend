@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Star } from "lucide-react";
+import { ChevronRight, Star, Heart } from "lucide-react";
 
 const allVipAds = [
   { id: 2, title: "3 otaqlı mənzil, Nəsimi r.", price: "185,000", location: "Bakı", date: "Bugün", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop" },
@@ -26,7 +26,6 @@ function shuffle<T>(arr: T[]): T[] {
 const VipAds = () => {
   const [shuffleKey, setShuffleKey] = useState(0);
 
-  // Re-shuffle every 25 seconds
   useEffect(() => {
     const interval = setInterval(() => setShuffleKey(k => k + 1), 25000);
     return () => clearInterval(interval);
@@ -35,38 +34,57 @@ const VipAds = () => {
   const vipAds = useMemo(() => shuffle(allVipAds), [shuffleKey]);
 
   return (
-    <section className="section-padding bg-gradient-to-b from-[hsl(var(--vip-gold)/0.06)] to-transparent">
+    <section className="section-padding py-8 md:py-12">
       <div className="container">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--vip-gold)/0.15)]">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[hsl(var(--vip-gold)/0.12)] flex items-center justify-center">
               <Star size={16} className="text-[hsl(var(--vip-gold))]" fill="currentColor" />
-            </span>
-            VIP Elanlar
-          </h2>
-          <Link to="/axtaris?type=vip" className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1">
-            Hamısını gör <ChevronRight size={14} />
+            </div>
+            <h2 className="text-lg font-bold text-foreground">VIP Elanlar</h2>
+          </div>
+          <Link to="/axtaris?type=vip" className="text-sm font-medium text-[hsl(var(--vip-gold))] hover:underline inline-flex items-center gap-1 transition-colors">
+            Hamısına bax <ChevronRight size={14} />
           </Link>
         </div>
+
+        {/* Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {vipAds.map((ad) => (
             <Link
               key={ad.id}
               to={`/elanlar/${ad.id}`}
-              className="rounded-xl bg-card overflow-hidden card-lift group ring-2 ring-[hsl(var(--vip-gold)/0.3)] hover:ring-[hsl(var(--vip-gold)/0.6)] transition-all"
+              className="group relative rounded-xl bg-card border border-[hsl(var(--vip-gold)/0.2)] overflow-hidden hover:border-[hsl(var(--vip-gold)/0.5)] hover:shadow-[0_4px_20px_hsl(var(--vip-gold)/0.1)] transition-all duration-300"
             >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded bg-[hsl(var(--vip-gold))] text-foreground shadow-sm">
-                  <Star size={10} fill="currentColor" /> VIP
-                </span>
+              {/* Image */}
+              <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                <img
+                  src={ad.img}
+                  alt={ad.title}
+                  className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
+                  loading="lazy"
+                />
+                {/* VIP badge */}
+                <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-[3px] rounded-md bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(43,90%,48%)] text-[10px] font-bold text-foreground shadow-sm">
+                  <Star size={9} fill="currentColor" /> VIP
+                </div>
+                {/* Favorite */}
+                <button
+                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-foreground/10 backdrop-blur-md flex items-center justify-center hover:bg-foreground/20 transition-colors"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <Heart size={13} className="text-white" />
+                </button>
               </div>
-              <div className="p-2.5">
-                <p className="text-xs font-medium text-card-foreground line-clamp-2 leading-snug">{ad.title}</p>
-                <p className="text-sm font-bold text-foreground mt-1">{ad.price} ₼</p>
-                <div className="flex items-center justify-between mt-1 text-[11px] text-muted-foreground">
-                  <span className="truncate">📍 {ad.location}</span>
-                  <span className="shrink-0">{ad.date}</span>
+
+              {/* Content */}
+              <div className="p-2.5 space-y-1">
+                <p className="text-xs font-medium text-card-foreground line-clamp-2 leading-[1.4]">{ad.title}</p>
+                <p className="text-[15px] font-extrabold text-foreground tracking-tight">{ad.price} ₼</p>
+                <div className="flex items-center justify-between pt-0.5">
+                  <span className="text-[11px] text-muted-foreground truncate">📍 {ad.location}</span>
+                  <span className="text-[10px] text-muted-foreground shrink-0">{ad.date}</span>
                 </div>
               </div>
             </Link>
