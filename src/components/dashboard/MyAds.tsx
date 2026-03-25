@@ -38,6 +38,7 @@ const initialAds = [
 ];
 
 const MyAds = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
   const [ads, setAds] = useState(initialAds);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
