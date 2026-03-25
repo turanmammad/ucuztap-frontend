@@ -507,12 +507,12 @@ const FilterContent = ({ slug, onActiveCount, onFilterChange }: { slug?: string;
   );
 };
 
-const CategoryFilterSidebar = ({ open, onClose, slug }: Props) => {
+const CategoryFilterSidebar = ({ open, onClose, slug, onFilterChange }: Props) => {
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden lg:block w-full rounded-xl border border-border bg-card p-4 shadow-sm">
-        <FilterContent slug={slug} />
+        <FilterContent slug={slug} onFilterChange={onFilterChange} />
       </aside>
 
       {/* Mobile bottom sheet */}
@@ -533,7 +533,7 @@ const CategoryFilterSidebar = ({ open, onClose, slug }: Props) => {
               </div>
             </div>
             <div className="p-5 pb-8">
-              <FilterContent slug={slug} />
+              <FilterContent slug={slug} onFilterChange={onFilterChange} />
             </div>
           </div>
         </div>
