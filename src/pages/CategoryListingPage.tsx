@@ -8,7 +8,12 @@ import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar, AdCardInFeed, AdBannerHorizontal } from "@/components/AdBanners";
 import PullToRefresh from "@/components/PullToRefresh";
 
-const sortOptions = ["Tarixə görə", "Ucuzdan bahaya", "Bahalıdan ucuza", "Populyarlığa görə"];
+const sortOptions = [
+  { value: "date", label: "Tarixə görə" },
+  { value: "price-asc", label: "Ucuzdan bahaya" },
+  { value: "price-desc", label: "Bahalıdan ucuza" },
+  { value: "popular", label: "Populyarlığa görə" },
+];
 
 type CategoryData = {
   title: string;
