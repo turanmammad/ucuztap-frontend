@@ -221,7 +221,7 @@ const FilterSection = ({
   );
 };
 
-const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?: (n: number) => void }) => {
+const FilterContent = ({ slug, onActiveCount, onFilterChange }: { slug?: string; onActiveCount?: (n: number) => void; onFilterChange?: (state: SidebarFilterState) => void }) => {
   const fields = categoryFilters[slug || ""] || defaultFilters;
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [checked, setChecked] = useState<Record<string, string[]>>({});
@@ -229,6 +229,7 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
   const [selects, setSelects] = useState<Record<string, string>>({});
   const [dateFilter, setDateFilter] = useState("Hamısı");
   const [filterSearch, setFilterSearch] = useState("");
+  const [city, setCity] = useState("Bütün şəhərlər");
 
   const toggleCheck = (key: string, val: string) => {
     const list = checked[key] || [];
@@ -239,7 +240,7 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
     setRanges({ ...ranges, [key]: { ...(ranges[key] || { min: "", max: "" }), [side]: val } });
   };
 
-  // Count active filters
+  // Count active filters and notify parent
   const activeCount = useMemo(() => {
     let count = 0;
     if (activeSub) count++;
@@ -247,9 +248,11 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
     Object.values(ranges).forEach(r => { if (r.min || r.max) count++; });
     Object.values(selects).forEach(v => { if (v) count++; });
     if (dateFilter !== "Hamısı") count++;
+    if (city !== "Bütün şəhərlər") count++;
     onActiveCount?.(count);
+    onFilterChange?.({ activeSub, checked, ranges, selects, dateFilter, city, activeCount: count });
     return count;
-  }, [activeSub, checked, ranges, selects, dateFilter, onActiveCount]);
+  }, [activeSub, checked, ranges, selects, dateFilter, city, onActiveCount, onFilterChange]);
 
   const handleReset = () => {
     setActiveSub(null);
