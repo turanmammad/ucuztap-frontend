@@ -48,22 +48,27 @@ const FilterDropdown = ({
   trigger,
   open,
   onToggle,
+  onClose,
   children,
 }: {
   trigger: React.ReactNode;
   open: boolean;
   onToggle: () => void;
+  onClose: () => void;
   children: React.ReactNode;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onToggle();
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        onClose();
+      }
     };
-    if (open) document.addEventListener("mousedown", handler);
+    document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open, onToggle]);
+  }, [open, onClose]);
 
   return (
     <div ref={ref} className="relative">
