@@ -460,7 +460,7 @@ const CategoryListingPage = () => {
               {/* Ad cards */}
               {view === "grid" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {ads.map((ad, i) => (
+                  {filteredAds.map((ad, i) => (
                     <>
                       {i === 3 && <AdCardInFeed key="ad-feed" />}
                       <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
