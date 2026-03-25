@@ -120,6 +120,47 @@ const SearchResultsPage = () => {
     (selectedPrice.label !== "Hamısı" ? 1 : 0) +
     (priceMin || priceMax ? 1 : 0);
 
+  // Filter and sort results reactively
+  const filteredResults = useMemo(() => {
+    let results = [...searchResults];
+
+    // City filter
+    if (selectedCity !== "Hamısı") {
+      results = results.filter(ad => ad.location === selectedCity);
+    }
+
+    // Price filter (from preset)
+    if (selectedPrice.label !== "Hamısı") {
+      results = results.filter(ad => {
+        const p = parseInt(ad.price.replace(/,/g, ""));
+        const aboveMin = p >= selectedPrice.min;
+        const belowMax = selectedPrice.max === 0 || p <= selectedPrice.max;
+        return aboveMin && belowMax;
+      });
+    }
+
+    // Price filter (custom range)
+    if (priceMin || priceMax) {
+      results = results.filter(ad => {
+        const p = parseInt(ad.price.replace(/,/g, ""));
+        if (priceMin && p < parseInt(priceMin)) return false;
+        if (priceMax && p > parseInt(priceMax)) return false;
+        return true;
+      });
+    }
+
+    // Sort
+    if (sort.value === "price-asc") {
+      results.sort((a, b) => parseInt(a.price.replace(/,/g, "")) - parseInt(b.price.replace(/,/g, "")));
+    } else if (sort.value === "price-desc") {
+      results.sort((a, b) => parseInt(b.price.replace(/,/g, "")) - parseInt(a.price.replace(/,/g, "")));
+    } else if (sort.value === "popular") {
+      results.sort((a, b) => b.views - a.views);
+    }
+
+    return results;
+  }, [selectedCity, selectedPrice, priceMin, priceMax, sort]);
+
   const toggleDropdown = (key: string) => {
     setOpenDropdown(openDropdown === key ? null : key);
   };
