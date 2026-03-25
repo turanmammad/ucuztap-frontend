@@ -395,7 +395,7 @@ const CategoryListingPage = () => {
           <div className="flex gap-8">
             {/* Sidebar */}
             <div className="hidden lg:block w-[280px] shrink-0 space-y-4">
-              <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} onFilterChange={handleFilterChange} />
+              <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} onFilterChange={handleFilterChange} />
               <AdBannerSidebar />
             </div>
 
@@ -547,8 +547,7 @@ const CategoryListingPage = () => {
           Filter ({activeFilterCount})
         </button>
 
-        {/* Mobile filter sheet */}
-        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} onFilterChange={handleFilterChange} />
+        {/* Mobile filter sheet handled by the sidebar component above */}
       </main>
       <SiteFooter />
       </PullToRefresh>
