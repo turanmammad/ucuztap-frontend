@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, Eye, Pencil, Star, RefreshCw, BarChart3, Trash2, Pause, Play, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { toast } from "sonner";
 
