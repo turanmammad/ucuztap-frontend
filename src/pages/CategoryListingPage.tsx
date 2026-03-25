@@ -481,7 +481,7 @@ const CategoryListingPage = () => {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {ads.map((ad) => (
+                  {filteredAds.map((ad) => (
                     <Link key={ad.id} to={`/elanlar/${ad.id}`} className="flex rounded-lg border border-border bg-card overflow-hidden card-lift group">
                       <div className="w-36 h-28 sm:w-44 sm:h-32 shrink-0 overflow-hidden">
                         <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
