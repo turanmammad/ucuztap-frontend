@@ -114,19 +114,26 @@ const SearchResultsPage = () => {
   const [selectedPrice, setSelectedPrice] = useState(priceRanges[0]);
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
+  const [sidebarFilters, setSidebarFilters] = useState<SidebarFilterState | null>(null);
+
+  const handleSidebarFilterChange = useCallback((state: SidebarFilterState) => {
+    setSidebarFilters(state);
+  }, []);
 
   const activeFilterCount =
     (selectedCity !== "Hamısı" ? 1 : 0) +
     (selectedPrice.label !== "Hamısı" ? 1 : 0) +
-    (priceMin || priceMax ? 1 : 0);
+    (priceMin || priceMax ? 1 : 0) +
+    (sidebarFilters?.activeCount || 0);
 
   // Filter and sort results reactively
   const filteredResults = useMemo(() => {
     let results = [...searchResults];
 
-    // City filter
-    if (selectedCity !== "Hamısı") {
-      results = results.filter(ad => ad.location === selectedCity);
+    // City filter (quick filter or sidebar)
+    const cityFilter = selectedCity !== "Hamısı" ? selectedCity : (sidebarFilters?.city && sidebarFilters.city !== "Bütün şəhərlər" ? sidebarFilters.city : null);
+    if (cityFilter) {
+      results = results.filter(ad => ad.location === cityFilter);
     }
 
     // Price filter (from preset)
@@ -139,12 +146,23 @@ const SearchResultsPage = () => {
       });
     }
 
-    // Price filter (custom range)
+    // Price filter (custom range from quick filter)
     if (priceMin || priceMax) {
       results = results.filter(ad => {
         const p = parseInt(ad.price.replace(/,/g, ""));
         if (priceMin && p < parseInt(priceMin)) return false;
         if (priceMax && p > parseInt(priceMax)) return false;
+        return true;
+      });
+    }
+
+    // Price filter from sidebar
+    const sidebarPrice = sidebarFilters?.ranges?.price;
+    if (sidebarPrice && (sidebarPrice.min || sidebarPrice.max) && !priceMin && !priceMax && selectedPrice.label === "Hamısı") {
+      results = results.filter(ad => {
+        const p = parseInt(ad.price.replace(/,/g, ""));
+        if (sidebarPrice.min && p < parseInt(sidebarPrice.min)) return false;
+        if (sidebarPrice.max && p > parseInt(sidebarPrice.max)) return false;
         return true;
       });
     }
@@ -159,7 +177,7 @@ const SearchResultsPage = () => {
     }
 
     return results;
-  }, [selectedCity, selectedPrice, priceMin, priceMax, sort]);
+  }, [selectedCity, selectedPrice, priceMin, priceMax, sort, sidebarFilters]);
 
   const toggleDropdown = (key: string) => {
     setOpenDropdown(openDropdown === key ? null : key);
