@@ -80,8 +80,8 @@ const MyAds = () => {
   };
 
   const startEdit = (ad: typeof initialAds[0]) => {
-    setEditingId(ad.id);
-    setEditPrice(ad.price.replace(/[^\d]/g, ""));
+    // Navigate to full edit page
+    window.location.href = `/elanlar/${ad.id}/redakte`;
   };
 
   const saveEdit = (id: number) => {

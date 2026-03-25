@@ -57,6 +57,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/elanlar/:id" element={<AdDetailPage />} />
           <Route path="/kateqoriya/:slug" element={<CategoryListingPage />} />
+          <Route path="/elanlar/:id/redakte" element={<EditAdPage />} />
           <Route path="/axtaris" element={<SearchResultsPage />} />
           <Route path="/elan-yerlesdir" element={<PostAdPage />} />
           <Route path="/daxil-ol" element={<LoginPage />} />
