@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package, TrendingUp } from "lucide-react";
-import { motion } from "framer-motion";
+import { Search, ShoppingBag, Car, Home, Smartphone, Briefcase, Wrench, Tag, Gift, Heart, Star, Zap, Package, TrendingUp, Laptop, Watch, Sofa, Camera, Headphones, MapPin } from "lucide-react";
+import { motion, useInView } from "framer-motion";
 
 const trendSearches = [
   "iPhone 15 Pro Max",
@@ -17,18 +17,23 @@ const trendSearches = [
 ];
 
 const floatingIcons = [
-  { Icon: ShoppingBag, size: 32, style: { top: "6%", left: "6%", animationDuration: "18s", animationDelay: "0s" } },
-  { Icon: Car, size: 28, style: { top: "18%", right: "7%", animationDuration: "22s", animationDelay: "2s" } },
-  { Icon: Home, size: 30, style: { bottom: "18%", left: "12%", animationDuration: "20s", animationDelay: "4s" } },
-  { Icon: Smartphone, size: 24, style: { top: "55%", right: "4%", animationDuration: "16s", animationDelay: "1s" } },
-  { Icon: Tag, size: 26, style: { top: "10%", left: "22%", animationDuration: "24s", animationDelay: "3s" } },
-  { Icon: Gift, size: 30, style: { bottom: "22%", right: "14%", animationDuration: "19s", animationDelay: "5s" } },
-  { Icon: Briefcase, size: 22, style: { top: "38%", left: "3%", animationDuration: "21s", animationDelay: "2.5s" } },
-  { Icon: Heart, size: 20, style: { top: "12%", right: "22%", animationDuration: "17s", animationDelay: "1.5s" } },
-  { Icon: Star, size: 26, style: { bottom: "8%", right: "28%", animationDuration: "23s", animationDelay: "4.5s" } },
-  { Icon: Wrench, size: 22, style: { bottom: "32%", left: "20%", animationDuration: "20s", animationDelay: "0.5s" } },
-  { Icon: Zap, size: 20, style: { top: "42%", right: "10%", animationDuration: "15s", animationDelay: "3.5s" } },
-  { Icon: Package, size: 28, style: { top: "68%", left: "7%", animationDuration: "25s", animationDelay: "6s" } },
+  { Icon: ShoppingBag, size: 44, style: { top: "5%", left: "4%", animationDuration: "18s", animationDelay: "0s" } },
+  { Icon: Car, size: 48, style: { top: "12%", right: "5%", animationDuration: "22s", animationDelay: "2s" } },
+  { Icon: Home, size: 42, style: { bottom: "15%", left: "8%", animationDuration: "20s", animationDelay: "4s" } },
+  { Icon: Smartphone, size: 36, style: { top: "50%", right: "3%", animationDuration: "16s", animationDelay: "1s" } },
+  { Icon: Tag, size: 38, style: { top: "8%", left: "20%", animationDuration: "24s", animationDelay: "3s" } },
+  { Icon: Gift, size: 40, style: { bottom: "20%", right: "10%", animationDuration: "19s", animationDelay: "5s" } },
+  { Icon: Briefcase, size: 34, style: { top: "35%", left: "2%", animationDuration: "21s", animationDelay: "2.5s" } },
+  { Icon: Heart, size: 30, style: { top: "10%", right: "20%", animationDuration: "17s", animationDelay: "1.5s" } },
+  { Icon: Star, size: 38, style: { bottom: "6%", right: "25%", animationDuration: "23s", animationDelay: "4.5s" } },
+  { Icon: Wrench, size: 32, style: { bottom: "30%", left: "18%", animationDuration: "20s", animationDelay: "0.5s" } },
+  { Icon: Laptop, size: 42, style: { top: "60%", right: "8%", animationDuration: "15s", animationDelay: "3.5s" } },
+  { Icon: Package, size: 40, style: { top: "72%", left: "5%", animationDuration: "25s", animationDelay: "6s" } },
+  { Icon: Watch, size: 30, style: { top: "25%", left: "10%", animationDuration: "19s", animationDelay: "1s" } },
+  { Icon: Sofa, size: 44, style: { bottom: "10%", left: "25%", animationDuration: "22s", animationDelay: "3s" } },
+  { Icon: Camera, size: 34, style: { top: "4%", right: "14%", animationDuration: "20s", animationDelay: "4s" } },
+  { Icon: Headphones, size: 36, style: { top: "45%", left: "6%", animationDuration: "18s", animationDelay: "5.5s" } },
+  { Icon: MapPin, size: 32, style: { bottom: "35%", right: "4%", animationDuration: "21s", animationDelay: "2s" } },
 ];
 
 const quickCategories = [
@@ -39,19 +44,64 @@ const quickCategories = [
   { label: "Xidmətlər", icon: Wrench },
 ];
 
+// Counter animation hook
+const useCountUp = (end: number, duration = 2000, startDelay = 800) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const timeout = setTimeout(() => {
+      let startTime: number | null = null;
+      const step = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+        setCount(Math.floor(eased * end));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, startDelay);
+
+    return () => clearTimeout(timeout);
+  }, [isInView, end, duration, startDelay]);
+
+  return { count, ref };
+};
+
+const StatCounter = ({ value, suffix, label, delay }: { value: number; suffix: string; label: string; delay: number }) => {
+  const { count, ref } = useCountUp(value, 2000, delay);
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.9 + delay / 1000 }}
+      className="text-center"
+    >
+      <p className="text-xl md:text-2xl font-extrabold text-primary-foreground tabular-nums">
+        {count}{suffix}
+      </p>
+      <p className="text-[11px] text-primary-foreground/60 font-medium">{label}</p>
+    </motion.div>
+  );
+};
+
 const HeroSearch = () => {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = (q?: string) => {
+  const handleSearch = useCallback((q?: string) => {
     const term = (q || query).trim();
     if (term) {
       setFocused(false);
       navigate(`/axtaris?q=${encodeURIComponent(term)}`);
     }
-  };
+  }, [query, navigate]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -109,16 +159,16 @@ const HeroSearch = () => {
           className="absolute top-1/2 left-1/4 w-40 h-40 rounded-full bg-foreground/[0.02] animate-hero-pulse"
           style={{ animationDelay: "5s" }}
         />
-        
-        {/* Diagonal lines */}
+
+        {/* Subtle dot pattern instead of diagonal lines */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
-          className="absolute top-0 right-0 w-full h-full opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 60px, currentColor 60px, currentColor 61px)",
-            color: "hsl(var(--foreground))"
+            backgroundImage: "radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
           }}
         />
       </div>
@@ -127,13 +177,13 @@ const HeroSearch = () => {
       {floatingIcons.map(({ Icon, size, style }, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 0, y: 40, rotate: -15 }}
-          animate={{ opacity: 1, y: 0, rotate: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 + i * 0.1, type: "spring", stiffness: 60 }}
+          initial={{ opacity: 0, scale: 0, rotate: -30 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ duration: 0.9, delay: 0.4 + i * 0.08, type: "spring", stiffness: 50, damping: 12 }}
           className="absolute pointer-events-none animate-hero-float"
           style={style as React.CSSProperties}
         >
-          <Icon size={size} className="text-foreground/[0.07]" strokeWidth={1.5} />
+          <Icon size={size} className="text-foreground/[0.08]" strokeWidth={1.2} />
         </motion.div>
       ))}
 
@@ -160,9 +210,6 @@ const HeroSearch = () => {
           <span className="relative inline-block ml-2">
             tapın
             <motion.svg
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
               className="absolute -bottom-1 left-0 w-full"
               viewBox="0 0 100 12"
               preserveAspectRatio="none"
@@ -269,24 +316,11 @@ const HeroSearch = () => {
           ))}
         </div>
 
-        {/* Stats row */}
+        {/* Stats row with counter animation */}
         <div className="flex items-center justify-center gap-6 md:gap-10 mt-8">
-          {[
-            { value: "152K+", label: "Aktiv elan" },
-            { value: "48K+", label: "İstifadəçi" },
-            { value: "5K+", label: "Gündəlik baxış" },
-          ].map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.9 + i * 0.12 }}
-              className="text-center"
-            >
-              <p className="text-xl md:text-2xl font-extrabold text-primary-foreground">{s.value}</p>
-              <p className="text-[11px] text-primary-foreground/60 font-medium">{s.label}</p>
-            </motion.div>
-          ))}
+          <StatCounter value={152} suffix="K+" label="Aktiv elan" delay={800} />
+          <StatCounter value={48} suffix="K+" label="İstifadəçi" delay={950} />
+          <StatCounter value={5} suffix="K+" label="Gündəlik baxış" delay={1100} />
         </div>
       </div>
     </section>
