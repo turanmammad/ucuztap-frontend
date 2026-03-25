@@ -609,7 +609,7 @@ const SearchResultsPage = () => {
         </div>
 
         {/* Mobile filter bottom sheet only */}
-        {filterOpen && <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />}
+        {filterOpen && <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} onFilterChange={handleSidebarFilterChange} />}
       </main>
       <SiteFooter />
     </div>
