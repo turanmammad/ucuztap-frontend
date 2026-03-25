@@ -183,7 +183,7 @@ const HeroSearch = () => {
           className="absolute pointer-events-none animate-hero-float"
           style={style as React.CSSProperties}
         >
-          <Icon size={size} className="text-foreground/[0.08]" strokeWidth={1.2} />
+          <Icon size={size} className="text-foreground/[0.12]" strokeWidth={1.4} />
         </motion.div>
       ))}
 
