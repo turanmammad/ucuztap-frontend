@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Search, Sparkles, ChevronDown, LayoutGrid, List, SearchX,
@@ -119,6 +119,47 @@ const SearchResultsPage = () => {
     (selectedCity !== "Hamısı" ? 1 : 0) +
     (selectedPrice.label !== "Hamısı" ? 1 : 0) +
     (priceMin || priceMax ? 1 : 0);
+
+  // Filter and sort results reactively
+  const filteredResults = useMemo(() => {
+    let results = [...searchResults];
+
+    // City filter
+    if (selectedCity !== "Hamısı") {
+      results = results.filter(ad => ad.location === selectedCity);
+    }
+
+    // Price filter (from preset)
+    if (selectedPrice.label !== "Hamısı") {
+      results = results.filter(ad => {
+        const p = parseInt(ad.price.replace(/,/g, ""));
+        const aboveMin = p >= selectedPrice.min;
+        const belowMax = selectedPrice.max === 0 || p <= selectedPrice.max;
+        return aboveMin && belowMax;
+      });
+    }
+
+    // Price filter (custom range)
+    if (priceMin || priceMax) {
+      results = results.filter(ad => {
+        const p = parseInt(ad.price.replace(/,/g, ""));
+        if (priceMin && p < parseInt(priceMin)) return false;
+        if (priceMax && p > parseInt(priceMax)) return false;
+        return true;
+      });
+    }
+
+    // Sort
+    if (sort.value === "price-asc") {
+      results.sort((a, b) => parseInt(a.price.replace(/,/g, "")) - parseInt(b.price.replace(/,/g, "")));
+    } else if (sort.value === "price-desc") {
+      results.sort((a, b) => parseInt(b.price.replace(/,/g, "")) - parseInt(a.price.replace(/,/g, "")));
+    } else if (sort.value === "popular") {
+      results.sort((a, b) => b.views - a.views);
+    }
+
+    return results;
+  }, [selectedCity, selectedPrice, priceMin, priceMax, sort]);
 
   const toggleDropdown = (key: string) => {
     setOpenDropdown(openDropdown === key ? null : key);
@@ -377,13 +418,13 @@ const SearchResultsPage = () => {
 
             {/* Main content */}
             <div className="flex-1 min-w-0">
-              {showResults ? (
+              {filteredResults.length > 0 ? (
                 <>
                   {/* Top results bar */}
                   <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
                     <div>
                       <h1 className="text-lg md:text-xl font-bold text-foreground">
-                        "{query.split(" ")[0]}" üçün <span className="text-primary">1,203</span> nəticə
+                        "{query.split(" ")[0]}" üçün <span className="text-primary">{filteredResults.length}</span> nəticə
                       </h1>
                       <p className="text-xs text-muted-foreground mt-0.5">Səhifə {currentPage} / {TOTAL_PAGES}</p>
                     </div>
@@ -403,7 +444,7 @@ const SearchResultsPage = () => {
                   {/* Grid view */}
                   {view === "grid" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                      {searchResults.map((ad) => (
+                      {filteredResults.map((ad) => (
                         <div key={ad.id} className="rounded-xl border border-border bg-card overflow-hidden group relative hover:shadow-lg hover:border-primary/20 transition-all duration-200">
                           {aiMode && ad.ai && (
                             <span className="absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white text-[10px] font-bold shadow-sm">
@@ -442,7 +483,7 @@ const SearchResultsPage = () => {
                   ) : (
                     /* List view */
                     <div className="space-y-3">
-                      {searchResults.map((ad) => (
+                      {filteredResults.map((ad) => (
                         <div key={ad.id} className="flex rounded-xl border border-border bg-card overflow-hidden group relative hover:shadow-lg hover:border-primary/20 transition-all duration-200">
                           {aiMode && ad.ai && (
                             <span className="absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(217,91%,60%)] to-[hsl(271,81%,56%)] text-white text-[10px] font-bold shadow-sm">

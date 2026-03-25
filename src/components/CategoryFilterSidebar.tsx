@@ -471,19 +471,14 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
         </div>
       </FilterSection>
 
-      {/* Actions */}
-      <div className="space-y-2 pt-4">
-        <button className="w-full py-3 rounded-xl bg-accent text-accent-foreground font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97] shadow-sm">
-          <span className="flex items-center justify-center gap-2">
-            <Search size={15} /> Nəticələri göstər
-          </span>
-        </button>
-        {activeCount > 0 && (
-          <button onClick={handleReset} className="w-full py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1.5">
+      {/* Actions - only reset, no "show results" button */}
+      {activeCount > 0 && (
+        <div className="pt-4">
+          <button onClick={handleReset} className="w-full py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1.5 border border-border rounded-lg hover:bg-muted">
             <RotateCcw size={13} /> Filterləri sıfırla
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
