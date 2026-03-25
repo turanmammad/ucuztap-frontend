@@ -184,9 +184,13 @@ const SearchResultsPage = () => {
     return results;
   }, [selectedCity, selectedPrice, priceMin, priceMax, sort, sidebarFilters]);
 
-  const toggleDropdown = (key: string) => {
-    setOpenDropdown(openDropdown === key ? null : key);
-  };
+  const toggleDropdown = useCallback((key: string) => {
+    setOpenDropdown(prev => prev === key ? null : key);
+  }, []);
+
+  const closeDropdown = useCallback(() => {
+    setOpenDropdown(null);
+  }, []);
 
   const toggleFav = (id: number) => {
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
