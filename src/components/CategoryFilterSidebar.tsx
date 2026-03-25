@@ -452,9 +452,13 @@ const FilterContent = ({ slug, onActiveCount, onFilterChange }: { slug?: string;
       })}
 
       {/* City */}
-      <FilterSection title="Şəhər" defaultOpen={false}>
+      <FilterSection title="Şəhər" defaultOpen={false} badge={city !== "Bütün şəhərlər" ? 1 : undefined}>
         <div className="relative">
-          <select className="w-full appearance-none px-3 py-2.5 pr-8 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all">
+          <select
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="w-full appearance-none px-3 py-2.5 pr-8 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+          >
             <option>Bütün şəhərlər</option>
             <option>Bakı</option>
             <option>Gəncə</option>
@@ -462,6 +466,11 @@ const FilterContent = ({ slug, onActiveCount, onFilterChange }: { slug?: string;
             <option>Mingəçevir</option>
             <option>Lənkəran</option>
             <option>Şəki</option>
+            <option>Naxçıvan</option>
+            <option>Şirvan</option>
+            <option>Quba</option>
+            <option>Abşeron</option>
+            <option>Şamaxı</option>
           </select>
           <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         </div>
