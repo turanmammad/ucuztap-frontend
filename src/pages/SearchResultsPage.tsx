@@ -281,6 +281,7 @@ const SearchResultsPage = () => {
               <FilterDropdown
                 open={openDropdown === "city"}
                 onToggle={() => toggleDropdown("city")}
+                onClose={closeDropdown}
                 trigger={
                   <button className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all border ${
                     selectedCity !== "Hamısı"
