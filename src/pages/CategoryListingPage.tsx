@@ -338,7 +338,7 @@ const CategoryListingPage = () => {
               <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{title}</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  <span className="font-semibold text-foreground">{count}</span> aktiv elan
+                  <span className="font-semibold text-foreground">{filteredAds.length}</span> aktiv elan
                 </p>
               </div>
 
