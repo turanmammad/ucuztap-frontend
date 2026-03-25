@@ -160,15 +160,15 @@ const HeroSearch = () => {
           style={{ animationDelay: "5s" }}
         />
 
-        {/* Subtle dot pattern instead of diagonal lines */}
+        {/* Subtle dot pattern */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 2, delay: 1 }}
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.02]"
           style={{
-            backgroundImage: "radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+            backgroundImage: "radial-gradient(circle, hsl(var(--foreground)) 0.8px, transparent 0.8px)",
+            backgroundSize: "40px 40px",
           }}
         />
       </div>
