@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
+import CategoryFilterSidebar, { type SidebarFilterState } from "@/components/CategoryFilterSidebar";
 
 const sortOptions = [
   { value: "date", label: "Tarixə görə", icon: Clock },
