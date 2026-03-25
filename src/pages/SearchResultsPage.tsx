@@ -431,7 +431,7 @@ const SearchResultsPage = () => {
           <div className="flex gap-8">
             {/* Desktop sidebar - rendered by CategoryFilterSidebar below */}
             <div className="hidden lg:block w-[280px] shrink-0">
-              <CategoryFilterSidebar open={false} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} onFilterChange={handleSidebarFilterChange} />
+              <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} onFilterChange={handleSidebarFilterChange} />
             </div>
 
             {/* Main content */}
