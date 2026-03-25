@@ -17,7 +17,7 @@ const categories = [
 ];
 
 const CategoryGrid = () => (
-  <section className="section-padding py-10 md:py-14">
+  <section className="section-padding py-10 md:py-14 bg-muted/40">
     <div className="container">
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -35,13 +35,13 @@ const CategoryGrid = () => (
           <Link
             key={cat.name}
             to={`/kateqoriya/${cat.slug}`}
-            className="group flex flex-col items-center gap-2 p-3.5 rounded-2xl border border-border bg-card hover:border-primary/40 transition-all shrink-0 w-[88px] snap-start"
+            className="group flex flex-col items-center gap-2 p-3.5 rounded-2xl border border-border bg-card hover:border-primary/40 transition-all shrink-0 w-[92px] snap-start"
           >
             <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+              className="w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
               style={{ backgroundColor: `${cat.color}15` }}
             >
-              <cat.icon size={22} style={{ color: cat.color }} strokeWidth={1.8} />
+              <cat.icon size={24} style={{ color: cat.color }} strokeWidth={1.8} />
             </div>
             <span className="text-[11px] font-semibold text-center text-card-foreground leading-tight line-clamp-2">{cat.name}</span>
           </Link>
@@ -54,7 +54,7 @@ const CategoryGrid = () => (
           <Link
             key={cat.name}
             to={`/kateqoriya/${cat.slug}`}
-            className="group relative flex flex-col items-center gap-3 p-5 pb-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-200 overflow-hidden"
+            className="group relative flex flex-col items-center gap-3 p-6 pb-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-200 overflow-hidden"
           >
             {/* Hover gradient */}
             <div
@@ -62,15 +62,12 @@ const CategoryGrid = () => (
               style={{ background: `linear-gradient(135deg, ${cat.color}08, ${cat.color}03)` }}
             />
 
-            {/* Icon */}
+            {/* Icon - bigger */}
             <div
-              className="relative z-10 w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 group-hover:scale-110 group-hover:shadow-md"
-              style={{
-                backgroundColor: `${cat.color}12`,
-                boxShadow: `0 0 0 0 ${cat.color}00`,
-              }}
+              className="relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-200 group-hover:scale-110 group-hover:shadow-md"
+              style={{ backgroundColor: `${cat.color}12` }}
             >
-              <cat.icon size={26} style={{ color: cat.color }} strokeWidth={1.7} />
+              <cat.icon size={30} style={{ color: cat.color }} strokeWidth={1.6} />
             </div>
 
             {/* Name */}

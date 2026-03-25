@@ -196,7 +196,7 @@ const HeroSearch = () => {
           className="inline-flex items-center gap-1.5 bg-foreground/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-5"
         >
           <Zap size={13} className="text-primary-foreground" />
-          <span className="text-xs font-semibold text-primary-foreground">Azərbaycanın ən böyük elan platforması</span>
+          <span className="text-xs font-semibold text-primary-foreground">Sərfəli al, sürətli sat!</span>
         </motion.div>
 
         <motion.h1
