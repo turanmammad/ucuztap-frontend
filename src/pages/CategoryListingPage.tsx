@@ -4,7 +4,7 @@ import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal, Search,
 import CategoryFilterSidebar, { type SidebarFilterState } from "@/components/CategoryFilterSidebar";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
+
 import { AdBannerSidebar, AdCardInFeed, AdBannerHorizontal } from "@/components/AdBanners";
 import PullToRefresh from "@/components/PullToRefresh";
 
