@@ -1,13 +1,19 @@
 import { useState, useCallback, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal, Search, MapPin, ArrowUpDown, Grid3X3 } from "lucide-react";
+import { ChevronRight, ChevronDown, LayoutGrid, List, SlidersHorizontal, Search, MapPin, ArrowUpDown, Grid3X3, Check } from "lucide-react";
+import CategoryFilterSidebar, { type SidebarFilterState } from "@/components/CategoryFilterSidebar";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
+
 import { AdBannerSidebar, AdCardInFeed, AdBannerHorizontal } from "@/components/AdBanners";
 import PullToRefresh from "@/components/PullToRefresh";
 
-const sortOptions = ["Tarixə görə", "Ucuzdan bahaya", "Bahalıdan ucuza", "Populyarlığa görə"];
+const sortOptions = [
+  { value: "date", label: "Tarixə görə" },
+  { value: "price-asc", label: "Ucuzdan bahaya" },
+  { value: "price-desc", label: "Bahalıdan ucuza" },
+  { value: "popular", label: "Populyarlığa görə" },
+];
 
 type CategoryData = {
   title: string;
@@ -224,12 +230,13 @@ const subcategoryMap: Record<string, { name: string; count: string; emoji: strin
 const CategoryListingPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [sort, setSortValue] = useState(sortOptions[0]);
+  const [sort, setSort] = useState(sortOptions[0]);
   const [sortOpen, setSortOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [searchInCategory, setSearchInCategory] = useState("");
+  const [sidebarFilters, setSidebarFilters] = useState<SidebarFilterState | null>(null);
 
   const handleRefresh = useCallback(async () => {
     await new Promise((r) => setTimeout(r, 800));
@@ -237,9 +244,54 @@ const CategoryListingPage = () => {
   }, []);
 
   const category = categoryMap[slug || "neqliyyat"] || categoryMap.neqliyyat;
-  const { title, count, ads } = category;
+  const { title, ads } = category;
   const subcategories = subcategoryMap[slug || "neqliyyat"] || [];
-  const activeFilterCount = 3;
+
+  const handleFilterChange = useCallback((state: SidebarFilterState) => {
+    setSidebarFilters(state);
+  }, []);
+
+  // Filter and sort ads reactively
+  const filteredAds = useMemo(() => {
+    let result = [...ads];
+
+    // Subcategory filter from chips
+    // (subcategory selection from sidebar is separate)
+
+    // Search within category
+    if (searchInCategory.trim()) {
+      const q = searchInCategory.toLowerCase();
+      result = result.filter(ad => ad.title.toLowerCase().includes(q) || ad.desc.toLowerCase().includes(q));
+    }
+
+    // City filter from sidebar
+    if (sidebarFilters?.city && sidebarFilters.city !== "Bütün şəhərlər") {
+      result = result.filter(ad => ad.location === sidebarFilters.city);
+    }
+
+    // Price range from sidebar
+    const priceRange = sidebarFilters?.ranges?.price;
+    if (priceRange && (priceRange.min || priceRange.max)) {
+      result = result.filter(ad => {
+        const p = parseFloat(ad.price.replace(/[^0-9.]/g, ""));
+        if (isNaN(p)) return true;
+        if (priceRange.min && p < parseFloat(priceRange.min)) return false;
+        if (priceRange.max && p > parseFloat(priceRange.max)) return false;
+        return true;
+      });
+    }
+
+    // Sort
+    if (sort.value === "price-asc") {
+      result.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, "")) - parseFloat(b.price.replace(/[^0-9.]/g, "")));
+    } else if (sort.value === "price-desc") {
+      result.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, "")) - parseFloat(a.price.replace(/[^0-9.]/g, "")));
+    }
+
+    return result;
+  }, [ads, searchInCategory, sidebarFilters, sort]);
+
+  const activeFilterCount = sidebarFilters?.activeCount || 0;
 
   const getPageNumbers = () => {
     const pages: (number | "...")[] = [];
@@ -286,7 +338,7 @@ const CategoryListingPage = () => {
               <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold text-foreground">{title}</h1>
                 <p className="text-sm text-muted-foreground mt-1">
-                  <span className="font-semibold text-foreground">{count}</span> aktiv elan
+                  <span className="font-semibold text-foreground">{filteredAds.length}</span> aktiv elan
                 </p>
               </div>
 
@@ -343,7 +395,7 @@ const CategoryListingPage = () => {
           <div className="flex gap-8">
             {/* Sidebar */}
             <div className="hidden lg:block w-[280px] shrink-0 space-y-4">
-              <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} />
+              <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} slug={slug} onFilterChange={handleFilterChange} />
               <AdBannerSidebar />
             </div>
 
@@ -352,7 +404,7 @@ const CategoryListingPage = () => {
               {/* Top bar */}
               <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
                 <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{count}</span> elan tapıldı
+                  <span className="font-semibold text-foreground">{filteredAds.length}</span> elan tapıldı
                 </p>
 
                 <div className="flex items-center gap-2">
@@ -360,25 +412,26 @@ const CategoryListingPage = () => {
                   <div className="relative">
                     <button
                       onClick={() => setSortOpen(!sortOpen)}
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-md hover:border-primary/50 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:border-primary/50 transition-colors"
                     >
-                      <span className="text-muted-foreground">Sırala:</span>
-                      <span className="font-medium">{sort}</span>
+                      <ArrowUpDown size={13} />
+                      <span className="font-medium">{sort.label}</span>
                       <ChevronDown size={14} className="text-muted-foreground" />
                     </button>
                     {sortOpen && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setSortOpen(false)} />
-                        <div className="absolute right-0 top-full mt-1 w-52 bg-popover border border-border rounded-lg shadow-xl z-50 py-1 animate-fade-in">
+                        <div className="absolute right-0 top-full mt-1 w-52 bg-popover border border-border rounded-xl shadow-xl z-50 py-1.5 animate-fade-in">
                           {sortOptions.map((opt) => (
                             <button
-                              key={opt}
-                              onClick={() => { setSortValue(opt); setSortOpen(false); }}
-                              className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                                sort === opt ? "bg-primary/10 text-foreground font-medium" : "text-muted-foreground hover:bg-muted"
+                              key={opt.value}
+                              onClick={() => { setSort(opt); setSortOpen(false); }}
+                              className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
+                                sort.value === opt.value ? "bg-primary/10 text-foreground font-medium" : "text-muted-foreground hover:bg-muted"
                               }`}
                             >
-                              {opt}
+                              <span>{opt.label}</span>
+                              {sort.value === opt.value && <Check size={14} className="text-primary" />}
                             </button>
                           ))}
                         </div>
@@ -407,7 +460,7 @@ const CategoryListingPage = () => {
               {/* Ad cards */}
               {view === "grid" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {ads.map((ad, i) => (
+                  {filteredAds.map((ad, i) => (
                     <>
                       {i === 3 && <AdCardInFeed key="ad-feed" />}
                       <Link key={ad.id} to={`/elanlar/${ad.id}`} className="rounded-lg border border-border bg-card overflow-hidden card-lift group">
@@ -428,7 +481,7 @@ const CategoryListingPage = () => {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {ads.map((ad) => (
+                  {filteredAds.map((ad) => (
                     <Link key={ad.id} to={`/elanlar/${ad.id}`} className="flex rounded-lg border border-border bg-card overflow-hidden card-lift group">
                       <div className="w-36 h-28 sm:w-44 sm:h-32 shrink-0 overflow-hidden">
                         <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
@@ -495,7 +548,7 @@ const CategoryListingPage = () => {
         </button>
 
         {/* Mobile filter sheet */}
-        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} />
+        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} slug={slug} onFilterChange={handleFilterChange} />
       </main>
       <SiteFooter />
       </PullToRefresh>

@@ -169,11 +169,22 @@ const categoryFilters: Record<string, FilterField[]> = {
 
 const defaultFilters = categoryFilters.neqliyyat;
 
+export type SidebarFilterState = {
+  activeSub: string | null;
+  checked: Record<string, string[]>;
+  ranges: Record<string, { min: string; max: string }>;
+  selects: Record<string, string>;
+  dateFilter: string;
+  city: string;
+  activeCount: number;
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
   activeFilters: number;
   slug?: string;
+  onFilterChange?: (state: SidebarFilterState) => void;
 }
 
 /* ── Collapsible Section ── */
@@ -210,7 +221,7 @@ const FilterSection = ({
   );
 };
 
-const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?: (n: number) => void }) => {
+const FilterContent = ({ slug, onActiveCount, onFilterChange }: { slug?: string; onActiveCount?: (n: number) => void; onFilterChange?: (state: SidebarFilterState) => void }) => {
   const fields = categoryFilters[slug || ""] || defaultFilters;
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [checked, setChecked] = useState<Record<string, string[]>>({});
@@ -218,6 +229,7 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
   const [selects, setSelects] = useState<Record<string, string>>({});
   const [dateFilter, setDateFilter] = useState("Hamısı");
   const [filterSearch, setFilterSearch] = useState("");
+  const [city, setCity] = useState("Bütün şəhərlər");
 
   const toggleCheck = (key: string, val: string) => {
     const list = checked[key] || [];
@@ -228,7 +240,7 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
     setRanges({ ...ranges, [key]: { ...(ranges[key] || { min: "", max: "" }), [side]: val } });
   };
 
-  // Count active filters
+  // Count active filters and notify parent
   const activeCount = useMemo(() => {
     let count = 0;
     if (activeSub) count++;
@@ -236,9 +248,11 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
     Object.values(ranges).forEach(r => { if (r.min || r.max) count++; });
     Object.values(selects).forEach(v => { if (v) count++; });
     if (dateFilter !== "Hamısı") count++;
+    if (city !== "Bütün şəhərlər") count++;
     onActiveCount?.(count);
+    onFilterChange?.({ activeSub, checked, ranges, selects, dateFilter, city, activeCount: count });
     return count;
-  }, [activeSub, checked, ranges, selects, dateFilter, onActiveCount]);
+  }, [activeSub, checked, ranges, selects, dateFilter, city, onActiveCount, onFilterChange]);
 
   const handleReset = () => {
     setActiveSub(null);
@@ -247,6 +261,7 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
     setSelects({});
     setDateFilter("Hamısı");
     setFilterSearch("");
+    setCity("Bütün şəhərlər");
   };
 
   // Collect active filter chips
@@ -437,9 +452,13 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
       })}
 
       {/* City */}
-      <FilterSection title="Şəhər" defaultOpen={false}>
+      <FilterSection title="Şəhər" defaultOpen={false} badge={city !== "Bütün şəhərlər" ? 1 : undefined}>
         <div className="relative">
-          <select className="w-full appearance-none px-3 py-2.5 pr-8 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all">
+          <select
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="w-full appearance-none px-3 py-2.5 pr-8 text-sm border border-border rounded-lg bg-background outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+          >
             <option>Bütün şəhərlər</option>
             <option>Bakı</option>
             <option>Gəncə</option>
@@ -447,6 +466,11 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
             <option>Mingəçevir</option>
             <option>Lənkəran</option>
             <option>Şəki</option>
+            <option>Naxçıvan</option>
+            <option>Şirvan</option>
+            <option>Quba</option>
+            <option>Abşeron</option>
+            <option>Şamaxı</option>
           </select>
           <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         </div>
@@ -483,12 +507,12 @@ const FilterContent = ({ slug, onActiveCount }: { slug?: string; onActiveCount?:
   );
 };
 
-const CategoryFilterSidebar = ({ open, onClose, slug }: Props) => {
+const CategoryFilterSidebar = ({ open, onClose, slug, onFilterChange }: Props) => {
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden lg:block w-full rounded-xl border border-border bg-card p-4 shadow-sm">
-        <FilterContent slug={slug} />
+        <FilterContent slug={slug} onFilterChange={onFilterChange} />
       </aside>
 
       {/* Mobile bottom sheet */}
@@ -509,7 +533,7 @@ const CategoryFilterSidebar = ({ open, onClose, slug }: Props) => {
               </div>
             </div>
             <div className="p-5 pb-8">
-              <FilterContent slug={slug} />
+              <FilterContent slug={slug} onFilterChange={onFilterChange} />
             </div>
           </div>
         </div>
