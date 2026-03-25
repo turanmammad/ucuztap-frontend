@@ -404,7 +404,7 @@ const CategoryListingPage = () => {
               {/* Top bar */}
               <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
                 <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{count}</span> elan tapıldı
+                  <span className="font-semibold text-foreground">{filteredAds.length}</span> elan tapıldı
                 </p>
 
                 <div className="flex items-center gap-2">
@@ -412,25 +412,26 @@ const CategoryListingPage = () => {
                   <div className="relative">
                     <button
                       onClick={() => setSortOpen(!sortOpen)}
-                      className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-md hover:border-primary/50 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:border-primary/50 transition-colors"
                     >
-                      <span className="text-muted-foreground">Sırala:</span>
-                      <span className="font-medium">{sort}</span>
+                      <ArrowUpDown size={13} />
+                      <span className="font-medium">{sort.label}</span>
                       <ChevronDown size={14} className="text-muted-foreground" />
                     </button>
                     {sortOpen && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setSortOpen(false)} />
-                        <div className="absolute right-0 top-full mt-1 w-52 bg-popover border border-border rounded-lg shadow-xl z-50 py-1 animate-fade-in">
+                        <div className="absolute right-0 top-full mt-1 w-52 bg-popover border border-border rounded-xl shadow-xl z-50 py-1.5 animate-fade-in">
                           {sortOptions.map((opt) => (
                             <button
-                              key={opt}
-                              onClick={() => { setSortValue(opt); setSortOpen(false); }}
-                              className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                                sort === opt ? "bg-primary/10 text-foreground font-medium" : "text-muted-foreground hover:bg-muted"
+                              key={opt.value}
+                              onClick={() => { setSort(opt); setSortOpen(false); }}
+                              className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
+                                sort.value === opt.value ? "bg-primary/10 text-foreground font-medium" : "text-muted-foreground hover:bg-muted"
                               }`}
                             >
-                              {opt}
+                              <span>{opt.label}</span>
+                              {sort.value === opt.value && <Check size={14} className="text-primary" />}
                             </button>
                           ))}
                         </div>
