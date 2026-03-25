@@ -261,6 +261,7 @@ const FilterContent = ({ slug, onActiveCount, onFilterChange }: { slug?: string;
     setSelects({});
     setDateFilter("Hamısı");
     setFilterSearch("");
+    setCity("Bütün şəhərlər");
   };
 
   // Collect active filter chips
