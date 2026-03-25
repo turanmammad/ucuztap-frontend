@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, Eye, Pencil, Star, RefreshCw, BarChart3, Trash2, Pause, Play, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,6 +38,7 @@ const initialAds = [
 ];
 
 const MyAds = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("active");
   const [ads, setAds] = useState(initialAds);
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
@@ -80,8 +81,7 @@ const MyAds = () => {
   };
 
   const startEdit = (ad: typeof initialAds[0]) => {
-    // Navigate to full edit page
-    window.location.href = `/elanlar/${ad.id}/redakte`;
+    navigate(`/elanlar/${ad.id}/redakte`);
   };
 
   const saveEdit = (id: number) => {
