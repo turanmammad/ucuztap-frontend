@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import {
   Search, Sparkles, ChevronDown, LayoutGrid, List, SearchX,
   SlidersHorizontal, X, MapPin, Tag, ArrowUpDown, Clock, Heart,
-  Eye, Check, RotateCcw
+  Eye, Check, RotateCcw, History
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
