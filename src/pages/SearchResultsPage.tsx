@@ -370,9 +370,9 @@ const SearchResultsPage = () => {
 
         <div className="container py-6 md:py-8">
           <div className="flex gap-8">
-            {/* Desktop sidebar */}
+            {/* Desktop sidebar - rendered by CategoryFilterSidebar below */}
             <div className="hidden lg:block w-[280px] shrink-0">
-              <CategoryFilterSidebar open={false} onClose={() => {}} activeFilters={activeFilterCount} />
+              <CategoryFilterSidebar open={false} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />
             </div>
 
             {/* Main content */}
@@ -549,7 +549,8 @@ const SearchResultsPage = () => {
           </div>
         </div>
 
-        <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />
+        {/* Mobile filter bottom sheet only */}
+        {filterOpen && <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />}
       </main>
       <SiteFooter />
     </div>
