@@ -12,6 +12,7 @@ const ScrollToTop = () => {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import AdDetailPage from "./pages/AdDetailPage.tsx";
+import EditAdPage from "./pages/EditAdPage.tsx";
 import CategoryListingPage from "./pages/CategoryListingPage.tsx";
 import SearchResultsPage from "./pages/SearchResultsPage.tsx";
 import PostAdPage from "./pages/PostAdPage.tsx";
