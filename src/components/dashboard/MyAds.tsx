@@ -81,8 +81,7 @@ const MyAds = () => {
   };
 
   const startEdit = (ad: typeof initialAds[0]) => {
-    // Navigate to full edit page
-    window.location.href = `/elanlar/${ad.id}/redakte`;
+    navigate(`/elanlar/${ad.id}/redakte`);
   };
 
   const saveEdit = (id: number) => {
