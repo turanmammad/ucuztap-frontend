@@ -515,6 +515,32 @@ const SearchResultsPage = () => {
                       Növbəti »
                     </button>
                   </nav>
+
+                  {/* Son baxdıqlarınız */}
+                  <div className="mt-10 pt-8 border-t border-border">
+                    <div className="flex items-center gap-2 mb-4">
+                      <History size={18} className="text-muted-foreground" />
+                      <h3 className="text-base font-bold text-foreground">Son baxdıqlarınız</h3>
+                    </div>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                      {searchResults.slice(0, 5).map((ad) => (
+                        <Link
+                          key={`recent-${ad.id}`}
+                          to={`/elanlar/${ad.id}`}
+                          className="shrink-0 w-[160px] rounded-xl border border-border bg-card overflow-hidden hover:shadow-md hover:border-primary/20 transition-all group"
+                        >
+                          <div className="aspect-[4/3] overflow-hidden">
+                            <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                          </div>
+                          <div className="p-2.5">
+                            <p className="text-xs font-medium text-card-foreground line-clamp-1">{ad.title}</p>
+                            <p className="text-sm font-bold text-foreground mt-0.5">{ad.price} ₼</p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1"><MapPin size={9} />{ad.location}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </>
               ) : (
                 <NoResults onAiSearch={() => setAiMode(true)} />
@@ -523,17 +549,6 @@ const SearchResultsPage = () => {
           </div>
         </div>
 
-        {/* Mobile filter FAB */}
-        <button
-          onClick={() => setFilterOpen(true)}
-          className="lg:hidden fixed bottom-20 right-4 z-40 flex items-center gap-2 px-4 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm shadow-xl hover:bg-primary-hover transition-colors active:scale-[0.97]"
-        >
-          <SlidersHorizontal size={16} />
-          Filterlər
-          {activeFilterCount > 0 && (
-            <span className="w-5 h-5 rounded-full bg-background text-foreground text-[11px] font-bold flex items-center justify-center">{activeFilterCount}</span>
-          )}
-        </button>
         <CategoryFilterSidebar open={filterOpen} onClose={() => setFilterOpen(false)} activeFilters={activeFilterCount} />
       </main>
       <SiteFooter />
