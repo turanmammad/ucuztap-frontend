@@ -319,6 +319,39 @@ const UserAdsPage = () => {
                     ))}
                   </div>
                 )}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-1.5 mt-8">
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:border-primary/30 hover:text-foreground transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      <ChevronLeft size={16} /> Əvvəlki
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${
+                          currentPage === page
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:border-primary/30 hover:text-foreground transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      Sonrakı <ChevronRight size={16} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
