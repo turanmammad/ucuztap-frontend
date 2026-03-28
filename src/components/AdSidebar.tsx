@@ -121,7 +121,7 @@ const AdSidebar = () => {
           <span>Əlaqə saatları: <span className="font-semibold text-foreground">09:00 — 22:00</span></span>
         </div>
 
-        <Link to="#" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
+        <Link to="/istifadeci/eli-memmedov/elanlar" className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
           Bütün elanları (23) <ChevronRight size={14} />
         </Link>
 
