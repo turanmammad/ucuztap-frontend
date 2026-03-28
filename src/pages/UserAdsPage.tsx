@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import PullToRefresh from "@/components/PullToRefresh";
 import {
-  ChevronRight, Star, Check, Clock, MapPin, Eye, Heart,
+  ChevronRight, ChevronLeft, Star, Check, Clock, MapPin, Eye, Heart,
   Grid3X3, List, SlidersHorizontal, Phone, MessageCircle,
   Calendar, Package, ChevronDown, X
 } from "lucide-react";
@@ -51,6 +51,8 @@ const UserAdsPage = () => {
   const [selectedSort, setSelectedSort] = useState("Yenilər əvvəl");
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [phoneRevealed, setPhoneRevealed] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const adsPerPage = 6;
 
   const handleRefresh = useCallback(async () => {
     await new Promise((r) => setTimeout(r, 800));
@@ -66,6 +68,13 @@ const UserAdsPage = () => {
   };
 
   const filteredAds = selectedCategory === "Hamısı" ? userAds : userAds.filter((a) => a.category === selectedCategory);
+  const totalPages = Math.ceil(filteredAds.length / adsPerPage);
+  const paginatedAds = useMemo(() => filteredAds.slice((currentPage - 1) * adsPerPage, currentPage * adsPerPage), [filteredAds, currentPage]);
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
@@ -153,7 +162,7 @@ const UserAdsPage = () => {
                     {categories.map((cat) => (
                       <button
                         key={cat}
-                        onClick={() => setSelectedCategory(cat)}
+                        onClick={() => handleCategoryChange(cat)}
                         className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
                           selectedCategory === cat
                             ? "bg-primary text-primary-foreground shadow-sm"
@@ -227,7 +236,7 @@ const UserAdsPage = () => {
                 {/* Ads grid/list */}
                 {viewMode === "grid" ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                    {filteredAds.map((ad) => (
+                    {paginatedAds.map((ad) => (
                       <Link
                         key={ad.id}
                         to={`/elanlar/${ad.id}`}
@@ -268,7 +277,7 @@ const UserAdsPage = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {filteredAds.map((ad) => (
+                    {paginatedAds.map((ad) => (
                       <Link
                         key={ad.id}
                         to={`/elanlar/${ad.id}`}
@@ -308,6 +317,39 @@ const UserAdsPage = () => {
                         </div>
                       </Link>
                     ))}
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-1.5 mt-8">
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:border-primary/30 hover:text-foreground transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      <ChevronLeft size={16} /> Əvvəlki
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${
+                          currentPage === page
+                            ? "bg-primary text-primary-foreground shadow-sm"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:border-primary/30 hover:text-foreground transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                    >
+                      Sonrakı <ChevronRight size={16} />
+                    </button>
                   </div>
                 )}
               </div>
