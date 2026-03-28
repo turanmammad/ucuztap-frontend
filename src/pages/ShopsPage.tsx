@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, TrendingUp, Filter, X, BadgeCheck, LayoutGrid, List, Grid3X3, Crown } from "lucide-react";
+import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, Filter, X, BadgeCheck, LayoutGrid, List, Crown, Users, ArrowRight } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -32,35 +32,25 @@ const ShopsPage = () => {
   const [sortBy, setSortBy] = useState("popular");
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<"large" | "compact" | "list">("large");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filtered = useMemo(() => {
     let result = [...allShops];
-
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(s => s.name.toLowerCase().includes(q) || s.description.toLowerCase().includes(q));
     }
-    if (selectedCategory !== "Hamısı") {
-      result = result.filter(s => s.category === selectedCategory);
-    }
-    if (selectedLocation !== "Hamısı") {
-      result = result.filter(s => s.location === selectedLocation);
-    }
-    if (onlyVerified) {
-      result = result.filter(s => s.verified);
-    }
+    if (selectedCategory !== "Hamısı") result = result.filter(s => s.category === selectedCategory);
+    if (selectedLocation !== "Hamısı") result = result.filter(s => s.location === selectedLocation);
+    if (onlyVerified) result = result.filter(s => s.verified);
 
-    // Sort, but always keep premium shops first
     switch (sortBy) {
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
       case "newest": result.sort((a, b) => Number(b.since) - Number(a.since)); break;
       case "ads": result.sort((a, b) => b.adsCount - a.adsCount); break;
       default: result.sort((a, b) => b.reviews - a.reviews);
     }
-    // Premium shops always appear first
     result.sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
-
     return result;
   }, [searchQuery, selectedCategory, selectedLocation, sortBy, onlyVerified]);
 
@@ -76,38 +66,30 @@ const ShopsPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-muted/20">
+    <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0 bg-background">
       <SiteHeader />
       <main className="flex-1">
 
-        {/* Hero */}
-        <section className="relative bg-primary overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary-foreground)/0.08),transparent_70%)]" />
-          <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-primary-foreground/[0.04] animate-hero-pulse" />
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-primary-foreground/[0.03]" />
-
-          <div className="container relative z-10 py-10 md:py-16">
+        {/* Hero — Clean & Bold */}
+        <section className="bg-gradient-to-b from-muted/60 to-background border-b border-border">
+          <div className="container py-8 md:py-14">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground/80 text-xs font-medium mb-4">
-                <Store size={13} />
-                {allShops.length} aktiv mağaza
-              </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-3" style={{ lineHeight: 1.15 }}>
-                Etibarlı mağazaları kəşf edin
+              <h1 className="text-2xl md:text-4xl font-extrabold text-foreground mb-2 tracking-tight">
+                Mağazaları kəşf edin
               </h1>
-              <p className="text-primary-foreground/70 text-sm md:text-base max-w-lg mb-6">
-                Rəsmi mağazalardan təhlükəsiz alış-veriş edin. Yoxlanılmış satıcılar, keyfiyyətli məhsullar.
+              <p className="text-muted-foreground text-sm md:text-base mb-6">
+                Yoxlanılmış satıcılardan təhlükəsiz alış-veriş. <span className="font-semibold text-foreground">{allShops.length}</span> mağaza, <span className="font-semibold text-foreground">{totalAds.toLocaleString()}</span> aktiv elan.
               </p>
 
               {/* Search */}
-              <div className="flex items-center bg-background rounded-xl shadow-xl p-1.5 max-w-xl">
+              <div className="flex items-center bg-card rounded-xl border border-border shadow-sm p-1.5 max-w-lg">
                 <Search size={18} className="ml-3 text-muted-foreground shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Mağaza axtar..."
-                  className="flex-1 px-3 py-2.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
+                  className="flex-1 px-3 py-2 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
                 />
                 {searchQuery && (
                   <button onClick={() => setSearchQuery("")} className="p-2 text-muted-foreground hover:text-foreground">
@@ -117,42 +99,36 @@ const ShopsPage = () => {
               </div>
             </div>
 
-            {/* Stats row */}
-            <div className="flex flex-wrap gap-6 mt-8">
+            {/* Quick stats */}
+            <div className="flex gap-6 mt-6">
               {[
                 { icon: Store, label: "Mağaza", value: allShops.length },
-                { icon: TrendingUp, label: "Aktiv elan", value: totalAds.toLocaleString() },
                 { icon: Shield, label: "Yoxlanılmış", value: allShops.filter(s => s.verified).length },
-                { icon: Star, label: "Orta reytinq", value: (allShops.reduce((s, sh) => s + sh.rating, 0) / allShops.length).toFixed(1) },
+                { icon: Users, label: "Orta reytinq", value: (allShops.reduce((s, sh) => s + sh.rating, 0) / allShops.length).toFixed(1) },
               ].map((stat, i) => (
-                <div key={i} className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
-                    <stat.icon size={16} className="text-primary-foreground/70" />
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold text-primary-foreground leading-tight">{stat.value}</p>
-                    <p className="text-[11px] text-primary-foreground/50">{stat.label}</p>
-                  </div>
+                <div key={i} className="flex items-center gap-2">
+                  <stat.icon size={14} className="text-muted-foreground" />
+                  <span className="text-sm font-bold text-foreground">{stat.value}</span>
+                  <span className="text-xs text-muted-foreground hidden sm:inline">{stat.label}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Filters + Grid */}
-        <div className="container py-6 md:py-8">
-          {/* Desktop filters bar */}
-          <div className="hidden md:flex items-center gap-3 mb-6 flex-wrap">
-            {/* Category pills */}
+        {/* Content */}
+        <div className="container py-6">
+          {/* Desktop filters */}
+          <div className="hidden md:flex items-center gap-3 mb-5 flex-wrap">
             <div className="flex items-center gap-1.5 flex-wrap flex-1">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     selectedCategory === cat
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
+                      ? "bg-foreground text-background"
+                      : "bg-muted text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {cat}
@@ -160,43 +136,40 @@ const ShopsPage = () => {
               ))}
             </div>
 
-            {/* Location select */}
             <select
               value={selectedLocation}
               onChange={e => setSelectedLocation(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground outline-none focus:ring-2 focus:ring-ring transition-shadow"
+              className="px-3 py-1.5 rounded-lg border border-border bg-card text-xs text-foreground outline-none focus:ring-2 focus:ring-ring"
             >
               {LOCATIONS.map(loc => (
                 <option key={loc} value={loc}>{loc === "Hamısı" ? "Bütün şəhərlər" : loc}</option>
               ))}
             </select>
 
-            {/* Sort */}
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground outline-none focus:ring-2 focus:ring-ring transition-shadow"
+              className="px-3 py-1.5 rounded-lg border border-border bg-card text-xs text-foreground outline-none focus:ring-2 focus:ring-ring"
             >
               {SORT_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
 
-            {/* Verified toggle */}
             <button
               onClick={() => setOnlyVerified(!onlyVerified)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 onlyVerified
-                  ? "bg-primary/10 text-primary border border-primary/30"
-                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                  ? "bg-accent/10 text-accent border border-accent/30"
+                  : "bg-muted text-muted-foreground hover:text-foreground"
               }`}
             >
-              <BadgeCheck size={14} />
+              <BadgeCheck size={13} />
               Yoxlanılmış
             </button>
 
             {activeFilterCount > 0 && (
-              <button onClick={resetFilters} className="text-xs text-muted-foreground hover:text-foreground transition-colors underline">
+              <button onClick={resetFilters} className="text-xs text-destructive hover:underline">
                 Sıfırla
               </button>
             )}
@@ -212,38 +185,33 @@ const ShopsPage = () => {
               <Filter size={14} />
               Filtr
               {activeFilterCount > 0 && (
-                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                <span className="w-5 h-5 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center">
                   {activeFilterCount}
                 </span>
               )}
             </button>
           </div>
 
-          {/* Results count + View toggle */}
+          {/* Results bar */}
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">{filtered.length}</span> mağaza tapıldı
-              {searchQuery && (
-                <span className="hidden md:inline"> — "<span className="font-medium text-foreground">{searchQuery}</span>" üçün</span>
-              )}
+            <p className="text-xs text-muted-foreground">
+              <span className="font-semibold text-foreground">{filtered.length}</span> nəticə
             </p>
             <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5">
               {([
-                { key: "large" as const, icon: LayoutGrid, tip: "Böyük" },
-                { key: "compact" as const, icon: Grid3X3, tip: "Kiçik" },
-                { key: "list" as const, icon: List, tip: "Siyahı" },
+                { key: "grid" as const, icon: LayoutGrid },
+                { key: "list" as const, icon: List },
               ]).map((v) => (
                 <button
                   key={v.key}
                   onClick={() => setViewMode(v.key)}
-                  title={v.tip}
                   className={`p-1.5 rounded-md transition-all ${
                     viewMode === v.key
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <v.icon size={16} />
+                  <v.icon size={15} />
                 </button>
               ))}
             </div>
@@ -252,93 +220,84 @@ const ShopsPage = () => {
           {/* Shop Grid */}
           {filtered.length > 0 ? (
             <div className={
-              viewMode === "large"
+              viewMode === "grid"
                 ? "grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
-                : viewMode === "compact"
-                ? "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
                 : "flex flex-col gap-3"
             }>
               {filtered.map(shop => (
                 <Link key={shop.id} to={`/magazalar/${shop.slug}`} className="group">
-                  {viewMode === "large" && (
-                    <div className={`bg-card rounded-xl border overflow-hidden card-lift ${shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/20" : "border-border"}`}>
+                  {viewMode === "grid" && (
+                    <div className={`bg-card rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 ${
+                      shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/10" : "border-border"
+                    }`}>
+                      {/* Cover */}
                       <div className="relative h-28 overflow-hidden">
                         <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                         {shop.premium && (
-                          <span className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-lg">
-                            <Crown size={10} /> Premium
+                          <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <Crown size={9} /> Premium
                           </span>
                         )}
+                        {/* Logo */}
                         <div className="absolute -bottom-5 left-4">
-                          <img src={shop.img} alt={shop.name} className="w-14 h-14 rounded-xl object-cover border-[3px] border-card shadow-lg" loading="lazy" />
+                          <img src={shop.img} alt={shop.name} className={`w-12 h-12 rounded-xl object-cover shadow-md ${
+                            shop.premium ? "border-2 border-[hsl(var(--vip-gold))]/50" : "border-2 border-card"
+                          }`} loading="lazy" />
                         </div>
                       </div>
-                      <div className="pt-7 px-4 pb-4">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <h2 className="text-sm font-bold text-foreground truncate flex items-center gap-1.5">
-                              {shop.name}
-                              {shop.verified && <BadgeCheck size={14} className="text-primary shrink-0" />}
-                            </h2>
-                            <p className="text-xs text-muted-foreground mt-0.5">{shop.description}</p>
-                          </div>
-                          <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0 mt-0.5" />
-                        </div>
-                        <div className="flex items-center gap-3 mt-3 flex-wrap">
-                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin size={11} /> {shop.location}</span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary"><Star size={11} fill="currentColor" /> {shop.rating} <span className="text-muted-foreground font-normal">({shop.reviews})</span></span>
-                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><Clock size={11} /> {shop.since}</span>
-                        </div>
-                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
-                          <span className="text-xs font-medium text-foreground">{shop.adsCount} aktiv elan</span>
-                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{shop.category}</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
-                  {viewMode === "compact" && (
-                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift p-3">
-                      <div className="flex items-center gap-2.5 mb-2.5">
-                        <img src={shop.img} alt={shop.name} className="w-10 h-10 rounded-lg object-cover shrink-0" loading="lazy" />
-                        <div className="min-w-0 flex-1">
-                          <h2 className="text-xs font-bold text-foreground truncate flex items-center gap-1">
-                            {shop.name}
-                            {shop.verified && <BadgeCheck size={11} className="text-primary shrink-0" />}
-                          </h2>
-                          <p className="text-[10px] text-muted-foreground truncate">{shop.category} · {shop.location}</p>
+                      {/* Info */}
+                      <div className="pt-7 px-4 pb-4">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <h2 className="text-sm font-bold text-foreground truncate">{shop.name}</h2>
+                          {shop.verified && <BadgeCheck size={13} className="text-accent shrink-0" />}
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-1 mb-3">{shop.description}</p>
+                        
+                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                          <span className="inline-flex items-center gap-1">
+                            <Star size={11} fill="currentColor" className="text-[hsl(var(--vip-gold))]" />
+                            <span className="font-semibold text-foreground">{shop.rating}</span>
+                            <span>({shop.reviews})</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1"><MapPin size={10} /> {shop.location}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+                          <span className="text-xs text-muted-foreground">{shop.adsCount} elan</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{shop.category}</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary">
-                          <Star size={10} fill="currentColor" /> {shop.rating}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">{shop.adsCount} elan</span>
-                      </div>
-                      {shop.premium && (
-                        <span className="mt-2 block text-center text-[9px] font-bold uppercase tracking-wider text-accent bg-accent/10 rounded-md py-0.5">Premium</span>
-                      )}
                     </div>
                   )}
 
                   {viewMode === "list" && (
-                    <div className="bg-card rounded-xl border border-border overflow-hidden card-lift flex items-center gap-3 p-3">
-                      <img src={shop.img} alt={shop.name} className="w-12 h-12 rounded-lg object-cover shrink-0" loading="lazy" />
+                    <div className={`bg-card rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-md flex items-center gap-4 p-4 ${
+                      shop.premium ? "border-[hsl(var(--vip-gold))]/40" : "border-border"
+                    }`}>
+                      <img src={shop.img} alt={shop.name} className={`w-14 h-14 rounded-xl object-cover shrink-0 ${
+                        shop.premium ? "ring-2 ring-[hsl(var(--vip-gold))]/30" : ""
+                      }`} loading="lazy" />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5 mb-0.5">
                           <h2 className="text-sm font-bold text-foreground truncate">{shop.name}</h2>
-                          {shop.verified && <BadgeCheck size={13} className="text-primary shrink-0" />}
-                          {shop.premium && <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent text-[9px] font-bold uppercase">Premium</span>}
+                          {shop.verified && <BadgeCheck size={13} className="text-accent shrink-0" />}
+                          {shop.premium && (
+                            <span className="px-1.5 py-0.5 rounded bg-[hsl(var(--vip-gold))]/10 text-[hsl(var(--vip-gold))] text-[9px] font-bold uppercase">Premium</span>
+                          )}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5 truncate">{shop.description}</p>
-                        <div className="flex items-center gap-3 mt-1.5">
-                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><MapPin size={10} /> {shop.location}</span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary"><Star size={10} fill="currentColor" /> {shop.rating}</span>
-                          <span className="text-[11px] text-muted-foreground">{shop.adsCount} elan</span>
+                        <p className="text-xs text-muted-foreground line-clamp-1">{shop.description}</p>
+                        <div className="flex items-center gap-3 mt-1.5 text-[11px] text-muted-foreground">
+                          <span className="inline-flex items-center gap-1">
+                            <Star size={10} fill="currentColor" className="text-[hsl(var(--vip-gold))]" /> {shop.rating}
+                          </span>
+                          <span className="inline-flex items-center gap-1"><MapPin size={10} /> {shop.location}</span>
+                          <span>{shop.adsCount} elan</span>
+                          <span className="inline-flex items-center gap-1"><Clock size={10} /> {shop.since}</span>
                         </div>
                       </div>
-                      <ChevronRight size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                      <ChevronRight size={16} className="text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                     </div>
                   )}
                 </Link>
@@ -346,33 +305,37 @@ const ShopsPage = () => {
             </div>
           ) : (
             <div className="text-center py-16">
-              <Store size={48} className="mx-auto text-muted-foreground/30 mb-4" />
-              <h3 className="text-lg font-bold text-foreground mb-1">Mağaza tapılmadı</h3>
+              <Store size={40} className="mx-auto text-muted-foreground/30 mb-3" />
+              <h3 className="text-base font-bold text-foreground mb-1">Mağaza tapılmadı</h3>
               <p className="text-sm text-muted-foreground mb-4">Axtarış kriteriyalarınızı dəyişdirin</p>
-              <button onClick={resetFilters} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
+              <button onClick={resetFilters} className="px-4 py-2 rounded-lg bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity">
                 Filtrləri sıfırla
               </button>
             </div>
           )}
 
           {/* CTA */}
-          <div className="mt-10 rounded-2xl bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 border border-border p-6 md:p-10 text-center">
-            <Store size={36} className="mx-auto text-primary mb-3" />
-            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Öz mağazanızı açın</h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto mb-5">
-              Brendinizi yaradın, elanlarınızı bir yerdə idarə edin və daha çox müştəriyə çatın.
-            </p>
+          <div className="mt-10 rounded-2xl border border-border bg-card p-8 md:p-10 flex flex-col md:flex-row items-center gap-6">
+            <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center shrink-0">
+              <Store size={28} className="text-accent" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-lg font-bold text-foreground mb-1">Öz mağazanızı açın</h2>
+              <p className="text-sm text-muted-foreground">
+                Brendinizi yaradın, elanlarınızı idarə edin və daha çox müştəriyə çatın.
+              </p>
+            </div>
             <Link
               to="/magazalar/yarat"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97] shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-accent-foreground font-bold text-sm hover:bg-accent-hover transition-colors active:scale-[0.97] shrink-0"
             >
-              <Store size={16} /> Mağaza yarat
+              Mağaza yarat <ArrowRight size={15} />
             </Link>
           </div>
         </div>
       </main>
 
-      {/* Mobile Filter Bottom Sheet */}
+      {/* Mobile Filter Sheet */}
       {mobileFilterOpen && (
         <div className="md:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-foreground/50" onClick={() => setMobileFilterOpen(false)} />
@@ -385,7 +348,6 @@ const ShopsPage = () => {
             </div>
 
             <div className="space-y-5">
-              {/* Category */}
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-2.5">Kateqoriya</h3>
                 <div className="flex flex-wrap gap-2">
@@ -395,7 +357,7 @@ const ShopsPage = () => {
                       onClick={() => setSelectedCategory(cat)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                         selectedCategory === cat
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-foreground text-background"
                           : "bg-muted text-muted-foreground"
                       }`}
                     >
@@ -405,7 +367,6 @@ const ShopsPage = () => {
                 </div>
               </div>
 
-              {/* Location */}
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-2.5">Şəhər</h3>
                 <div className="flex flex-wrap gap-2">
@@ -415,7 +376,7 @@ const ShopsPage = () => {
                       onClick={() => setSelectedLocation(loc)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                         selectedLocation === loc
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-foreground text-background"
                           : "bg-muted text-muted-foreground"
                       }`}
                     >
@@ -425,7 +386,6 @@ const ShopsPage = () => {
                 </div>
               </div>
 
-              {/* Sort */}
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-2.5">Sıralama</h3>
                 <div className="space-y-1">
@@ -435,7 +395,7 @@ const ShopsPage = () => {
                       onClick={() => setSortBy(o.value)}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                         sortBy === o.value
-                          ? "bg-primary/10 text-foreground font-medium"
+                          ? "bg-foreground/5 text-foreground font-medium"
                           : "text-muted-foreground hover:bg-muted"
                       }`}
                     >
@@ -445,20 +405,13 @@ const ShopsPage = () => {
                 </div>
               </div>
 
-              {/* Verified */}
               <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={onlyVerified}
-                  onChange={() => setOnlyVerified(!onlyVerified)}
-                  className="w-4 h-4 rounded accent-primary"
-                />
-                <span className="text-sm text-foreground">Yalnız yoxlanılmış mağazalar</span>
+                <input type="checkbox" checked={onlyVerified} onChange={() => setOnlyVerified(!onlyVerified)} className="w-4 h-4 rounded accent-accent" />
+                <span className="text-sm text-foreground">Yalnız yoxlanılmış</span>
               </label>
 
-              {/* Actions */}
               <div className="space-y-2 pt-2 border-t border-border">
-                <button onClick={() => setMobileFilterOpen(false)} className="w-full py-2.5 rounded-lg bg-accent text-accent-foreground font-semibold text-sm active:scale-[0.97]">
+                <button onClick={() => setMobileFilterOpen(false)} className="w-full py-2.5 rounded-lg bg-foreground text-background font-semibold text-sm active:scale-[0.97]">
                   {filtered.length} nəticəni göstər
                 </button>
                 <button onClick={() => { resetFilters(); setMobileFilterOpen(false); }} className="w-full py-2 text-sm text-muted-foreground hover:text-foreground">
