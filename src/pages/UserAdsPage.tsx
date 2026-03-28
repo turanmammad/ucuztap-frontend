@@ -277,7 +277,7 @@ const UserAdsPage = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {filteredAds.map((ad) => (
+                    {paginatedAds.map((ad) => (
                       <Link
                         key={ad.id}
                         to={`/elanlar/${ad.id}`}
