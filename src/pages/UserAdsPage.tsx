@@ -276,11 +276,14 @@ const UserAdsPage = () => {
                       >
                         <div className="w-36 sm:w-44 h-28 rounded-lg overflow-hidden shrink-0 relative">
                           <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                          {ad.badge && (
-                            <span className={`absolute top-1.5 left-1.5 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full ${badgeConfig[ad.badge].cls}`}>
-                              <badgeConfig[ad.badge].icon size={9} fill="currentColor" /> {badgeConfig[ad.badge].label}
-                            </span>
-                          )}
+                          {ad.badge && (() => {
+                            const BadgeIcon = badgeConfig[ad.badge].icon;
+                            return (
+                              <span className={`absolute top-1.5 left-1.5 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full ${badgeConfig[ad.badge].cls}`}>
+                                <BadgeIcon size={9} fill="currentColor" /> {badgeConfig[ad.badge].label}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                           <div>
