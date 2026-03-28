@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import PullToRefresh from "@/components/PullToRefresh";
 import {
-  ChevronRight, Star, Check, Clock, MapPin, Eye, Heart,
+  ChevronRight, ChevronLeft, Star, Check, Clock, MapPin, Eye, Heart,
   Grid3X3, List, SlidersHorizontal, Phone, MessageCircle,
   Calendar, Package, ChevronDown, X
 } from "lucide-react";
