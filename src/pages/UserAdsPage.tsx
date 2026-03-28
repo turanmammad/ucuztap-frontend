@@ -51,6 +51,8 @@ const UserAdsPage = () => {
   const [selectedSort, setSelectedSort] = useState("Yenilər əvvəl");
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [phoneRevealed, setPhoneRevealed] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const adsPerPage = 6;
 
   const handleRefresh = useCallback(async () => {
     await new Promise((r) => setTimeout(r, 800));
