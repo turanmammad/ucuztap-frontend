@@ -68,6 +68,13 @@ const UserAdsPage = () => {
   };
 
   const filteredAds = selectedCategory === "Hamısı" ? userAds : userAds.filter((a) => a.category === selectedCategory);
+  const totalPages = Math.ceil(filteredAds.length / adsPerPage);
+  const paginatedAds = useMemo(() => filteredAds.slice((currentPage - 1) * adsPerPage, currentPage * adsPerPage), [filteredAds, currentPage]);
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="min-h-screen flex flex-col pb-mobile-bar md:pb-0">
