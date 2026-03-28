@@ -236,7 +236,7 @@ const UserAdsPage = () => {
                 {/* Ads grid/list */}
                 {viewMode === "grid" ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                    {filteredAds.map((ad) => (
+                    {paginatedAds.map((ad) => (
                       <Link
                         key={ad.id}
                         to={`/elanlar/${ad.id}`}
