@@ -235,11 +235,14 @@ const UserAdsPage = () => {
                       >
                         <div className="aspect-[4/3] overflow-hidden relative">
                           <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                          {ad.badge && (
-                            <span className={`absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full ${badgeConfig[ad.badge].cls}`}>
-                              <badgeConfig[ad.badge].icon size={9} fill="currentColor" /> {badgeConfig[ad.badge].label}
-                            </span>
-                          )}
+                          {ad.badge && (() => {
+                            const BadgeIcon = badgeConfig[ad.badge].icon;
+                            return (
+                              <span className={`absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full ${badgeConfig[ad.badge].cls}`}>
+                                <BadgeIcon size={9} fill="currentColor" /> {badgeConfig[ad.badge].label}
+                              </span>
+                            );
+                          })()}
                           <button
                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFav(ad.id); }}
                             className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
