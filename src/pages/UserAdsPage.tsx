@@ -162,7 +162,7 @@ const UserAdsPage = () => {
                     {categories.map((cat) => (
                       <button
                         key={cat}
-                        onClick={() => setSelectedCategory(cat)}
+                        onClick={() => handleCategoryChange(cat)}
                         className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
                           selectedCategory === cat
                             ? "bg-primary text-primary-foreground shadow-sm"
