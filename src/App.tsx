@@ -43,6 +43,7 @@ import Reviews from "./components/dashboard/Reviews.tsx";
 import SettingsPage from "./components/dashboard/SettingsPage.tsx";
 import UserAdsPage from "./pages/UserAdsPage.tsx";
 import InstallPage from "./pages/InstallPage.tsx";
+import ColorCompare from "./pages/ColorCompare.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -77,6 +78,7 @@ const App = () => (
           <Route path="/xidmetler/:id" element={<ServiceDetailPage />} />
           <Route path="/istifadeci/:userId/elanlar" element={<UserAdsPage />} />
           <Route path="/install" element={<InstallPage />} />
+          <Route path="/reng-muqayise" element={<ColorCompare />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
