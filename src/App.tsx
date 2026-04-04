@@ -78,6 +78,7 @@ const App = () => (
           <Route path="/xidmetler/:id" element={<ServiceDetailPage />} />
           <Route path="/istifadeci/:userId/elanlar" element={<UserAdsPage />} />
           <Route path="/install" element={<InstallPage />} />
+          <Route path="/reng-muqayise" element={<ColorCompare />} />
           <Route path="/panel" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="elanlarim" element={<MyAds />} />
