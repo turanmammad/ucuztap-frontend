@@ -28,7 +28,6 @@ const ColorCompare = () => (
         {colors.map((c) => (
           <div key={c.hex} className={`rounded-2xl border bg-card overflow-hidden shadow-sm ${c.active ? "border-accent ring-2 ring-accent/30" : "border-border"}`}>
             {c.active && <div className="bg-accent text-accent-foreground text-xs font-bold text-center py-1">✓ HAZIRKİ</div>}
-          <div key={c.hex} className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
             {/* Color swatch */}
             <div className="h-20 flex items-center justify-center" style={{ background: c.hex }}>
               <span className="text-lg font-extrabold" style={{ color: "#1a1d23" }}>ucuztap.az</span>
