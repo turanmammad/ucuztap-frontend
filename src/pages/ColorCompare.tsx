@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { Star, ShoppingBag, Search, Plus, Heart, ChevronRight } from "lucide-react";
 
 const colors = [
-  { name: "Tünd sarı", hex: "#d4a800", hsl: "46 100% 41%", desc: "Premium, ciddi, göz yormur" },
-  { name: "Qızılı sarı", hex: "#c89600", hsl: "43 100% 39%", desc: "Lüks, peşəkar, klassik" },
-  { name: "Orta tünd", hex: "#e0b500", hsl: "48 100% 44%", desc: "Hazırkından bir az tünd, hələ də parlaq" },
+  { name: "Hazırkı (Aktiv)", hex: "#f2ce04", hsl: "51 95% 48%", desc: "İndiki primary — parlaq sarı", active: true },
+  { name: "Tünd sarı", hex: "#d4a800", hsl: "46 100% 41%", desc: "Premium, ciddi, göz yormur", active: false },
+  { name: "Qızılı sarı", hex: "#c89600", hsl: "43 100% 39%", desc: "Lüks, peşəkar, klassik", active: false },
+  { name: "Orta tünd", hex: "#e0b500", hsl: "48 100% 44%", desc: "Hazırkından bir az tünd, hələ də parlaq", active: false },
 ];
 
 const ColorCompare = () => (
