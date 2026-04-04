@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { Star, ShoppingBag, Search, Plus, Heart, ChevronRight } from "lucide-react";
 
 const colors = [
-  { name: "Tünd sarı", hex: "#d4a800", hsl: "46 100% 41%", desc: "Premium, ciddi, göz yormur" },
-  { name: "Qızılı sarı", hex: "#c89600", hsl: "43 100% 39%", desc: "Lüks, peşəkar, klassik" },
-  { name: "Orta tünd", hex: "#e0b500", hsl: "48 100% 44%", desc: "Hazırkından bir az tünd, hələ də parlaq" },
+  { name: "Hazırkı (Aktiv)", hex: "#f2ce04", hsl: "51 95% 48%", desc: "İndiki primary — parlaq sarı", active: true },
+  { name: "Tünd sarı", hex: "#d4a800", hsl: "46 100% 41%", desc: "Premium, ciddi, göz yormur", active: false },
+  { name: "Qızılı sarı", hex: "#c89600", hsl: "43 100% 39%", desc: "Lüks, peşəkar, klassik", active: false },
+  { name: "Orta tünd", hex: "#e0b500", hsl: "48 100% 44%", desc: "Hazırkından bir az tünd, hələ də parlaq", active: false },
 ];
 
 const ColorCompare = () => (
@@ -23,9 +24,10 @@ const ColorCompare = () => (
       <h1 className="text-xl font-extrabold text-foreground text-center mb-2">Rəng müqayisəsi</h1>
       <p className="text-sm text-muted-foreground text-center mb-8">Hər üç variantı yanyana müqayisə edin</p>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {colors.map((c) => (
-          <div key={c.hex} className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+          <div key={c.hex} className={`rounded-2xl border bg-card overflow-hidden shadow-sm ${c.active ? "border-accent ring-2 ring-accent/30" : "border-border"}`}>
+            {c.active && <div className="bg-accent text-accent-foreground text-xs font-bold text-center py-1">✓ HAZIRKİ</div>}
             {/* Color swatch */}
             <div className="h-20 flex items-center justify-center" style={{ background: c.hex }}>
               <span className="text-lg font-extrabold" style={{ color: "#1a1d23" }}>ucuztap.az</span>
