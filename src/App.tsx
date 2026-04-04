@@ -43,6 +43,7 @@ import Reviews from "./components/dashboard/Reviews.tsx";
 import SettingsPage from "./components/dashboard/SettingsPage.tsx";
 import UserAdsPage from "./pages/UserAdsPage.tsx";
 import InstallPage from "./pages/InstallPage.tsx";
+import ColorCompare from "./pages/ColorCompare.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
