@@ -253,6 +253,9 @@ const ShopsPage = () => {
                           }`} loading="lazy" />
                         </div>
                       </div>
+                      {/* Enterprise/Premium accent */}
+                      {shop.enterprise && <div className="h-0.5 bg-gradient-to-r from-[hsl(260,70%,60%)]/40 via-[hsl(260,70%,60%)] to-[hsl(260,70%,60%)]/40" />}
+                      {shop.premium && !shop.enterprise && <div className="h-0.5 bg-gradient-to-r from-[hsl(var(--vip-gold))]/40 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/40" />}
 
                       {/* Info */}
                       <div className="pt-7 px-4 pb-4">
@@ -281,16 +284,21 @@ const ShopsPage = () => {
 
                   {viewMode === "list" && (
                     <div className={`bg-card rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-md flex items-center gap-4 p-4 ${
-                      shop.premium ? "border-[hsl(var(--vip-gold))]/40" : "border-border"
+                      shop.enterprise ? "border-[hsl(260,70%,60%)]/40" : shop.premium ? "border-[hsl(var(--vip-gold))]/40" : "border-border"
                     }`}>
                       <img src={shop.img} alt={shop.name} className={`w-14 h-14 rounded-xl object-cover shrink-0 ${
-                        shop.premium ? "ring-2 ring-[hsl(var(--vip-gold))]/30" : ""
+                        shop.enterprise ? "ring-2 ring-[hsl(260,70%,60%)]/30" : shop.premium ? "ring-2 ring-[hsl(var(--vip-gold))]/30" : ""
                       }`} loading="lazy" />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <h2 className="text-sm font-bold text-foreground truncate">{shop.name}</h2>
                           {shop.verified && <BadgeCheck size={13} className="text-accent shrink-0" />}
-                          {shop.premium && (
+                          {shop.enterprise && (
+                            <span className="px-1.5 py-0.5 rounded bg-[hsl(260,70%,60%)]/10 text-[hsl(260,70%,60%)] text-[9px] font-bold uppercase flex items-center gap-0.5">
+                              <Building2 size={9} /> Enterprise
+                            </span>
+                          )}
+                          {shop.premium && !shop.enterprise && (
                             <span className="px-1.5 py-0.5 rounded bg-[hsl(var(--vip-gold))]/10 text-[hsl(var(--vip-gold))] text-[9px] font-bold uppercase">Premium</span>
                           )}
                         </div>
