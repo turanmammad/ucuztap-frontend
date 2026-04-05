@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles, Share2, Link2, Copy, Check as CheckIcon } from "lucide-react";
+import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles, Share2, Link2, Copy, Check as CheckIcon, Building2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar } from "@/components/AdBanners";
@@ -10,7 +10,8 @@ const shopData = {
   id: "autoplus",
   name: "AutoPlus MMC",
   category: "Nəqliyyat",
-  premium: true,
+  premium: false,
+  enterprise: true,
   description: "Bakının ən etibarlı avtomobil satış mərkəzi. 2015-ci ildən fəaliyyət göstəririk. Yeni və ikinci əl avtomobillər, lizinq imkanları, texniki xidmət.",
   location: "Bakı, Nəsimi r.",
   address: "Təbriz küç. 42, Nəsimi rayonu, Bakı, AZ1007",
