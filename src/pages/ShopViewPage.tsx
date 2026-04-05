@@ -203,8 +203,11 @@ const ShopViewPage = () => {
           </div>
         </div>
 
-        {/* Premium accent bar */}
-        {shopData.premium && (
+        {/* Accent bar */}
+        {shopData.enterprise && (
+          <div className="h-1 bg-gradient-to-r from-[hsl(260,70%,60%)]/60 via-[hsl(260,70%,60%)] to-[hsl(260,70%,60%)]/60" />
+        )}
+        {shopData.premium && !shopData.enterprise && (
           <div className="h-1 bg-gradient-to-r from-[hsl(var(--vip-gold))]/60 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/60" />
         )}
 
