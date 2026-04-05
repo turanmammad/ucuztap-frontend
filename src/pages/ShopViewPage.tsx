@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles, Share2, Link2, Copy, Check as CheckIcon } from "lucide-react";
+import { MapPin, Star, Phone, Globe, Clock, MessageCircle, ChevronRight, ShieldCheck, Store, Calendar, Navigation, ThumbsUp, ThumbsDown, ChevronDown, Pencil, X, Flag, ArrowUpDown, Crown, Sparkles, Share2, Link2, Copy, Check as CheckIcon, Building2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { AdBannerSidebar } from "@/components/AdBanners";
@@ -10,7 +10,8 @@ const shopData = {
   id: "autoplus",
   name: "AutoPlus MMC",
   category: "Nəqliyyat",
-  premium: true,
+  premium: false,
+  enterprise: true,
   description: "Bakının ən etibarlı avtomobil satış mərkəzi. 2015-ci ildən fəaliyyət göstəririk. Yeni və ikinci əl avtomobillər, lizinq imkanları, texniki xidmət.",
   location: "Bakı, Nəsimi r.",
   address: "Təbriz küç. 42, Nəsimi rayonu, Bakı, AZ1007",
@@ -112,16 +113,23 @@ const ShopViewPage = () => {
   };
 
   return (
-     <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
+     <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.enterprise ? 'bg-[hsl(260,70%,60%)]/[0.02]' : shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
       <SiteHeader />
       <main className="flex-1">
         {/* Cover + Hero Header */}
-        <div className={`relative h-52 md:h-72 overflow-hidden bg-muted ${shopData.premium ? 'ring-b-4 ring-[hsl(var(--vip-gold))]' : ''}`}>
+        <div className={`relative h-52 md:h-72 overflow-hidden bg-muted`}>
           <img src={shopData.cover} alt="" className="w-full h-full object-cover" />
-          <div className={`absolute inset-0 ${shopData.premium ? 'bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10' : 'bg-gradient-to-t from-black/80 via-black/40 to-black/10'}`} />
+          <div className={`absolute inset-0 ${
+            shopData.enterprise ? 'bg-gradient-to-t from-[hsl(260,20%,8%)]/90 via-[hsl(260,30%,10%)]/50 to-black/10'
+            : shopData.premium ? 'bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10'
+            : 'bg-gradient-to-t from-black/80 via-black/40 to-black/10'
+          }`} />
 
-          {/* Premium shimmer overlay */}
-          {shopData.premium && (
+          {/* Shimmer overlay */}
+          {shopData.enterprise && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(260,70%,60%)]/[0.06] to-transparent pointer-events-none" />
+          )}
+          {shopData.premium && !shopData.enterprise && (
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--vip-gold))]/[0.06] to-transparent pointer-events-none" />
           )}
 
@@ -134,7 +142,9 @@ const ShopViewPage = () => {
                     src={shopData.logo}
                     alt={shopData.name}
                     className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl object-cover shadow-2xl ${
-                      shopData.premium
+                      shopData.enterprise
+                        ? 'border-[3px] border-[hsl(260,70%,60%)]/60 ring-2 ring-[hsl(260,70%,60%)]/30'
+                        : shopData.premium
                         ? 'border-[3px] border-[hsl(var(--vip-gold))]/60 ring-2 ring-[hsl(var(--vip-gold))]/30'
                         : 'border-[3px] border-white/20 ring-2 ring-white/10'
                     }`}
@@ -144,7 +154,12 @@ const ShopViewPage = () => {
                       <ShieldCheck size={14} className="text-accent-foreground" />
                     </div>
                   )}
-                  {shopData.premium && (
+                  {shopData.enterprise && (
+                    <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
+                      <Building2 size={14} className="text-white" />
+                    </div>
+                  )}
+                  {shopData.premium && !shopData.enterprise && (
                     <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(var(--vip-gold))] to-[hsl(35,80%,45%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
                       <Crown size={14} className="text-white" />
                     </div>
@@ -155,7 +170,12 @@ const ShopViewPage = () => {
                     <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
                       {shopData.name}
                     </h1>
-                    {shopData.premium && (
+                    {shopData.enterprise && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-[10px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
+                        <Building2 size={10} /> Enterprise
+                      </span>
+                    )}
+                    {shopData.premium && !shopData.enterprise && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[10px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
                         <Crown size={10} /> Premium
                       </span>
@@ -183,8 +203,11 @@ const ShopViewPage = () => {
           </div>
         </div>
 
-        {/* Premium accent bar */}
-        {shopData.premium && (
+        {/* Accent bar */}
+        {shopData.enterprise && (
+          <div className="h-1 bg-gradient-to-r from-[hsl(260,70%,60%)]/60 via-[hsl(260,70%,60%)] to-[hsl(260,70%,60%)]/60" />
+        )}
+        {shopData.premium && !shopData.enterprise && (
           <div className="h-1 bg-gradient-to-r from-[hsl(var(--vip-gold))]/60 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/60" />
         )}
 
@@ -205,13 +228,20 @@ const ShopViewPage = () => {
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {shopData.ads.map((ad) => (
                       <Link key={ad.id} to={`/elanlar/${ad.id}`} className={`rounded-lg border overflow-hidden card-lift group ${
-                        shopData.premium
+                        shopData.enterprise
+                          ? 'border-[hsl(260,70%,60%)]/30 bg-card shadow-sm hover:shadow-[0_4px_20px_hsl(260,70%,60%,0.1)]'
+                          : shopData.premium
                           ? 'border-[hsl(var(--vip-gold))]/30 bg-card shadow-sm hover:shadow-[0_4px_20px_hsl(var(--vip-gold)/0.1)]'
                           : 'border-border bg-card'
                       }`}>
                         <div className="aspect-[4/3] overflow-hidden relative">
                           <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                          {shopData.premium && (
+                          {shopData.enterprise && (
+                            <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-[9px] font-bold text-white uppercase shadow">
+                              <Building2 size={8} /> Enterprise
+                            </span>
+                          )}
+                          {shopData.premium && !shopData.enterprise && (
                             <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[9px] font-bold text-white uppercase shadow">
                               <Crown size={8} /> Premium
                             </span>

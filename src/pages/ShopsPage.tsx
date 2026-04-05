@@ -1,19 +1,19 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, Filter, X, BadgeCheck, LayoutGrid, List, Crown, Users, ArrowRight } from "lucide-react";
+import { Store, MapPin, Star, Search, ChevronRight, Shield, Clock, Filter, X, BadgeCheck, LayoutGrid, List, Crown, Users, ArrowRight, Building2 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 const allShops = [
-  { id: 1, name: "AutoPlus MMC", slug: "autoplus-mmc", category: "Nəqliyyat", location: "Bakı", rating: 4.8, reviews: 312, adsCount: 127, verified: true, premium: true, since: "2019", img: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=300&fit=crop", description: "Rəsmi avtomobil satış və servis mərkəzi" },
-  { id: 2, name: "TechZone", slug: "techzone", category: "Elektronika", location: "Bakı", rating: 4.6, reviews: 189, adsCount: 89, verified: true, premium: true, since: "2020", img: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=300&fit=crop", description: "Elektronika və gadget mağazası" },
-  { id: 3, name: "Əmlak Premium", slug: "emlak-premium", category: "Daşınmaz Əmlak", location: "Bakı", rating: 4.9, reviews: 456, adsCount: 243, verified: true, premium: true, since: "2018", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=300&fit=crop", description: "Premium əmlak agentliyi" },
-  { id: 4, name: "MebelCity", slug: "mebelcity", category: "Ev və Bağ", location: "Sumqayıt", rating: 4.5, reviews: 98, adsCount: 64, verified: true, premium: false, since: "2021", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=300&fit=crop", description: "Keyfiyyətli mebel və ev dekorasiyası" },
-  { id: 5, name: "KidLand", slug: "kidland", category: "Uşaq Aləmi", location: "Bakı", rating: 4.7, reviews: 134, adsCount: 52, verified: true, premium: false, since: "2022", img: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=300&fit=crop", description: "Uşaq geyimləri və oyuncaqlar" },
-  { id: 6, name: "SportMax", slug: "sportmax", category: "Hobbi və Asudə", location: "Gəncə", rating: 4.4, reviews: 67, adsCount: 38, verified: false, premium: false, since: "2023", img: "https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=300&fit=crop", description: "İdman avadanlıqları və geyimləri" },
-  { id: 7, name: "ModaEvi", slug: "modaevi", category: "Geyim və Aksesuar", location: "Bakı", rating: 4.3, reviews: 201, adsCount: 175, verified: true, premium: false, since: "2020", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=300&fit=crop", description: "Kişi və qadın geyimləri" },
-  { id: 8, name: "PetWorld", slug: "petworld", category: "Heyvanlar", location: "Bakı", rating: 4.6, reviews: 88, adsCount: 41, verified: true, premium: false, since: "2021", img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=300&fit=crop", description: "Ev heyvanları və aksesuarlar" },
-  { id: 9, name: "BuildPro", slug: "buildpro", category: "Tikinti və Təmir", location: "Sumqayıt", rating: 4.2, reviews: 54, adsCount: 93, verified: false, premium: false, since: "2022", img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=300&fit=crop", description: "Tikinti materialları və alətlər" },
+  { id: 1, name: "AutoPlus MMC", slug: "autoplus-mmc", category: "Nəqliyyat", location: "Bakı", rating: 4.8, reviews: 312, adsCount: 127, verified: true, premium: false, enterprise: true, since: "2019", img: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=300&fit=crop", description: "Rəsmi avtomobil satış və servis mərkəzi" },
+  { id: 2, name: "TechZone", slug: "techzone", category: "Elektronika", location: "Bakı", rating: 4.6, reviews: 189, adsCount: 89, verified: true, premium: true, enterprise: false, since: "2020", img: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=300&fit=crop", description: "Elektronika və gadget mağazası" },
+  { id: 3, name: "Əmlak Premium", slug: "emlak-premium", category: "Daşınmaz Əmlak", location: "Bakı", rating: 4.9, reviews: 456, adsCount: 243, verified: true, premium: true, enterprise: false, since: "2018", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=300&fit=crop", description: "Premium əmlak agentliyi" },
+  { id: 4, name: "MebelCity", slug: "mebelcity", category: "Ev və Bağ", location: "Sumqayıt", rating: 4.5, reviews: 98, adsCount: 64, verified: true, premium: false, enterprise: false, since: "2021", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=300&fit=crop", description: "Keyfiyyətli mebel və ev dekorasiyası" },
+  { id: 5, name: "KidLand", slug: "kidland", category: "Uşaq Aləmi", location: "Bakı", rating: 4.7, reviews: 134, adsCount: 52, verified: true, premium: false, enterprise: false, since: "2022", img: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=300&fit=crop", description: "Uşaq geyimləri və oyuncaqlar" },
+  { id: 6, name: "SportMax", slug: "sportmax", category: "Hobbi və Asudə", location: "Gəncə", rating: 4.4, reviews: 67, adsCount: 38, verified: false, premium: false, enterprise: false, since: "2023", img: "https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=300&fit=crop", description: "İdman avadanlıqları və geyimləri" },
+  { id: 7, name: "ModaEvi", slug: "modaevi", category: "Geyim və Aksesuar", location: "Bakı", rating: 4.3, reviews: 201, adsCount: 175, verified: true, premium: false, enterprise: false, since: "2020", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&h=300&fit=crop", description: "Kişi və qadın geyimləri" },
+  { id: 8, name: "PetWorld", slug: "petworld", category: "Heyvanlar", location: "Bakı", rating: 4.6, reviews: 88, adsCount: 41, verified: true, premium: false, enterprise: false, since: "2021", img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=300&fit=crop", description: "Ev heyvanları və aksesuarlar" },
+  { id: 9, name: "BuildPro", slug: "buildpro", category: "Tikinti və Təmir", location: "Sumqayıt", rating: 4.2, reviews: 54, adsCount: 93, verified: false, premium: false, enterprise: false, since: "2022", img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=400&fit=crop", cover: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=300&fit=crop", description: "Tikinti materialları və alətlər" },
 ];
 
 const CATEGORIES = ["Hamısı", "Nəqliyyat", "Daşınmaz Əmlak", "Elektronika", "Ev və Bağ", "Geyim və Aksesuar", "Uşaq Aləmi", "Heyvanlar", "Hobbi və Asudə", "Tikinti və Təmir"];
@@ -50,7 +50,7 @@ const ShopsPage = () => {
       case "ads": result.sort((a, b) => b.adsCount - a.adsCount); break;
       default: result.sort((a, b) => b.reviews - a.reviews);
     }
-    result.sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
+    result.sort((a, b) => ((b.enterprise ? 2 : b.premium ? 1 : 0) - (a.enterprise ? 2 : a.premium ? 1 : 0)));
     return result;
   }, [searchQuery, selectedCategory, selectedLocation, sortBy, onlyVerified]);
 
@@ -228,13 +228,20 @@ const ShopsPage = () => {
                 <Link key={shop.id} to={`/magazalar/${shop.slug}`} className="group">
                   {viewMode === "grid" && (
                     <div className={`bg-card rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 ${
-                      shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/10" : "border-border"
+                      shop.enterprise ? "border-[hsl(260,70%,60%)]/40 ring-1 ring-[hsl(260,70%,60%)]/10" : shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/10" : "border-border"
                     }`}>
                       {/* Cover */}
                       <div className="relative h-28 overflow-hidden">
                         <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        {shop.premium && (
+                        <div className={`absolute inset-0 ${
+                          shop.enterprise ? "bg-gradient-to-t from-[hsl(260,20%,8%)]/70 to-transparent" : "bg-gradient-to-t from-black/60 to-transparent"
+                        }`} />
+                        {shop.enterprise && (
+                          <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <Building2 size={9} /> Enterprise
+                          </span>
+                        )}
+                        {shop.premium && !shop.enterprise && (
                           <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
                             <Crown size={9} /> Premium
                           </span>
@@ -242,10 +249,13 @@ const ShopsPage = () => {
                         {/* Logo */}
                         <div className="absolute -bottom-5 left-4">
                           <img src={shop.img} alt={shop.name} className={`w-12 h-12 rounded-xl object-cover shadow-md ${
-                            shop.premium ? "border-2 border-[hsl(var(--vip-gold))]/50" : "border-2 border-card"
+                            shop.enterprise ? "border-2 border-[hsl(260,70%,60%)]/50" : shop.premium ? "border-2 border-[hsl(var(--vip-gold))]/50" : "border-2 border-card"
                           }`} loading="lazy" />
                         </div>
                       </div>
+                      {/* Enterprise/Premium accent */}
+                      {shop.enterprise && <div className="h-0.5 bg-gradient-to-r from-[hsl(260,70%,60%)]/40 via-[hsl(260,70%,60%)] to-[hsl(260,70%,60%)]/40" />}
+                      {shop.premium && !shop.enterprise && <div className="h-0.5 bg-gradient-to-r from-[hsl(var(--vip-gold))]/40 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/40" />}
 
                       {/* Info */}
                       <div className="pt-7 px-4 pb-4">
@@ -274,16 +284,21 @@ const ShopsPage = () => {
 
                   {viewMode === "list" && (
                     <div className={`bg-card rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-md flex items-center gap-4 p-4 ${
-                      shop.premium ? "border-[hsl(var(--vip-gold))]/40" : "border-border"
+                      shop.enterprise ? "border-[hsl(260,70%,60%)]/40" : shop.premium ? "border-[hsl(var(--vip-gold))]/40" : "border-border"
                     }`}>
                       <img src={shop.img} alt={shop.name} className={`w-14 h-14 rounded-xl object-cover shrink-0 ${
-                        shop.premium ? "ring-2 ring-[hsl(var(--vip-gold))]/30" : ""
+                        shop.enterprise ? "ring-2 ring-[hsl(260,70%,60%)]/30" : shop.premium ? "ring-2 ring-[hsl(var(--vip-gold))]/30" : ""
                       }`} loading="lazy" />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <h2 className="text-sm font-bold text-foreground truncate">{shop.name}</h2>
                           {shop.verified && <BadgeCheck size={13} className="text-accent shrink-0" />}
-                          {shop.premium && (
+                          {shop.enterprise && (
+                            <span className="px-1.5 py-0.5 rounded bg-[hsl(260,70%,60%)]/10 text-[hsl(260,70%,60%)] text-[9px] font-bold uppercase flex items-center gap-0.5">
+                              <Building2 size={9} /> Enterprise
+                            </span>
+                          )}
+                          {shop.premium && !shop.enterprise && (
                             <span className="px-1.5 py-0.5 rounded bg-[hsl(var(--vip-gold))]/10 text-[hsl(var(--vip-gold))] text-[9px] font-bold uppercase">Premium</span>
                           )}
                         </div>
