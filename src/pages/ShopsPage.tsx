@@ -50,7 +50,7 @@ const ShopsPage = () => {
       case "ads": result.sort((a, b) => b.adsCount - a.adsCount); break;
       default: result.sort((a, b) => b.reviews - a.reviews);
     }
-    result.sort((a, b) => (b.premium ? 1 : 0) - (a.premium ? 1 : 0));
+    result.sort((a, b) => ((b.enterprise ? 2 : b.premium ? 1 : 0) - (a.enterprise ? 2 : a.premium ? 1 : 0)));
     return result;
   }, [searchQuery, selectedCategory, selectedLocation, sortBy, onlyVerified]);
 
@@ -228,13 +228,20 @@ const ShopsPage = () => {
                 <Link key={shop.id} to={`/magazalar/${shop.slug}`} className="group">
                   {viewMode === "grid" && (
                     <div className={`bg-card rounded-xl border overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 ${
-                      shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/10" : "border-border"
+                      shop.enterprise ? "border-[hsl(260,70%,60%)]/40 ring-1 ring-[hsl(260,70%,60%)]/10" : shop.premium ? "border-[hsl(var(--vip-gold))]/40 ring-1 ring-[hsl(var(--vip-gold))]/10" : "border-border"
                     }`}>
                       {/* Cover */}
                       <div className="relative h-28 overflow-hidden">
                         <img src={shop.cover} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        {shop.premium && (
+                        <div className={`absolute inset-0 ${
+                          shop.enterprise ? "bg-gradient-to-t from-[hsl(260,20%,8%)]/70 to-transparent" : "bg-gradient-to-t from-black/60 to-transparent"
+                        }`} />
+                        {shop.enterprise && (
+                          <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+                            <Building2 size={9} /> Enterprise
+                          </span>
+                        )}
+                        {shop.premium && !shop.enterprise && (
                           <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
                             <Crown size={9} /> Premium
                           </span>
@@ -242,7 +249,7 @@ const ShopsPage = () => {
                         {/* Logo */}
                         <div className="absolute -bottom-5 left-4">
                           <img src={shop.img} alt={shop.name} className={`w-12 h-12 rounded-xl object-cover shadow-md ${
-                            shop.premium ? "border-2 border-[hsl(var(--vip-gold))]/50" : "border-2 border-card"
+                            shop.enterprise ? "border-2 border-[hsl(260,70%,60%)]/50" : shop.premium ? "border-2 border-[hsl(var(--vip-gold))]/50" : "border-2 border-card"
                           }`} loading="lazy" />
                         </div>
                       </div>
