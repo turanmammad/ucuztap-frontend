@@ -113,16 +113,23 @@ const ShopViewPage = () => {
   };
 
   return (
-     <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
+     <div className={`min-h-screen flex flex-col pb-mobile-bar md:pb-0 ${shopData.enterprise ? 'bg-[hsl(260,70%,60%)]/[0.02]' : shopData.premium ? 'bg-[hsl(var(--vip-gold))]/[0.02]' : 'bg-background'}`}>
       <SiteHeader />
       <main className="flex-1">
         {/* Cover + Hero Header */}
-        <div className={`relative h-52 md:h-72 overflow-hidden bg-muted ${shopData.premium ? 'ring-b-4 ring-[hsl(var(--vip-gold))]' : ''}`}>
+        <div className={`relative h-52 md:h-72 overflow-hidden bg-muted`}>
           <img src={shopData.cover} alt="" className="w-full h-full object-cover" />
-          <div className={`absolute inset-0 ${shopData.premium ? 'bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10' : 'bg-gradient-to-t from-black/80 via-black/40 to-black/10'}`} />
+          <div className={`absolute inset-0 ${
+            shopData.enterprise ? 'bg-gradient-to-t from-[hsl(260,20%,8%)]/90 via-[hsl(260,30%,10%)]/50 to-black/10'
+            : shopData.premium ? 'bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-[hsl(30,30%,10%)]/50 to-black/10'
+            : 'bg-gradient-to-t from-black/80 via-black/40 to-black/10'
+          }`} />
 
-          {/* Premium shimmer overlay */}
-          {shopData.premium && (
+          {/* Shimmer overlay */}
+          {shopData.enterprise && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(260,70%,60%)]/[0.06] to-transparent pointer-events-none" />
+          )}
+          {shopData.premium && !shopData.enterprise && (
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--vip-gold))]/[0.06] to-transparent pointer-events-none" />
           )}
 
