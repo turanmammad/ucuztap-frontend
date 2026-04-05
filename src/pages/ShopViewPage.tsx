@@ -142,7 +142,9 @@ const ShopViewPage = () => {
                     src={shopData.logo}
                     alt={shopData.name}
                     className={`w-20 h-20 md:w-28 md:h-28 rounded-2xl object-cover shadow-2xl ${
-                      shopData.premium
+                      shopData.enterprise
+                        ? 'border-[3px] border-[hsl(260,70%,60%)]/60 ring-2 ring-[hsl(260,70%,60%)]/30'
+                        : shopData.premium
                         ? 'border-[3px] border-[hsl(var(--vip-gold))]/60 ring-2 ring-[hsl(var(--vip-gold))]/30'
                         : 'border-[3px] border-white/20 ring-2 ring-white/10'
                     }`}
@@ -152,7 +154,12 @@ const ShopViewPage = () => {
                       <ShieldCheck size={14} className="text-accent-foreground" />
                     </div>
                   )}
-                  {shopData.premium && (
+                  {shopData.enterprise && (
+                    <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
+                      <Building2 size={14} className="text-white" />
+                    </div>
+                  )}
+                  {shopData.premium && !shopData.enterprise && (
                     <div className="absolute -top-2 -left-2 w-7 h-7 rounded-full bg-gradient-to-br from-[hsl(var(--vip-gold))] to-[hsl(35,80%,45%)] flex items-center justify-center shadow-lg ring-2 ring-black/20">
                       <Crown size={14} className="text-white" />
                     </div>
@@ -163,7 +170,12 @@ const ShopViewPage = () => {
                     <h1 className="text-xl md:text-3xl font-extrabold text-white drop-shadow-lg truncate">
                       {shopData.name}
                     </h1>
-                    {shopData.premium && (
+                    {shopData.enterprise && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-[10px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
+                        <Building2 size={10} /> Enterprise
+                      </span>
+                    )}
+                    {shopData.premium && !shopData.enterprise && (
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[10px] font-bold text-white uppercase tracking-wide shadow-lg shrink-0">
                         <Crown size={10} /> Premium
                       </span>
