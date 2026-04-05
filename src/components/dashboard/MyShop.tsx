@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Store, Check, Package, Zap, Crown, BarChart3, Edit, ExternalLink, Eye, X, CreditCard, Shield, Star, TrendingUp, ChevronRight, Sparkles, Camera, Upload, Wand2 } from "lucide-react";
+import { Store, Check, Package, Zap, Crown, BarChart3, Edit, ExternalLink, Eye, X, CreditCard, Shield, Star, TrendingUp, ChevronRight, Sparkles, Camera, Upload, Wand2, Building2, Megaphone, Settings2, Globe, Headphones, Users, Layout, Palette, MonitorPlay } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -13,8 +13,19 @@ const packages = [
     color: "text-muted-foreground",
     bg: "bg-muted/50",
     borderColor: "border-border",
-    features: ["5 elan limiti", "Standart görünüş", "Əsas statistika"],
-    missing: ["Mağaza brending", "Ön sırada göstərilmə", "VIP elanlar", "Prioritet dəstək"],
+    gradient: "",
+    features: [
+      { text: "5 elan limiti", included: true },
+      { text: "Standart görünüş", included: true },
+      { text: "Əsas statistika", included: true },
+      { text: "Mağaza səhifəsi", included: false },
+      { text: "Logo brending", included: false },
+      { text: "Ön sırada göstərilmə", included: false },
+      { text: "VIP elanlar", included: false },
+      { text: "Prioritet dəstək", included: false },
+      { text: "API girişi", included: false },
+      { text: "Reklam baner yerləri", included: false },
+    ],
   },
   {
     id: "business",
@@ -25,9 +36,19 @@ const packages = [
     color: "text-accent",
     bg: "bg-accent/10",
     borderColor: "border-accent",
+    gradient: "",
     popular: true,
-    features: ["50 elan limiti", "Mağaza səhifəsi", "Logo brending", "Ətraflı statistika", "Prioritet dəstək"],
-    missing: ["Ön sırada göstərilmə", "VIP elanlar"],
+    features: [
+      { text: "50 elan limiti", included: true },
+      { text: "Mağaza səhifəsi", included: true },
+      { text: "Logo brending", included: true },
+      { text: "Ətraflı statistika", included: true },
+      { text: "Prioritet dəstək", included: true },
+      { text: "Ön sırada göstərilmə", included: false },
+      { text: "VIP elanlar", included: false },
+      { text: "API girişi", included: false },
+      { text: "Reklam baner yerləri", included: false },
+    ],
   },
   {
     id: "premium",
@@ -38,18 +59,45 @@ const packages = [
     color: "text-[hsl(var(--vip-gold))]",
     bg: "bg-[hsl(var(--vip-gold))]/10",
     borderColor: "border-[hsl(var(--vip-gold))]",
+    gradient: "from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)]",
     features: [
-      "Limitsiz elan",
-      "Premium mağaza nişanı",
-      "Mağaza ön sıralarda",
-      "Məhsullar ön sıralarda",
-      "Aylıq 10 VIP elan",
-      "Logo brending",
-      "Ətraflı statistika",
-      "Prioritet dəstək",
-      "API girişi",
+      { text: "Limitsiz elan", included: true },
+      { text: "Premium mağaza nişanı", included: true },
+      { text: "Mağaza ön sıralarda", included: true },
+      { text: "Məhsullar ön sıralarda", included: true },
+      { text: "Aylıq 10 VIP elan", included: true },
+      { text: "Logo brending", included: true },
+      { text: "Ətraflı statistika", included: true },
+      { text: "Prioritet dəstək", included: true },
+      { text: "API girişi", included: true },
+      { text: "Reklam baner yerləri", included: false },
     ],
-    missing: [],
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    price: "199",
+    period: "/ ay",
+    icon: Building2,
+    color: "text-[hsl(260,70%,60%)]",
+    bg: "bg-[hsl(260,70%,60%)]/10",
+    borderColor: "border-[hsl(260,70%,60%)]",
+    gradient: "from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)]",
+    features: [
+      { text: "Limitsiz elan", included: true },
+      { text: "Enterprise nişanı", included: true },
+      { text: "Mağaza ön sıralarda", included: true },
+      { text: "Məhsullar ön sıralarda", included: true },
+      { text: "Aylıq 30 VIP elan", included: true },
+      { text: "Tam brending paketi", included: true },
+      { text: "Real-time analitika", included: true },
+      { text: "24/7 şəxsi menecer", included: true },
+      { text: "Full API girişi", included: true },
+      { text: "Reklam baner yerləri", included: true },
+      { text: "Fərdi dizayn", included: true },
+      { text: "Multi-user idarəetmə", included: true },
+    ],
+    customizable: true,
   },
 ];
 
@@ -57,6 +105,24 @@ const bannerDesignPackages = [
   { id: "basic", name: "Sadə", price: "15", delivery: "24 saat", features: ["1 baner", "2 reviziya", "JPG/PNG"] },
   { id: "pro", name: "Professional", price: "35", delivery: "48 saat", popular: true, features: ["3 variant", "5 reviziya", "Sosial media"] },
   { id: "premium", name: "Premium", price: "65", delivery: "72 saat", features: ["5 variant", "Limitsiz reviziya", "Animasiya"] },
+];
+
+const adBannerPlacements = [
+  { id: "homepage_top", name: "Ana səhifə — yuxarı baner", size: "1200×200", price: "149", period: "/ ay", views: "~50K/ay", hot: true },
+  { id: "homepage_side", name: "Ana səhifə — yan panel", size: "300×600", price: "99", period: "/ ay", views: "~40K/ay" },
+  { id: "category_top", name: "Kateqoriya səhifəsi — yuxarı", size: "1200×200", price: "79", period: "/ ay", views: "~25K/ay" },
+  { id: "search_results", name: "Axtarış nəticələri — arası", size: "728×90", price: "59", period: "/ ay", views: "~30K/ay" },
+  { id: "ad_detail_side", name: "Elan detalı — yan panel", size: "300×250", price: "49", period: "/ ay", views: "~20K/ay" },
+  { id: "mobile_bottom", name: "Mobil — alt baner", size: "320×100", price: "39", period: "/ ay", views: "~35K/ay" },
+];
+
+const enterpriseAddons = [
+  { id: "custom_domain", name: "Xüsusi domen", desc: "sizinmarka.ucuztap.az", price: "29", icon: Globe },
+  { id: "dedicated_support", name: "Şəxsi menecer", desc: "24/7 prioritet dəstək", price: "49", icon: Headphones },
+  { id: "team_access", name: "Komanda girişi", desc: "5 istifadəçi əlavə", price: "39", icon: Users },
+  { id: "custom_design", name: "Fərdi mağaza dizaynı", desc: "Unikal şablon və rənglər", price: "79", icon: Palette },
+  { id: "analytics_pro", name: "Pro analitika", desc: "Real-time data, eksport", price: "29", icon: BarChart3 },
+  { id: "api_unlimited", name: "Limitsiz API", desc: "Tam inteqrasiya imkanı", price: "49", icon: Settings2 },
 ];
 
 const MyShop = () => {
@@ -77,9 +143,18 @@ const MyShop = () => {
   const [bannerProcessing, setBannerProcessing] = useState(false);
   const [bannerDescription, setBannerDescription] = useState("");
 
+  // Enterprise customization
+  const [showEnterpriseCustomizer, setShowEnterpriseCustomizer] = useState(false);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [selectedBannerPlacements, setSelectedBannerPlacements] = useState<string[]>([]);
+
   const currentPkg = packages.find(p => p.id === currentPlan)!;
 
   const handleUpgrade = (pkgId: string) => {
+    if (pkgId === "enterprise") {
+      setShowEnterpriseCustomizer(true);
+      return;
+    }
     setSelectedUpgrade(pkgId);
     setShowPayment(true);
   };
@@ -89,9 +164,10 @@ const MyShop = () => {
     setTimeout(() => {
       setPaymentProcessing(false);
       setShowPayment(false);
+      setShowEnterpriseCustomizer(false);
       setCurrentPlan(selectedUpgrade);
       setActiveTab("overview");
-      toast.success(selectedUpgrade === "premium" ? "Premium aktivləşdirildi! 🎉" : "Paket yeniləndi!");
+      toast.success(selectedUpgrade === "enterprise" ? "Enterprise aktivləşdirildi! 🚀" : selectedUpgrade === "premium" ? "Premium aktivləşdirildi! 🎉" : "Paket yeniləndi!");
     }, 2000);
   };
 
@@ -112,6 +188,132 @@ const MyShop = () => {
       setBannerDescription("");
       toast.success("Sifariş qəbul edildi! 🎨");
     }, 1500);
+  };
+
+  const toggleAddon = (id: string) => {
+    setSelectedAddons(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const toggleBannerPlacement = (id: string) => {
+    setSelectedBannerPlacements(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const enterpriseTotal = () => {
+    const base = 199;
+    const addonsTotal = selectedAddons.reduce((sum, id) => {
+      const addon = enterpriseAddons.find(a => a.id === id);
+      return sum + (addon ? parseInt(addon.price) : 0);
+    }, 0);
+    const bannersTotal = selectedBannerPlacements.reduce((sum, id) => {
+      const placement = adBannerPlacements.find(p => p.id === id);
+      return sum + (placement ? parseInt(placement.price) : 0);
+    }, 0);
+    return base + addonsTotal + bannersTotal;
+  };
+
+  // ═══ Package Card Component ═══
+  const PackageCard = ({ p, isCurrent, isDowngrade, compact = false }: { p: typeof packages[0]; isCurrent: boolean; isDowngrade: boolean; compact?: boolean }) => {
+    const PkgIcon = p.icon;
+    const isEnterprise = p.id === "enterprise";
+    const isPremium = p.id === "premium";
+
+    return (
+      <div
+        className={`relative rounded-2xl border-2 transition-all overflow-hidden ${
+          isCurrent
+            ? `${p.borderColor} bg-card shadow-lg ring-1 ring-${p.borderColor}`
+            : isEnterprise
+            ? "border-[hsl(260,70%,60%)]/50 bg-gradient-to-b from-[hsl(260,70%,60%)]/[0.03] to-card hover:border-[hsl(260,70%,60%)]"
+            : isPremium
+            ? "border-[hsl(var(--vip-gold))]/30 bg-gradient-to-b from-[hsl(var(--vip-gold))]/[0.03] to-card hover:border-[hsl(var(--vip-gold))]"
+            : "border-border bg-card hover:border-muted-foreground/30"
+        }`}
+      >
+        {/* Top accent bar */}
+        {(isEnterprise || isPremium) && (
+          <div className={`h-1 bg-gradient-to-r ${p.gradient}`} />
+        )}
+
+        {/* Badges */}
+        {p.id === "business" && (
+          <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-accent text-accent-foreground">
+            Populyar
+          </span>
+        )}
+        {isCurrent && (
+          <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-accent/10 text-accent">
+            ✓ Cari
+          </span>
+        )}
+        {isEnterprise && !isCurrent && (
+          <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[hsl(260,70%,60%)]/10 text-[hsl(260,70%,60%)]">
+            Fərdiləşdir
+          </span>
+        )}
+
+        <div className="p-5">
+          {/* Icon & Name */}
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${
+            isEnterprise ? "bg-[hsl(260,70%,60%)]/10" : isPremium ? "bg-[hsl(var(--vip-gold))]/10" : p.bg
+          }`}>
+            <PkgIcon size={20} className={p.color} />
+          </div>
+          <h3 className="text-base font-bold text-foreground">{p.name}</h3>
+          <p className="text-[11px] text-muted-foreground mt-0.5 mb-3">
+            {p.id === "start" && "Başlanğıc üçün ideal"}
+            {p.id === "business" && "Kiçik biznes üçün"}
+            {p.id === "premium" && "Professional satıcılar üçün"}
+            {p.id === "enterprise" && "Böyük şirkətlər üçün"}
+          </p>
+
+          {/* Price */}
+          <div className="flex items-baseline gap-1 mb-4">
+            <span className={`text-3xl font-extrabold ${
+              isEnterprise ? "text-[hsl(260,70%,60%)]" : isPremium ? "text-[hsl(var(--vip-gold))]" : "text-foreground"
+            }`}>{p.price}</span>
+            <span className="text-sm text-muted-foreground">₼ {p.period}</span>
+          </div>
+
+          {/* Features */}
+          <ul className={`space-y-1.5 mb-5 ${compact ? "max-h-48 overflow-y-auto" : ""}`}>
+            {p.features.map((f) => (
+              <li key={f.text} className={`flex items-center gap-2 text-xs ${f.included ? "text-foreground" : "text-muted-foreground/40"}`}>
+                {f.included ? (
+                  <Check size={13} className={`shrink-0 ${isEnterprise ? "text-[hsl(260,70%,60%)]" : isPremium ? "text-[hsl(var(--vip-gold))]" : "text-accent"}`} />
+                ) : (
+                  <X size={13} className="shrink-0" />
+                )}
+                <span className={!f.included ? "line-through" : ""}>{f.text}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Button */}
+          {isCurrent ? (
+            <button disabled className="w-full py-2.5 rounded-xl bg-muted text-muted-foreground text-xs font-medium cursor-default">
+              Cari paket
+            </button>
+          ) : isDowngrade ? (
+            <button disabled className="w-full py-2.5 rounded-xl bg-muted text-muted-foreground text-xs font-medium cursor-default">
+              Aşağı paket
+            </button>
+          ) : (
+            <button
+              onClick={() => handleUpgrade(p.id)}
+              className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.97] ${
+                isEnterprise
+                  ? "bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white hover:opacity-90"
+                  : isPremium
+                  ? "bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white hover:opacity-90"
+                  : "bg-accent text-accent-foreground hover:bg-accent-hover"
+              }`}
+            >
+              {isEnterprise ? "Fərdiləşdir və al" : "Yüksəlt"}
+            </button>
+          )}
+        </div>
+      </div>
+    );
   };
 
   // ═══ No Shop State ═══
@@ -137,7 +339,7 @@ const MyShop = () => {
           </Link>
         </div>
 
-        {/* Benefits — compact 2-col */}
+        {/* Benefits */}
         <div className="grid sm:grid-cols-2 gap-3">
           {[
             { icon: Store, title: "Professional görünüş", desc: "Xüsusi mağaza səhifəsi ilə fərqlənin" },
@@ -159,51 +361,36 @@ const MyShop = () => {
           ))}
         </div>
 
-        {/* Packages — minimal */}
+        {/* Packages */}
         <div>
-          <h3 className="text-sm font-bold text-foreground mb-3">Paketlər</h3>
-          <div className="grid sm:grid-cols-3 gap-3">
-            {packages.map((p) => {
-              const PkgIcon = p.icon;
-              return (
-                <div key={p.id} className={`rounded-xl border-2 p-4 text-center relative ${p.borderColor} bg-card`}>
-                  {p.id === "business" && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-bold bg-accent text-accent-foreground">Populyar</span>
-                  )}
-                  <PkgIcon size={22} className={`mx-auto ${p.color} mb-2`} />
-                  <p className="text-sm font-bold text-foreground">{p.name}</p>
-                  <div className="flex items-baseline justify-center gap-0.5 mt-1 mb-3">
-                    <span className="text-xl font-extrabold text-foreground">{p.price}</span>
-                    <span className="text-xs text-muted-foreground"> ₼ {p.period}</span>
-                  </div>
-                  <ul className="space-y-1 text-left">
-                    {p.features.slice(0, 3).map((f) => (
-                      <li key={f} className="flex items-center gap-1.5 text-xs text-foreground">
-                        <Check size={11} className="text-accent shrink-0" /> {f}
-                      </li>
-                    ))}
-                    {p.features.length > 3 && (
-                      <li className="text-[10px] text-muted-foreground pl-5">+{p.features.length - 3} daha</li>
-                    )}
-                  </ul>
-                </div>
-              );
-            })}
+          <h3 className="text-base font-bold text-foreground mb-4">Paketlər</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {packages.map((p) => (
+              <PackageCard
+                key={p.id}
+                p={p}
+                isCurrent={false}
+                isDowngrade={false}
+                compact
+              />
+            ))}
           </div>
         </div>
 
-        {/* Premium CTA */}
-        <div className="rounded-xl border border-[hsl(var(--vip-gold))]/30 bg-[hsl(var(--vip-gold))]/[0.03] p-4 flex flex-col sm:flex-row items-center gap-4">
-          <Crown size={20} className="text-[hsl(var(--vip-gold))] shrink-0" />
+        {/* Enterprise CTA */}
+        <div className="rounded-2xl border border-[hsl(260,70%,60%)]/30 bg-gradient-to-r from-[hsl(260,70%,60%)]/[0.05] to-[hsl(280,60%,50%)]/[0.05] p-5 flex flex-col sm:flex-row items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-[hsl(260,70%,60%)]/10 flex items-center justify-center shrink-0">
+            <Building2 size={22} className="text-[hsl(260,70%,60%)]" />
+          </div>
           <div className="flex-1 text-center sm:text-left">
-            <p className="text-sm font-bold text-foreground">Premium mağaza ilə fərqlənin!</p>
-            <p className="text-xs text-muted-foreground">Elanlarınız ön sıralarda, premium nişan</p>
+            <p className="text-sm font-bold text-foreground">Enterprise ilə tam gücə çatın!</p>
+            <p className="text-xs text-muted-foreground">Reklam baner yerləri, fərdi dizayn, şəxsi menecer və daha çox</p>
           </div>
           <Link
             to="/magazalar/yarat"
-            className="shrink-0 px-5 py-2 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-sm font-bold hover:opacity-90 transition-opacity active:scale-[0.98]"
+            className="shrink-0 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white text-sm font-bold hover:opacity-90 transition-opacity active:scale-[0.98]"
           >
-            İndi başla →
+            Fərdiləşdir →
           </Link>
         </div>
       </div>
@@ -225,10 +412,17 @@ const MyShop = () => {
         <div className="h-28 md:h-36 relative overflow-hidden">
           <img src={cover} alt="" className="w-full h-full object-cover" />
           <div className={`absolute inset-0 ${
-            currentPlan === "premium"
+            currentPlan === "enterprise"
+              ? "bg-gradient-to-t from-[hsl(260,20%,8%)]/90 via-black/40 to-transparent"
+              : currentPlan === "premium"
               ? "bg-gradient-to-t from-[hsl(30,50%,8%)]/90 via-black/40 to-transparent"
               : "bg-gradient-to-t from-black/70 via-black/30 to-transparent"
           }`} />
+          {currentPlan === "enterprise" && (
+            <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
+              <Building2 size={9} /> Enterprise
+            </span>
+          )}
           {currentPlan === "premium" && (
             <span className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-md bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
               <Crown size={9} /> Premium
@@ -239,7 +433,9 @@ const MyShop = () => {
               src={logo}
               alt="Logo"
               className={`w-14 h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-lg ${
-                currentPlan === "premium"
+                currentPlan === "enterprise"
+                  ? "border-2 border-[hsl(260,70%,60%)]/50"
+                  : currentPlan === "premium"
                   ? "border-2 border-[hsl(var(--vip-gold))]/50"
                   : "border-2 border-white/20"
               }`}
@@ -255,6 +451,9 @@ const MyShop = () => {
             </div>
           </div>
         </div>
+        {currentPlan === "enterprise" && (
+          <div className="h-0.5 bg-gradient-to-r from-[hsl(260,70%,60%)]/40 via-[hsl(260,70%,60%)] to-[hsl(260,70%,60%)]/40" />
+        )}
         {currentPlan === "premium" && (
           <div className="h-0.5 bg-gradient-to-r from-[hsl(var(--vip-gold))]/40 via-[hsl(var(--vip-gold))] to-[hsl(var(--vip-gold))]/40" />
         )}
@@ -304,7 +503,7 @@ const MyShop = () => {
         <div className="space-y-4">
           {/* Current plan */}
           <div className={`rounded-xl border bg-card p-4 flex items-center justify-between ${
-            currentPlan === "premium" ? "border-[hsl(var(--vip-gold))]/40" : "border-accent/40"
+            currentPlan === "enterprise" ? "border-[hsl(260,70%,60%)]/40" : currentPlan === "premium" ? "border-[hsl(var(--vip-gold))]/40" : "border-accent/40"
           }`}>
             <div className="flex items-center gap-3">
               {(() => { const PkgIcon = currentPkg.icon; return <PkgIcon size={18} className={currentPkg.color} />; })()}
@@ -313,32 +512,50 @@ const MyShop = () => {
                 <p className="text-[11px] text-muted-foreground">{currentPkg.price} ₼/ay · Son: 15 Mar 2026</p>
               </div>
             </div>
-            {currentPlan !== "premium" && (
+            {currentPlan !== "enterprise" && (
               <button
                 onClick={() => setActiveTab("upgrade")}
-                className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-[11px] font-bold hover:opacity-90 flex items-center gap-1"
+                className={`px-3 py-1.5 rounded-lg text-[11px] font-bold hover:opacity-90 flex items-center gap-1 ${
+                  currentPlan === "premium"
+                    ? "bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white"
+                    : "bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white"
+                }`}
               >
-                <Crown size={11} /> Yüksəlt
+                {currentPlan === "premium" ? <Building2 size={11} /> : <Crown size={11} />} Yüksəlt
               </button>
             )}
           </div>
 
-          {/* Premium upsell */}
-          {currentPlan !== "premium" && (
-            <div className="rounded-xl border border-[hsl(var(--vip-gold))]/20 bg-[hsl(var(--vip-gold))]/[0.03] p-4">
+          {/* Upsell */}
+          {currentPlan !== "enterprise" && (
+            <div className={`rounded-xl border p-4 ${
+              currentPlan === "premium"
+                ? "border-[hsl(260,70%,60%)]/20 bg-[hsl(260,70%,60%)]/[0.03]"
+                : "border-[hsl(var(--vip-gold))]/20 bg-[hsl(var(--vip-gold))]/[0.03]"
+            }`}>
               <p className="text-sm font-bold text-foreground flex items-center gap-2 mb-2">
-                <Crown size={15} className="text-[hsl(var(--vip-gold))]" />
-                Premium-a yüksəl
+                {currentPlan === "premium" ? (
+                  <><Building2 size={15} className="text-[hsl(260,70%,60%)]" /> Enterprise-ə yüksəl</>
+                ) : (
+                  <><Crown size={15} className="text-[hsl(var(--vip-gold))]" /> Premium-a yüksəl</>
+                )}
               </p>
               <div className="grid grid-cols-2 gap-2 mb-3">
-                {[
+                {(currentPlan === "premium" ? [
+                  { title: "Reklam baner yerləri", desc: "Ana səhifə, kateqoriya..." },
+                  { title: "30 VIP elan/ay", desc: "3x daha çox VIP" },
+                  { title: "Fərdi dizayn", desc: "Unikal mağaza görünüşü" },
+                  { title: "24/7 şəxsi menecer", desc: "Prioritet dəstək xətti" },
+                ] : [
                   { title: "Ön sıralarda", desc: "Mağaza və elanlar yuxarıda" },
                   { title: "10 VIP elan/ay", desc: "50₼ qənaət" },
                   { title: "Premium nişan", desc: "Qızılı Crown ikonu" },
                   { title: "7/24 dəstək", desc: "Prioritet xətt" },
-                ].map((b, i) => (
+                ]).map((b, i) => (
                   <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-card">
-                    <Check size={12} className="text-[hsl(var(--vip-gold))] shrink-0 mt-0.5" />
+                    <Check size={12} className={`shrink-0 mt-0.5 ${
+                      currentPlan === "premium" ? "text-[hsl(260,70%,60%)]" : "text-[hsl(var(--vip-gold))]"
+                    }`} />
                     <div>
                       <p className="text-[11px] font-semibold text-foreground">{b.title}</p>
                       <p className="text-[10px] text-muted-foreground">{b.desc}</p>
@@ -347,10 +564,14 @@ const MyShop = () => {
                 ))}
               </div>
               <button
-                onClick={() => handleUpgrade("premium")}
-                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-sm font-bold hover:opacity-90 active:scale-[0.98]"
+                onClick={() => handleUpgrade(currentPlan === "premium" ? "enterprise" : "premium")}
+                className={`w-full py-2.5 rounded-lg text-sm font-bold hover:opacity-90 active:scale-[0.98] ${
+                  currentPlan === "premium"
+                    ? "bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white"
+                    : "bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white"
+                }`}
               >
-                Premium ol — 79 ₼/ay
+                {currentPlan === "premium" ? "Enterprise ol — 199 ₼/ay" : "Premium ol — 79 ₼/ay"}
               </button>
             </div>
           )}
@@ -382,60 +603,63 @@ const MyShop = () => {
       {/* ═══ Upgrade Tab ═══ */}
       {activeTab === "upgrade" && (
         <div className="space-y-4">
-          <div className="grid md:grid-cols-3 gap-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
             {packages.map((p) => {
               const isCurrent = p.id === currentPlan;
               const isDowngrade = packages.findIndex(x => x.id === p.id) < packages.findIndex(x => x.id === currentPlan);
-              const PkgIcon = p.icon;
               return (
-                <div
-                  key={p.id}
-                  className={`relative rounded-xl border-2 p-4 transition-all ${
-                    isCurrent
-                      ? `${p.borderColor} bg-card shadow-md`
-                      : "border-border bg-card hover:border-muted-foreground/30"
-                  }`}
-                >
-                  {isCurrent && (
-                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold bg-accent/10 text-accent">Cari</span>
-                  )}
-                  <PkgIcon size={20} className={`${p.color} mb-2`} />
-                  <h3 className="text-sm font-bold text-foreground">{p.name}</h3>
-                  <div className="flex items-baseline gap-0.5 mt-1 mb-3">
-                    <span className="text-xl font-extrabold text-foreground">{p.price}</span>
-                    <span className="text-xs text-muted-foreground"> ₼ {p.period}</span>
-                  </div>
-                  <ul className="space-y-1 mb-4">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-1.5 text-xs text-foreground">
-                        <Check size={12} className="text-accent shrink-0" /> {f}
-                      </li>
-                    ))}
-                    {p.missing.map((f) => (
-                      <li key={f} className="flex items-center gap-1.5 text-xs text-muted-foreground/50 line-through">
-                        <X size={12} className="shrink-0" /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                  {isCurrent ? (
-                    <button disabled className="w-full py-2 rounded-lg bg-muted text-muted-foreground text-xs font-medium cursor-default">Cari paket</button>
-                  ) : isDowngrade ? (
-                    <button disabled className="w-full py-2 rounded-lg bg-muted text-muted-foreground text-xs font-medium cursor-default">Aşağı</button>
-                  ) : (
-                    <button
-                      onClick={() => handleUpgrade(p.id)}
-                      className={`w-full py-2 rounded-lg text-xs font-bold transition-all active:scale-[0.97] ${
-                        p.id === "premium"
-                          ? "bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white"
-                          : "bg-accent text-accent-foreground hover:bg-accent-hover"
-                      }`}
-                    >
-                      Yüksəlt
-                    </button>
-                  )}
-                </div>
+                <PackageCard key={p.id} p={p} isCurrent={isCurrent} isDowngrade={isDowngrade} />
               );
             })}
+          </div>
+
+          {/* Feature comparison table */}
+          <div className="rounded-xl border border-border bg-card overflow-hidden">
+            <div className="px-4 py-3 border-b border-border">
+              <h3 className="text-sm font-bold text-foreground">Paket müqayisəsi</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left p-3 text-muted-foreground font-medium">Xüsusiyyət</th>
+                    {packages.map(p => (
+                      <th key={p.id} className={`p-3 text-center font-bold ${p.id === currentPlan ? "text-accent" : "text-foreground"}`}>
+                        {p.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { label: "Elan limiti", values: ["5", "50", "Limitsiz", "Limitsiz"] },
+                    { label: "Mağaza səhifəsi", values: [false, true, true, true] },
+                    { label: "Logo brending", values: [false, true, true, true] },
+                    { label: "Statistika", values: ["Əsas", "Ətraflı", "Ətraflı", "Real-time"] },
+                    { label: "Prioritet dəstək", values: [false, true, true, "24/7 menecer"] },
+                    { label: "Ön sırada göstərilmə", values: [false, false, true, true] },
+                    { label: "VIP elanlar/ay", values: ["—", "—", "10", "30"] },
+                    { label: "API girişi", values: [false, false, true, "Full"] },
+                    { label: "Reklam baner yerləri", values: [false, false, false, true] },
+                    { label: "Fərdi dizayn", values: [false, false, false, true] },
+                    { label: "Multi-user", values: [false, false, false, true] },
+                  ].map((row, i) => (
+                    <tr key={i} className="border-b border-border/50 last:border-0">
+                      <td className="p-3 text-muted-foreground">{row.label}</td>
+                      {row.values.map((v, j) => (
+                        <td key={j} className="p-3 text-center">
+                          {typeof v === "boolean" ? (
+                            v ? <Check size={14} className="mx-auto text-accent" /> : <X size={14} className="mx-auto text-muted-foreground/30" />
+                          ) : (
+                            <span className="text-foreground font-medium">{v}</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
@@ -579,18 +803,187 @@ const MyShop = () => {
         </div>
       )}
 
+      {/* ═══ Enterprise Customizer Modal ═══ */}
+      {showEnterpriseCustomizer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-foreground/50 backdrop-blur-sm" onClick={() => setShowEnterpriseCustomizer(false)} />
+          <div className="relative bg-card rounded-2xl border border-border shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] p-5 text-white">
+              <button onClick={() => setShowEnterpriseCustomizer(false)} className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30">
+                <X size={14} />
+              </button>
+              <Building2 size={24} className="mb-2" />
+              <h3 className="text-lg font-bold">Enterprise Paketini Fərdiləşdir</h3>
+              <p className="text-white/80 text-sm">Ehtiyaclarınıza uyğun konfiqurasiya edin</p>
+            </div>
+
+            <div className="overflow-y-auto max-h-[calc(85vh-200px)] p-5 space-y-5">
+              {/* Base package */}
+              <div className="rounded-xl border border-[hsl(260,70%,60%)]/20 bg-[hsl(260,70%,60%)]/[0.03] p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <Building2 size={14} className="text-[hsl(260,70%,60%)]" /> Əsas Enterprise Paket
+                  </h4>
+                  <span className="text-sm font-extrabold text-[hsl(260,70%,60%)]">199 ₼/ay</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {["Limitsiz elan", "Enterprise nişanı", "Ön sırada göstərilmə", "30 VIP elan/ay", "Tam brending", "Full API girişi"].map(f => (
+                    <div key={f} className="flex items-center gap-1.5 text-xs text-foreground">
+                      <Check size={11} className="text-[hsl(260,70%,60%)] shrink-0" /> {f}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Add-ons */}
+              <div>
+                <h4 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+                  <Settings2 size={14} className="text-muted-foreground" /> Əlavə xidmətlər
+                </h4>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {enterpriseAddons.map(addon => {
+                    const AddonIcon = addon.icon;
+                    const selected = selectedAddons.includes(addon.id);
+                    return (
+                      <button
+                        key={addon.id}
+                        onClick={() => toggleAddon(addon.id)}
+                        className={`rounded-xl border p-3 text-left transition-all ${
+                          selected
+                            ? "border-[hsl(260,70%,60%)] bg-[hsl(260,70%,60%)]/5 shadow-sm"
+                            : "border-border bg-card hover:border-[hsl(260,70%,60%)]/30"
+                        }`}
+                      >
+                        <div className="flex items-start gap-2.5">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            selected ? "bg-[hsl(260,70%,60%)]/10" : "bg-muted/50"
+                          }`}>
+                            <AddonIcon size={14} className={selected ? "text-[hsl(260,70%,60%)]" : "text-muted-foreground"} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="text-xs font-bold text-foreground">{addon.name}</p>
+                              <span className="text-xs font-extrabold text-[hsl(260,70%,60%)]">+{addon.price} ₼</span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">{addon.desc}</p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 mt-0.5 ${
+                            selected ? "border-[hsl(260,70%,60%)] bg-[hsl(260,70%,60%)]" : "border-border"
+                          }`}>
+                            {selected && <Check size={12} className="text-white" />}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Ad Banner Placements */}
+              <div>
+                <h4 className="text-sm font-bold text-foreground mb-1 flex items-center gap-2">
+                  <MonitorPlay size={14} className="text-muted-foreground" /> Reklam baner yerləri
+                </h4>
+                <p className="text-[11px] text-muted-foreground mb-3">Saytda reklam banerlərinizi yerləşdirin, daha çox müştəriyə çatın</p>
+                <div className="space-y-2">
+                  {adBannerPlacements.map(placement => {
+                    const selected = selectedBannerPlacements.includes(placement.id);
+                    return (
+                      <button
+                        key={placement.id}
+                        onClick={() => toggleBannerPlacement(placement.id)}
+                        className={`w-full rounded-xl border p-3 text-left transition-all ${
+                          selected
+                            ? "border-[hsl(260,70%,60%)] bg-[hsl(260,70%,60%)]/5 shadow-sm"
+                            : "border-border bg-card hover:border-[hsl(260,70%,60%)]/30"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                            selected ? "bg-[hsl(260,70%,60%)]/10" : "bg-muted/50"
+                          }`}>
+                            <Layout size={16} className={selected ? "text-[hsl(260,70%,60%)]" : "text-muted-foreground"} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <p className="text-xs font-bold text-foreground">{placement.name}</p>
+                              {placement.hot && (
+                                <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-destructive/10 text-destructive">🔥 TOP</span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              <span className="text-[10px] text-muted-foreground">{placement.size}</span>
+                              <span className="text-[10px] text-muted-foreground">·</span>
+                              <span className="text-[10px] text-muted-foreground">{placement.views} baxış</span>
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-sm font-extrabold text-[hsl(260,70%,60%)]">+{placement.price} ₼</p>
+                            <p className="text-[9px] text-muted-foreground">{placement.period}</p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 ${
+                            selected ? "border-[hsl(260,70%,60%)] bg-[hsl(260,70%,60%)]" : "border-border"
+                          }`}>
+                            {selected && <Check size={12} className="text-white" />}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Footer with total */}
+            <div className="border-t border-border px-5 py-4 bg-muted/30">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">Aylıq toplam</p>
+                  <p className="text-2xl font-extrabold text-foreground">{enterpriseTotal()} ₼<span className="text-sm font-normal text-muted-foreground"> / ay</span></p>
+                </div>
+                <div className="text-right text-[10px] text-muted-foreground">
+                  <p>Əsas: 199 ₼</p>
+                  {selectedAddons.length > 0 && <p>Əlavələr: +{selectedAddons.reduce((s, id) => s + parseInt(enterpriseAddons.find(a => a.id === id)?.price || "0"), 0)} ₼</p>}
+                  {selectedBannerPlacements.length > 0 && <p>Banerlər: +{selectedBannerPlacements.reduce((s, id) => s + parseInt(adBannerPlacements.find(p => p.id === id)?.price || "0"), 0)} ₼</p>}
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedUpgrade("enterprise");
+                  setShowEnterpriseCustomizer(false);
+                  setShowPayment(true);
+                }}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-white text-sm font-bold hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2"
+              >
+                <Shield size={14} /> Enterprise-ə keç — {enterpriseTotal()} ₼/ay
+              </button>
+              <p className="text-[10px] text-muted-foreground text-center mt-2 flex items-center justify-center gap-1">
+                <Shield size={9} /> İstənilən vaxt ləğv edə bilərsiniz
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ═══ Payment Modal ═══ */}
       {showPayment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-foreground/50 backdrop-blur-sm" onClick={() => !paymentProcessing && setShowPayment(false)} />
           <div className="relative bg-card rounded-2xl border border-border shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] p-5 text-white">
+            <div className={`p-5 text-white bg-gradient-to-r ${
+              selectedUpgrade === "enterprise"
+                ? "from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)]"
+                : "from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)]"
+            }`}>
               <button onClick={() => !paymentProcessing && setShowPayment(false)} className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30">
                 <X size={14} />
               </button>
-              <Crown size={24} className="mb-2" />
+              {selectedUpgrade === "enterprise" ? <Building2 size={24} className="mb-2" /> : <Crown size={24} className="mb-2" />}
               <h3 className="text-lg font-bold">{packages.find(p => p.id === selectedUpgrade)?.name} Paket</h3>
-              <p className="text-white/80 text-sm">{packages.find(p => p.id === selectedUpgrade)?.price} ₼ / ay</p>
+              <p className="text-white/80 text-sm">
+                {selectedUpgrade === "enterprise" ? `${enterpriseTotal()} ₼ / ay` : `${packages.find(p => p.id === selectedUpgrade)?.price} ₼ / ay`}
+              </p>
             </div>
             <div className="p-5 space-y-4">
               <div className="space-y-3">
@@ -615,12 +1008,16 @@ const MyShop = () => {
               <button
                 onClick={processPayment}
                 disabled={paymentProcessing}
-                className="w-full py-3 rounded-lg bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)] text-white text-sm font-bold hover:opacity-90 disabled:opacity-60 flex items-center justify-center gap-2"
+                className={`w-full py-3 rounded-lg text-sm font-bold hover:opacity-90 disabled:opacity-60 flex items-center justify-center gap-2 text-white bg-gradient-to-r ${
+                  selectedUpgrade === "enterprise"
+                    ? "from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)]"
+                    : "from-[hsl(var(--vip-gold))] to-[hsl(35,90%,50%)]"
+                }`}
               >
                 {paymentProcessing ? (
                   <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Emal olunur...</>
                 ) : (
-                  <><Shield size={14} /> Ödəniş et — {packages.find(p => p.id === selectedUpgrade)?.price} ₼</>
+                  <><Shield size={14} /> Ödəniş et — {selectedUpgrade === "enterprise" ? enterpriseTotal() : packages.find(p => p.id === selectedUpgrade)?.price} ₼</>
                 )}
               </button>
               <p className="text-[10px] text-muted-foreground text-center flex items-center justify-center gap-1">
