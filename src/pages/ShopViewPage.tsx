@@ -228,13 +228,20 @@ const ShopViewPage = () => {
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {shopData.ads.map((ad) => (
                       <Link key={ad.id} to={`/elanlar/${ad.id}`} className={`rounded-lg border overflow-hidden card-lift group ${
-                        shopData.premium
+                        shopData.enterprise
+                          ? 'border-[hsl(260,70%,60%)]/30 bg-card shadow-sm hover:shadow-[0_4px_20px_hsl(260,70%,60%,0.1)]'
+                          : shopData.premium
                           ? 'border-[hsl(var(--vip-gold))]/30 bg-card shadow-sm hover:shadow-[0_4px_20px_hsl(var(--vip-gold)/0.1)]'
                           : 'border-border bg-card'
                       }`}>
                         <div className="aspect-[4/3] overflow-hidden relative">
                           <img src={ad.img} alt={ad.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                          {shopData.premium && (
+                          {shopData.enterprise && (
+                            <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[hsl(260,70%,60%)] to-[hsl(280,60%,50%)] text-[9px] font-bold text-white uppercase shadow">
+                              <Building2 size={8} /> Enterprise
+                            </span>
+                          )}
+                          {shopData.premium && !shopData.enterprise && (
                             <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gradient-to-r from-[hsl(var(--vip-gold))] to-[hsl(35,80%,50%)] text-[9px] font-bold text-white uppercase shadow">
                               <Crown size={8} /> Premium
                             </span>
